@@ -1,0 +1,27 @@
+{% extends layout %}
+
+{% block contenido %}
+
+    <div class="col_drcha">
+        {% include '/Index/slider.html.twig' %}
+	<div class="media">
+            {% include '/Index/noticias.html.twig' %}
+            {#{% include '/Index/eventos.html.twig' %}    #}
+            {% include '/Index/contenidosVisitados.html.twig' %}  
+	</div>
+
+	<div class="media">
+            <div class="media_izqda border_top">
+                <span class="raya azul"></span>
+                <h1>Bienvenida del Presidente</h1>
+                <img src="{{app.path}}/{{values.presidente.imagen}}" alt="#" title="#" />
+                <p>{{values.presidente.parrafo}}</p>
+                <a href="saluda.php" title="ampliar" class="boton right">ampliar</a>
+            </div>
+                
+            {% include '/Index/albumes.html.twig' %}  
+
+	</div>
+    </div>	
+
+{% endblock %}

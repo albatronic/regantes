@@ -1,0 +1,23 @@
+<div id="menu_desp">
+    <div class="firstpane menu_list">
+        
+        {% for menu in values.menuDesplegable %} 
+        
+        <h3 class="menu_head">
+        {% if menu.url=="" %} 
+        {{menu.seccion}}
+        
+        {% else %}
+        <a href="{{menu.url}}" title="{{menu.seccion}}">{{menu.seccion}}</a>
+        {% endif %}
+        </h3>
+        
+        <ul class="menu_body">
+         {% for titulo, url in menu.subseccion %}   
+            <li><a href="{{url}}" title="{{titulo}}">{{titulo}}</a></li>
+         {% endfor %}
+        </ul>
+        {% endfor %}
+        
+    </div>
+</div>

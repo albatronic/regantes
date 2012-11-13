@@ -1,0 +1,56 @@
+
+
+<div class="col_izqda">
+    <ul class="menu_pie ancho">
+	{% if(values.nombreScript=="index.php") %}
+            <li><a href="index.php" title="INICIO" class="activo">Inicio</a></li>
+	{% else %}
+            <li><a href="index.php" title="INICIO">Inicio</a></li>
+      	{% endif %}
+
+
+
+	{% if(values.nombreScript=="somos.php") %}
+            <li><a href="somos.php" title="QUI&Eacute;NES SOMOS" class="activo">Qui&eacute;nes Somos</a></li>
+	{% else %}
+            <li><a href="somos.php" title="QUI&Eacute;NES SOMOS">Qui&eacute;nes Somos</a></li>
+      	{% endif %}
+
+
+	{% if(values.nombreScript=="noticias.php") %}
+            <li><a href="noticias.php" title="NOTICIAS" class="activo">Noticias</a></li>
+	{% else %}
+            <li><a href="noticias.php" title="NOTICIAS">Noticias</a></li>
+      	{% endif %}
+
+
+	{% if(values.nombreScript=="eventos.php") %}
+        <li><a href="eventos.php" title="EVENTOS" class="activo">Eventos</a></li>
+	{% else %}
+        <li><a href="eventos.php" title="EVENTOS">Eventos</a></li>
+      	{% endif %}
+    </ul>
+
+    <ul class="menu_pie estrecho ultimo">
+	{% if(values.nombreScript=="galeria.php") %}
+        <li><a href="galeria.php" title="GALER&Iacute;A" class="activo">Galer&iacute;a</a></li>
+	{% else %}
+        <li><a href="galeria.php" title="GALER&Iacute;A">Galer&iacute;a</a></li>
+      	{% endif %}
+
+
+	{% if(values.nombreScript=="video.php") %}
+        <li><a href="video.php" title="V&Iacute;DEO" class="activo">V&iacute;deo</a></li>
+	{% else %}
+        <li><a href="video.php" title="V&Iacute;DEO">V&iacute;deo</a></li>
+      	{% endif %}
+
+
+	{% if(values.nombreScript=="contacto.php") %}
+        <li><a href="contacto.php" title="CONTACTO" class="activo">Contacto</a></li>
+	{% else %}
+        <li><a href="contacto.php" title="CONTACTO">Contacto</a></li>
+      	{% endif %}
+    </ul>
+</div>
+

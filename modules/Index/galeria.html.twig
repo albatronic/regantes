@@ -1,0 +1,14 @@
+<ul class="galeria">
+    {% for key, galeria in values.galeriaFotos.thumbnail %}
+	<li {% if values.galeriaFotos.nThumbnail==key %}class="ultimo"{% endif %}>
+		<a href="{{galeria.enlaceImagen}}" rel="gallery" class="pirobox_gall" title="{{galeria.nombre}}"><img src="{{app.path}}/{{galeria.imagen}}" alt="{{galeria.nombre}}" title="{{galeria.nombre}}" /></a>
+	</li>
+        
+    {% endfor %}    
+</ul>
+
+        	<a href="{{galeria.enlaceImagen}}" rel="gallery" class="pirobox_gall" title="{{galeria.nombre}}"></a>
+
+
+<a href="galeria.php" title="ver m&aacute;s &aacute;lbumes" class="albumes">m&aacute;s &aacute;lbumes</a>
+				

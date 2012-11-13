@@ -1,0 +1,23 @@
+{% extends layout %}
+
+{% block title parent() ~ " - Inicio" %}
+
+
+{% block contenido %}
+
+    <div class="col_drcha">
+        {% include '/Index/slider.html.twig' %}
+	<div class="media">
+            {% include '/Index/noticias.html.twig' %}
+            {#{% include '/Index/eventos.html.twig' %}    #}
+            {% include '/Index/contenidosVisitados.html.twig' %}  
+	</div>
+
+	<div class="media">
+		{#include('home/maquetacion-presidente.php');
+		include('home/maquetacion-albumes.php');#}
+	</div>
+    </div>	
+
+
+{% endblock %}

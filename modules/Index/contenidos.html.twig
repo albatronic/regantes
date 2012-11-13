@@ -1,0 +1,15 @@
+<div id="contenidos">
+	<h1>Contenidos m&aacute;s visitados</h1>
+	<ul class="left">
+            {% for contenido in values.contenidosVisitados.left %}
+		<li><a href="{{contenido.url}}" title="{{contenido.titulo}}">{{contenido.titulo}}</a></li>
+            {% endfor %}    
+	</ul>
+
+
+	<ul class="right">
+            {% for contenido in values.contenidosVisitados.right %}
+		<li><a href="{{contenido.url}}" title="{{contenido.titulo}}">{{contenido.titulo}}</a></li>
+            {% endfor %}  
+	</ul>
+</div>

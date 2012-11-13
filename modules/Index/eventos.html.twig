@@ -1,0 +1,9 @@
+<div class="media_drcha">
+    <span class="raya verde"></span>
+    <h1>Eventos</h1>
+    {% for evento in values.eventos %}
+        {% include '/Index/eventoIndividual.html.twig' %}
+    {% endfor %}
+    <span class="filete"></span>
+    <a href="eventos.php" title="ver m&aacute;s eventos" class="boton right">m&aacute;s eventos</a>
+</div>	
