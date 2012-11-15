@@ -1,0 +1,6 @@
+## YAML Template.
+---
+Galeria:
+  #Variables Web
+  includesVarWeb:
+

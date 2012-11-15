@@ -1,51 +1,5 @@
 <ul id="nav">
-
-	{% if(values.nombreScript=="Index") %}
-				<li><a href="{{app.path}}/" title="INICIO" class="activo">Inicio</a></li>
-	{% else %}
-				<li><a href="{{app.path}}/" title="INICIO">Inicio</a></li>
-	{% endif %}
-
-
-	{% if(values.nombreScript=="somos.php") %}
-				<li><a href="somos.php" title="QUI&Eacute;NES SOMOS" class="activo">Qui&eacute;nes Somos</a></li>
-	{% else %}
-				<li><a href="somos.php" title="QUI&Eacute;NES SOMOS">Qui&eacute;nes Somos</a></li>
-	{% endif %}
-
-
-	{% if(values.nombreScript=="noticias.php") %}
-				<li><a href="{{app.path}}/noticias" title="NOTICIAS" class="activo">Noticias</a></li>
-	{% else %}
-				<li><a href="{{app.path}}/noticias" title="NOTICIAS">Noticias</a></li>
-	{% endif %}
-
-
-	{% if(values.nombreScript=="Eventos") %}
-				<li><a href="{{app.path}}/eventos" title="EVENTOS" class="activo">Eventos</a></li>
-	{% else %}
-				<li><a href="{{app.path}}/eventos" title="EVENTOS">Eventos</a></li>
-	{% endif %}
-
-
-	{% if(values.nombreScript=="galeria.php") %}
-				<li><a href="{{app.path}}/galeria" title="GALER&Iacute;A" class="activo">Galer&iacute;a</a></li>
-	{% else %}
-				<li><a href="{{app.path}}/galeria" title="GALER&Iacute;A">Galer&iacute;a</a></li>
-	{% endif %}
-
-
-	{% if(values.nombreScript=="/videos") %}
-				<li><a href="{{app.path}}/videos" title="V&Iacute;DEO" class="activo">V&iacute;deo</a></li>
-	{% else %}
-				<li><a href="{{app.path}}/videos" title="V&Iacute;DEO">V&iacute;deo</a></li>
-	{% endif %}
-
-
-	{% if(values.nombreScript=="/contacto") %}
-				<li><a href="{{app.path}}/contacto" title="CONTACTO" class="activo">Contacto</a></li>
-	{% else %}
-				<li><a href="{{app.path}}/contacto" title="CONTACTO">Contacto</a></li>
-	{% endif %}
-
+    {% for seccion in values.menuCabecera %}
+    <li><a href="{{app.path}}/{{seccion.url}}" title="{{seccion.nombre}}" {% if values.controller==seccion.controller %}class="activo"{% endif %}>{{seccion.nombre}}</a></li>
+    {% endfor %}
 </ul>

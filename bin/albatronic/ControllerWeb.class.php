@@ -111,6 +111,56 @@ class ControllerWeb {
 
            );          
           
+         
+        /* MENU CABECERA */
+         $this->values['menuCabecera'][] = array (
+            'nombre' => 'INICIO',
+            'url' => '',
+             'controller' => 'Index',
+         );
+
+         $this->values['menuCabecera'][] = array (
+            'nombre' => 'QUIÉNES SOMOS',
+            'url' => 'somos',
+             'controller' => 'Somos',
+             
+         );
+         
+         $this->values['menuCabecera'][] = array (
+            'nombre' => 'NOTICIAS',
+            'url' => 'Noticias',
+             'controller' => 'Noticias',
+             
+         );
+         
+         $this->values['menuCabecera'][] = array (
+            'nombre' => 'EVENTOS',
+            'url' => 'Eventos',
+             'controller' => 'Eventos',
+             
+         );
+         
+         $this->values['menuCabecera'][] = array (
+            'nombre' => 'GALERIA',
+            'url' => 'Galeria',
+             'controller' => 'Galeria',
+            
+         ); 
+         
+         $this->values['menuCabecera'][] = array (
+            'nombre' => 'VÍDEOS',
+            'url' => 'Videos',
+             'controller' => 'Videos',
+             
+         ); 
+         
+         $this->values['menuCabecera'][] = array (
+            'nombre' => 'CONTACTO',
+            'url' => 'Contacto',
+             'controller' => 'Contacto',
+             
+         );          
+         
         
     }
 

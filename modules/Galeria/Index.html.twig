@@ -1,0 +1,14 @@
+{% extends layout %}
+
+{% block contenido %}
+
+<div class="col_drcha">
+    {% include '_global/ruta.html.twig' %}
+    <h1>Galer&iacute;a de Im&aacute;genes</h1>
+
+    <div id="mosaicoProyectos"> 
+        {% include 'galeria/galeriaFila.html.twig' %}
+    </div> 
+</div>
+
+{% endblock %}
