@@ -1,6 +1,8 @@
 {# MACROS COMUNES AL PROYECTO #}
 
-{#  MACRO #}
+{#  MACRO NOTICIA #}
+{# Es el resumen de una noticia y puede estar en las siguientes secciones: INDEX, NOTICIAS, EVENTOS #}
+{# El contenido de un resumen de noticia sería: IMAGEN (puede llevar o no), FECHA (puede llevar o no), TÍTULO, SUBTÍTULO (puede llevar o no), PÁRRAFO #}
 {% macro noticia (arrayNoticia)%}
 <div class="evento_indiv">
 	{% if arrayNoticia.imagen!="" %}
@@ -16,7 +18,12 @@
 {% endmacro %}
 
 
-{# DEFINIR LA MACRO #}
+{# MACRO VIDEO #}
+{# Es la imagen del vídeo en la sección VÍDEOS #}
+{# Los vídeos entran en un <div class="proyectosFila"> y cada "proyectosFila" contiene 3 vídeos,
+ con lo que al recibir más vídeos se genera otro <div class="proyectosFila"> quedando siempre filas de 3 vídeos o menos, pero nunca más. #}
+{# El array de un vídeo contiene: IMAGEN del vídeo, TITULO, ENLACE al vídeo individual #}
+{# Es importante la variable 'key' porque el video 3 y sus múltiplos van a tener estilos diferenes que el 1 y el 2. #}
 {% macro video (arrayVideo, key, nCaracteres)%}
 {% set nCar=nCaracteres | default(100) %}
 <div class="mosaic-block bar proyecto{{key}}">
