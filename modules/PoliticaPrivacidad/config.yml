@@ -1,0 +1,6 @@
+## YAML Template.
+---
+PoliticaPrivacidad:
+  #Variables Web
+  includesVarWeb:
+

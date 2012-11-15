@@ -23,7 +23,7 @@ div.uploader,
 div.uploader span.action,
 div.button,
 div.button span {
-  background-image: url(../images/sprite.png); /* LLAMADA AL SPRITE */
+  background-image: url(../../images/sprite.png); /* LLAMADA AL SPRITE */
   background-repeat: no-repeat;
   -webkit-font-smoothing: antialiased;
 }
@@ -150,7 +150,7 @@ div.selector option { /*********** CAMBIAR INTERIOR DEL OPTION ***********/
 	background:#fff;
 	color:#999;
 	border:0px;
-	padding:510px 8px; /* padding entre los option, sólo funciona en firefox */
+	padding:510px 8px; /* padding entre los option, sï¿½lo funciona en firefox */
 	height:25px;
 	border:0px;
 	margin-bottom:5px;
@@ -185,7 +185,7 @@ div.selector.active span {
   background-position: right 0;
 }
 
-div.selector.focus, div.selector.hover, div.selector:hover { /* selector cuando pasa el ratón por encima 
+div.selector.focus, div.selector.hover, div.selector:hover { /* selector cuando pasa el ratï¿½n por encima 
   background-position: -485px -27px; /* original: -483px -156px 
 }
 
@@ -219,7 +219,7 @@ div.selector option { /*********** CAMBIAR INTERIOR DEL OPTION **********
 	background:#fff;
 	color:#999;
 	border:0px;
-	padding:510px 8px; /* padding entre los option, sólo funciona en firefox */
+	padding:510px 8px; /* padding entre los option, sï¿½lo funciona en firefox */
 	/*height:20px;
 }*/
 
@@ -244,7 +244,7 @@ div.checker input {
   height: 19px;
 }
 
-div.checker span { /* muestra el contenedor vacío del check */
+div.checker span { /* muestra el contenedor vacï¿½o del check */
   background-position: 0px -260px;
   height: 19px;
   width: 19px;
@@ -498,7 +498,7 @@ div.button span {
 /**********************************************************************************************************/
 
 div.selector { /* ancho selector */
-  width:500px; /* ORIGINAL: 200px, AL CAMBIAR ESTE HAY QUE CAMBIAR TAMBIÉN EN PROPORCION EL WIDTH DE div.selector span */ 
+  width:500px; /* ORIGINAL: 200px, AL CAMBIAR ESTE HAY QUE CAMBIAR TAMBIï¿½N EN PROPORCION EL WIDTH DE div.selector span */ 
   font-size:12px;
   display:block; /* nuevo */
   cursor:pointer; /* nuevo */
@@ -519,7 +519,7 @@ div.selector span {
 
 div.selector span { /* ANCHO DE INPUT SELECT */
   color: #777;
-  width: 403px;/* ORIGINAL: 158px, AL CAMBIAR ESTE HAY QUE CAMBIAR TAMBIÉN EN PROPORCION EL WIDTH DE div.selector */
+  width: 403px;/* ORIGINAL: 158px, AL CAMBIAR ESTE HAY QUE CAMBIAR TAMBIï¿½N EN PROPORCION EL WIDTH DE div.selector */
   /*text-shadow: 0 1px 0 #fff;*/
 }
 

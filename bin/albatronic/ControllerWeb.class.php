@@ -71,7 +71,7 @@ class ControllerWeb {
 
         // LECTURA DE METATAGS
 
-        
+        /* MENÚ DESPLEGABLE */
          $this->values['menuDesplegable'][] = array(
             'seccion' => 'Contenido2',
             'subseccion' => array(
@@ -96,7 +96,21 @@ class ControllerWeb {
                 'Sub pepito11' => 'http://asdfasdf',
             )
            );          
-             
+       
+          
+        /* RUTA // CONSTRUIR AQUÍ EL ARRAY DE LAS RUTAS */
+         $this->values['ruta'] = array(
+            'seccion1' => array (
+                'nombre' => 'Inicio',
+                'url' => 'app.path',
+            ),
+            'seccion2' => array (
+                'nombre' => 'Contenido Actual',
+                'url' => ''
+            ),
+
+           );          
+          
         
     }
 

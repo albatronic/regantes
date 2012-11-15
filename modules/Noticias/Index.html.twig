@@ -1,0 +1,23 @@
+{% extends layout %}
+
+{% block contenido %}
+    <div class="col_drcha">
+        {% include '/_global/ruta.html.twig' %}
+	<h1>Noticias</h1>
+
+	<div id="col_izqda">
+            {% for evento in values.eventos.left %}    
+                {{ mariquita.noticia (evento) }} 
+            {% endfor %}
+	</div>
+
+
+	<div id="col_drcha">
+            {% for evento in values.eventos.right %}    
+                {{ mariquita.noticia (evento) }}
+            {% endfor %}
+	</div>
+	
+	{% include'Noticias/botonera.html.twig' %}
+    </div>	
+{% endblock %}

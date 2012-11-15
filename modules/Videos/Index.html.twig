@@ -1,0 +1,39 @@
+{% extends layout %}
+
+{% set nColumnas = 3 %}
+{% set nuevaFila = 1 %}
+
+{% block contenido %}
+    <div class="col_drcha">
+        {% include '/_global/ruta.html.twig' %}
+	<h1>Galería de Vídeos</h1>
+        
+        <div id="mosaicoProyectos"> 
+            {#
+            <div class="proyectosFila">
+                {% for key, video in values.galeriaVideos.thumbnail %}        
+                    {{ mariquita.video (video, key) }}
+                {% endfor %}           
+            </div>
+            #}
+
+            {% for key, video in values.galeriaVideos.thumbnail %}
+                
+                {% if nuevaFila %}
+                    <div class="proyectosFila">
+                {% endif %}
+                            
+                {{ mariquita.video (video, key) }}
+                            
+                {% if (key+1) is divisibleby(nColumnas) %}
+                    </div>
+                    {% set nuevaFila = 1 %}
+                {% else %}
+                    {% set nuevaFila = 0 %}
+                {% endif %}
+                
+            {% endfor %}
+
+	</div> 
+    </div>	
+{% endblock %}

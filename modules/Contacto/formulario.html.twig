@@ -1,0 +1,20 @@
+<div id="formulario">
+    <form>
+        <div id="input_oculto">
+            <input type="text" name="buzon" value="" />
+            <input type="text" name="action" value="" />
+        </div>
+
+            <input type="text" name="" value="Nombre" class="celdaError" onFocus="if (this.value=='Nombre') this.value='';" />
+            <input type="text" name="" value="Email" class="celda" onFocus="if (this.value=='Email') this.value='';" />
+            <textarea name="mensaje" class="celda" rows="10" cols="" onFocus="if (this.value=='Mensaje') this.value='';">Mensaje</textarea>
+
+            <div id="contenedorEnviar">
+                    <div class="checboxesCaja">
+                            <input type="checkbox" value="SI" />He le&iacute;do y acepto la <a href="{{app.path}}/avisoLegal" rel="iframe-800-360" class="pirobox_gal" title="Pol&iacute;tica de Privacidad">pol&iacute;tica de privacidad.</a>
+                    </div>
+
+                    <a href="#" title="enviar" class="boton right">enviar</a>
+            </div>
+    </form>
+</div>

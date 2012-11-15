@@ -1,0 +1,30 @@
+{# MACROS COMUNES AL PROYECTO #}
+
+{#  MACRO #}
+{% macro noticia (arrayNoticia)%}
+<div class="evento_indiv">
+	{% if arrayNoticia.imagen!="" %}
+        <div class="imagen_evento">
+		<img src="{{arrayNoticia.imagen}}" alt="{{arrayNoticia.titulo}}" title="{{arrayNoticia.titulo}}" />
+		<a href="{{arrayNoticia.url}}" title="{{arrayNoticia.url}}"><span class="fecha_evento arriba">{{arrayNoticia.fecha}}</span></a>
+	</div>
+        {% endif %}
+	<h2><a href="contenido-aislado.php" title="#">{{arrayNoticia.titulo}}</a></h2>
+	<h3>{{arrayNoticia.subtitulo}}</h3>
+	<p>{{arrayNoticia.descripcion}}</p>
+</div>    
+{% endmacro %}
+
+
+{# DEFINIR LA MACRO #}
+{% macro video (arrayVideo, key, nCaracteres)%}
+{% set nCar=nCaracteres | default(100) %}
+<div class="mosaic-block bar proyecto{{key}}">
+    <div class="mosaic-backdrop"> 
+        <img src="{{arrayVideo.imagen}}" alt="{{arrayVideo.titulo}}" title="{{arrayVideo.titulo}}" />
+    </div>
+        <a href="{{arrayVideo.enlaceVideo}}" class="mosaic-overlay">
+            <span class="details">{{arrayVideo.titulo|slice(0, nCar)}}{% if arrayVideo.titulo | length > nCar %}...{% endif %}</span>
+        </a>
+</div>
+{% endmacro %}

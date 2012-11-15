@@ -1,0 +1,6 @@
+## YAML Template.
+---
+Acceso:
+  #Variables Web
+  includesVarWeb:
+

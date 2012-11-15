@@ -1,3 +1,9 @@
+# DIRECTIVAS AL SERVIDOR PARA DESVIAR TODAS
+# LAS PETICIONES AL CONTROLADOR FRONTAL index.php
+# EXCEPTO PARA LAS EXCEPCIONES QUE ESTÉN DESCOMENTADAS
+
+# NOTA: SI EL PROYECTO LLEVA CPanel, HABRÁ QUE DESCOMENTAR ESA LÍNEA
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
@@ -7,7 +13,11 @@
     RewriteRule .* - [L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
-    # Exception para la carpeta "dmntr"
+
+    # EXCEPCIONES
+    #RewriteCond %{REQUEST_URI} !/Cpanel
+    #-----------------------------------
+
     RewriteRule ^(.*)$ index.php [QSA,L]
 </IfModule>
 
@@ -17,4 +27,5 @@
     </filesMatch>
 </ifModule>
 
+# FUERZA AL SERVIDOR A DEVOLVER PAGINAS EN CODIFICACION UTF-8
 AddDefaultCharset utf-8
