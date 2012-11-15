@@ -16,7 +16,7 @@
 	width:203px;
 	height:124px;
 	padding:10px;
-	/*background:url(../imagenes/video-fondo.png) no-repeat;*/
+	/*background:url(../../images/video-fondo.png) no-repeat;*/
 	float: left;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
@@ -25,7 +25,7 @@
 	margin-right: 14px;
 }
 
-.mosaic-backdrop img { /* -------- Tamaño de la imagen dentro del mosaico */
+.mosaic-backdrop img { /* -------- Tamaï¿½o de la imagen dentro del mosaico */
 	width:205px;
 	height:126px;
 }
@@ -44,7 +44,7 @@
 			bottom:-146px;
 			height:146px;
 			/*background:url(../images/bg-black.png);*/
-			background:url(../imagenes/fondo-mosaico-portafolio.png) 0px 0 no-repeat;
+			background:url(../../images/fondo-mosaico-portafolio.png) 0px 0 no-repeat;
 			/*background:#000;*/
 			/*opacity:0.7;
 			filter:alpha(opacity:70);*/

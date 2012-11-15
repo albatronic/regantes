@@ -1,0 +1,18 @@
+{% extends layout %}
+
+{% block contenido %}
+    <div class="col_drcha">
+        {% include '/_global/ruta.html.twig' %}
+	<h1>Galería de Vídeos</h1>
+        
+        <div id="mosaicoProyectos"> 
+            <div class="proyectosFila">
+                {% for key, video in values.galeriaVideos.thumbnail %}        
+                    {{ mariquita.video (video, key) }}
+                {% endfor %}           
+            </div>
+
+
+	</div> 
+    </div>	
+{% endblock %}

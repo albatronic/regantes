@@ -1,0 +1,6 @@
+## YAML Template.
+---
+AvisoLegal:
+  #Variables Web
+  includesVarWeb:
+

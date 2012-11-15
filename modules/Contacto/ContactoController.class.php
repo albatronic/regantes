@@ -10,15 +10,15 @@
  *
  * @author Administrador
  */
-class Error404Controller extends ControllerWeb {
+class ContactoController extends ControllerWeb {
 
-    var $entity = "Error404";
+    var $entity = "Contacto";
 
     public function IndexAction() {
 
-             /* USTED ESTA EN */
+        /* USTED ESTA EN */
         $this->values['ustedEstaEn'] = array(
-            'titulo' => 'Error 404',
+            'titulo' => 'Contacto',
             'subsecciones' => array(
                 'Sub pepito' => 'http://asdfasdf',
                 'Sub manolito' => 'http://asdfasdfasdfasdf',
@@ -27,6 +27,12 @@ class Error404Controller extends ControllerWeb {
             ),
 
         );
+        
+                
+        
+        
+        
+        
         
         /*print_r($this->values['ustedEstaEn']);*/
 

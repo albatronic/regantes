@@ -1,0 +1,6 @@
+## YAML Template.
+---
+Noticias:
+  #Variables Web
+  includesVarWeb:
+

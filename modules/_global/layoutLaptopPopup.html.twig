@@ -1,5 +1,3 @@
-        {% import '_global/macros.html.twig' as mariquita %}
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es-ES" lang="es-ES">
     <head>
@@ -8,26 +6,15 @@
         {% include values.archivoJs %}
     </head>
 
-    <body {% block bodyContacto %}{%endblock%}>
-        <div id="contenedor_global">
-            <div class="contenedor_central">
-                {% block cabecera %}
-                    {% include '_global/cabecera.html.twig' %}
-                {% endblock %}
-                   
-                {% block menu %}
-                    {% include '_global/menuIzquieda.html.twig' %}
-                {% endblock %}
+    <body>
+
+
                     
                 {% block contenido %}
                     
                 {% endblock %}                    
 
-                {% block pie %}
-                    {% include '_global/pie.html.twig' %}
-                {% endblock %}
-            </div>
-         </div>
+
 
         {% if values._debugMode %}
         <div style="clear: both;">
