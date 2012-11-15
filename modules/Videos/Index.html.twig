@@ -25,7 +25,7 @@
                             
                 {{ mariquita.video (video, key) }}
                             
-                {% if (key+1) is divisibleby(nColumnas) %}
+                {% if key is divisibleby(nColumnas) %}
                     </div>
                     {% set nuevaFila = 1 %}
                 {% else %}
