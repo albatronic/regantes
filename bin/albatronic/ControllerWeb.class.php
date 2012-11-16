@@ -170,9 +170,9 @@ class ControllerWeb {
          );
 
          $this->values['menuPie'][left][] = array (
-            'nombre' => 'Quiénes somos',
-            'url' => 'somos',
-             'controller' => 'Somos',
+            'nombre' => 'Enlaces',
+            'url' => 'enlaces',
+             'controller' => 'Enlaces',
              
          );
          

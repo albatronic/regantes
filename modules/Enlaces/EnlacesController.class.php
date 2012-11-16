@@ -48,6 +48,51 @@ class EnlacesController extends ControllerWeb {
         );
     }
 
+    
+
+        public function EnlaceDesarrolladoAction() {    
+
+        /* USTED ESTA EN */
+        $this->values['ustedEstaEn'] = array(
+            'titulo' => 'Contacto',
+            'subsecciones' => array(
+                'Sub pepito' => 'http://asdfasdf',
+                'Sub manolito' => 'http://asdfasdfasdfasdf',
+                'Sub sdfg' => 'http://asdfasdfasdfasdf',
+                'Aenean consequat iaculis arcu sit amet faucibus. Fusce posuere posuere scelerisque.' => 'http://asdfasdfasdfasdf',
+            ),
+
+        );
+        
+        
+        /* ENLACES DE INTERES */
+        $this->values['enlacesInteres'] = array(
+            'tituloSeccion' => 'Fusce tempor tellus sit amet odio scelerisque ut rutrum lectus hendrerit.',
+        );
+        
+        $this->values['enlaceIndividual'][] = array(
+            'titulo' => 'Integer tempor malesuada nisl, vitae ultricies tellus sollicitudin hendrerit. Fusce tempor tellus sit amet odio scelerisque ut rutrum lectus hendrerit. Vestibulum semper commodo sagittis.',
+            'seccion' => '',
+            'nombre' => 'www.ideal.es',
+            'url' => 'http://www.ideal.es',
+        );
+
+        $this->values['enlaceIndividual'][] = array(
+            'titulo' => 'Fusce tempor tellus sit amet odio scelerisque ut rutrum lectus hendrerit. Vestibulum semper commodo sagittis.',
+            'seccion' => '',
+            'nombre' => 'www.ideal.es',
+            'url' => 'http://www.ideal.es',
+        );    
+        
+        
+            
+        return array(
+            'template' => $this->entity . '/EnlaceDesarrollado.html.twig',
+            'values' => $this->values
+        );
+        
+        
+        }
 }
 
 ?>
