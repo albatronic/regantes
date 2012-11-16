@@ -1,5 +1,5 @@
 <ul id="nav">
     {% for seccion in values.menuCabecera %}
-    <li><a href="{{app.path}}/{{seccion.url}}" title="{{seccion.nombre}}" {% if values.controller==seccion.controller %}class="activo"{% endif %}>{{seccion.nombre}}</a></li>
+        <li><a href="{{app.path}}/{{seccion.url}}" title="{{seccion.nombre}}" {% if values.controller==seccion.controller %}class="activo"{% endif %}>{{seccion.nombre}}</a></li>
     {% endfor %}
 </ul>

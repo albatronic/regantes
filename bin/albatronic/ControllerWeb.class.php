@@ -73,7 +73,7 @@ class ControllerWeb {
 
         /* MENÚ DESPLEGABLE */
          $this->values['menuDesplegable'][] = array(
-            'seccion' => 'Contenido2',
+            'seccion' => 'Enlaces',
             'subseccion' => array(
                 'Sub pepito' => 'http://asdfasdf',
                 'Sub pepito2' => 'http://asdfasdf',
@@ -120,9 +120,9 @@ class ControllerWeb {
          );
 
          $this->values['menuCabecera'][] = array (
-            'nombre' => 'QUIÉNES SOMOS',
-            'url' => 'somos',
-             'controller' => 'Somos',
+            'nombre' => 'Enlaces',
+            'url' => 'enlaces',
+             'controller' => 'Enlaces',
              
          );
          
@@ -160,7 +160,56 @@ class ControllerWeb {
              'controller' => 'Contacto',
              
          );          
+
          
+        /* MENU PIE */
+         $this->values['menuPie'][left][] = array (
+            'nombre' => 'Inicio',
+            'url' => '',
+             'controller' => 'Index',
+         );
+
+         $this->values['menuPie'][left][] = array (
+            'nombre' => 'Quiénes somos',
+            'url' => 'somos',
+             'controller' => 'Somos',
+             
+         );
+         
+         $this->values['menuPie'][left][] = array (
+            'nombre' => 'Noticias',
+            'url' => 'Noticias',
+             'controller' => 'Noticias',
+             
+         );
+         
+         $this->values['menuPie'][left][] = array (
+            'nombre' => 'Eventos',
+            'url' => 'Eventos',
+             'controller' => 'Eventos',
+             
+         );
+         
+         $this->values['menuPie'][right][] = array (
+            'nombre' => 'Galería',
+            'url' => 'Galeria',
+             'controller' => 'Galeria',
+            
+         ); 
+         
+         $this->values['menuPie'][right][] = array (
+            'nombre' => 'Vídeos',
+            'url' => 'Videos',
+             'controller' => 'Videos',
+             
+         ); 
+         
+         $this->values['menuPie'][right][] = array (
+            'nombre' => 'Contacto',
+            'url' => 'Contacto',
+             'controller' => 'Contacto',
+             
+         );            
         
     }
 

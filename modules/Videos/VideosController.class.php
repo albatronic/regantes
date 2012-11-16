@@ -46,8 +46,21 @@ class VideosController extends ControllerWeb {
             'titulo' => 'Quisque tincidunt augue at velit mattis commodo quis vitae urna.',
             'imagen' => 'images/xxximagen-eventos2.jpg',
             'enlaceImagen' => 'http://lorempixel.com/500/300/nature',
-        );         
-        
+        );    
+
+                
+        $this->values['galeriaVideos']['thumbnail'][4] = array(
+            'titulo' => 'Quisque tincidunt augue at velit mattis commodo quis vitae urna.',
+            'imagen' => 'images/xxximagen-eventos2.jpg',
+            'enlaceImagen' => 'http://lorempixel.com/500/300/nature',
+        );    
+
+        $this->values['galeriaVideos']['thumbnail'][5] = array(
+            'titulo' => 'Quisque tincidunt augue at velit mattis commodo quis vitae urna.',
+            'imagen' => 'images/xxximagen-eventos2.jpg',
+            'enlaceImagen' => 'http://lorempixel.com/500/300/nature',
+        );    
+                
         
         
         

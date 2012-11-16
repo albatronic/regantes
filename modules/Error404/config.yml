@@ -1,0 +1,6 @@
+## YAML Template.
+---
+Error404:
+  #Variables Web
+  includesVarWeb:
+

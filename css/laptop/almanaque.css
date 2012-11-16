@@ -19,7 +19,7 @@ ALMANAQUE DE EVENTOS
 
 
 /*#contenedor_almanaque #cabecera_almanaque {
-	background:url(../imagenes/calendario-cabecera.png) 0 0 no-repeat;
+	background:url(../../images/calendario-cabecera.png) 0 0 no-repeat;
 	width:260px;
 	height:33px;
 	float:left;
@@ -54,7 +54,7 @@ ALMANAQUE DE EVENTOS
 
 
 #contenedor_almanaque #borde_sup_almanaque {
-	background:url(../imagenes/fondo-calendario-top.png) 0 0 repeat-x;
+	background:url(../../images/fondo-calendario-top.png) 0 0 repeat-x;
 	width:250px;
 	text-align:center;
 	color:#f5f5f5;
@@ -77,21 +77,21 @@ ALMANAQUE DE EVENTOS
 }
 
 #contenedor_almanaque #contenedor_tabla_dias {
-	background:url(../imagenes/fondo-calendario.png) 0 0 repeat-y;
+	background:url(../../images/fondo-calendario.png) 0 0 repeat-y;
 	width:251px;
 	float:left;
 	overflow:hidden;
 	padding-left:0px;}
 
 /*#contenedor_almanaque #borde_inf_almanaque {
-	background:url(../imagenes/fondo-calendario-bottom.png) 0 0 no-repeat;
+	background:url(../../images/fondo-calendario-bottom.png) 0 0 no-repeat;
 	width:251px;
 	height:43px;
 	float:left;}*/
 
 
 #contenedor_almanaque #cabecera_almanaque {
-	background:url(../imagenes/fondo-mes.png) 0 0 no-repeat;
+	background:url(../../images/fondo-mes.png) 0 0 no-repeat;
 	width:251px;
 	height:29px;
 	float:left;
@@ -125,7 +125,7 @@ ALMANAQUE DE EVENTOS
 
 
 /* #almanaque_mes {
-	background:url(../imagenes/mes-calendario_v2.png) 0 0 no-repeat;
+	background:url(../../images/mes-calendario_v2.png) 0 0 no-repeat;
 	text-align:center;
 	height:48px;
 	color:#004C8E;
@@ -159,7 +159,7 @@ table#almanaque tr td.diasactuales_almanaque {
 
 
 table#almanaque tr td.dia_con_evento_almanaque {
-	background:url(../imagenes/calendario-esquina.png) right 0 no-repeat;
+	background:url(../../images/calendario-esquina.png) right 0 no-repeat;
 	/*font-family:Arial,Helvetica,sans-serif;*/
 	font-size:11px;
 	width:26px;
@@ -171,7 +171,7 @@ table#almanaque tr td.dia_con_evento_almanaque {
 }
 
 table#almanaque tr td.dia_con_evento_almanaque:hover {
-	background:#E3E3E3 url(../imagenes/calendario-esquina.png) right 0 no-repeat;
+	background:#E3E3E3 url(../../images/calendario-esquina.png) right 0 no-repeat;
 }
 
 table#almanaque tr td.dia_con_evento_almanaque a {

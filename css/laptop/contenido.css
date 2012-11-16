@@ -141,7 +141,7 @@ ul.listaContenidos li h1{
 	color:#94BC28;
 	text-decoration:none;
 	font-weight:normal;
-	background:url(../imagenes/contenidos-tic.png) no-repeat 0px 10px;
+	background:url(../../images/contenidos-tic.png) no-repeat 0px 10px;
 	display:block;
 	font-size:18px;
 	padding-top:5px;
@@ -203,13 +203,13 @@ ul.listaContenidos li p {
 	font-size:26px;
 	float:left;
 	padding-bottom:15px;
-	background:url(../imagenes/filete-horizontal.png) 0 bottom repeat-x;
+	background:url(../../images/filete-horizontal.png) 0 bottom repeat-x;
 	margin-bottom:15px;
 	border-bottom:0px;
 }
 
 .contenidoTop {
-	background:url(../imagenes/contenido-top.png) 0 0 no-repeat;
+	background:url(../../images/contenido-top.png) 0 0 no-repeat;
 	width:783px;
 	height:7px;
 	float:left;
@@ -218,7 +218,7 @@ ul.listaContenidos li p {
 .contenidoInter {
 	border-left:1px solid #d2d2d2;
 	border-right:1px solid #d2d2d2;
-	/*background:url(../imagenes/contenido-inter.png) 0 0 repeat-y;*/
+	/*background:url(../../images/contenido-inter.png) 0 0 repeat-y;*/
 	background:#f2f2f2;
 	padding:20px 36px 10px 36px;
 	float:left;
@@ -229,7 +229,7 @@ ul.listaContenidos li p {
 }
 
 .contenidoBottom {
-	background:url(../imagenes/contenido-bottom.png) 0 0 no-repeat;
+	background:url(../../images/contenido-bottom.png) 0 0 no-repeat;
 	width:783px;
 	height:6px;
 	float:left;
@@ -243,7 +243,7 @@ ul.listaContenidos li p {
 }
 
 .ficherosAdjuntos .contenidoInter ul li{
-	background:url(../imagenes/icono-pdf.png) 0 4px no-repeat;
+	background:url(../../images/icono-pdf.png) 0 4px no-repeat;
 	padding-left:25px;
 	/*padding-top:2px;*/
 	/*height:35px;*/
@@ -276,7 +276,7 @@ ul.listaContenidos li p {
 }
 
 .contenidoInter ul.enlaces_rel li{
-	background:url(../imagenes/icono-enlace.png) 0 3px no-repeat;
+	background:url(../../images/icono-enlace.png) 0 3px no-repeat;
 	padding-left:25px;
 	/*padding-top:2px;*/
 	/*height:35px;*/
@@ -308,7 +308,7 @@ ul.listaContenidos li p {
 	font-size:26px;
 	float:left;
 	padding-bottom:15px;
-	background:url(../imagenes/filete-horizontal.png) 0 bottom repeat-x;
+	background:url(../../images/filete-horizontal.png) 0 bottom repeat-x;
 	margin-bottom:15px;
 	border-bottom:0px;
 }
@@ -365,7 +365,7 @@ ul.galeria li img {
 
 
 .separacionVariosContenidos{
-	/*background:url(../imagenes/lineaPie.png) 0px 0px no-repeat;*/
+	/*background:url(../../images/lineaPie.png) 0px 0px no-repeat;*/
 	width:783px;
 	height:20px;
 	float:left;
@@ -379,7 +379,7 @@ ul.galeria li img {
 	RESPUESTA DE FORO
 =====================================*/
 /*.subcabeceraTabla {
-	background:url(../imagenes/subcabecera-contenido.png) 0 0 no-repeat;
+	background:url(../../images/subcabecera-contenido.png) 0 0 no-repeat;
 	*background:#e2e2e2;
 	width:637px;
 	height:25px;
@@ -412,5 +412,5 @@ ul.galeria li img {
 	width:637px;
 	border-bottom:1px solid #d1d1d1;
 	padding-bottom:20px;
-}/*
+}*/
 

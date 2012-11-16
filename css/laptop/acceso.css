@@ -82,7 +82,7 @@ label {
 	width:100%;
 	text-align:center;
 	float:left;
-	background:url(../imagenes/mensaje-error.png) 50% 0 no-repeat;
+	background:url(../../images/mensaje-error.png) 50% 0 no-repeat;
 	padding-top:60px;
 }
 
@@ -95,11 +95,11 @@ label {
 }
 
 .mensaje_enviado{
-	background:url(../imagenes/mensaje-exito.png) 50% 0 no-repeat;
+	background:url(../../images/mensaje-exito.png) 50% 0 no-repeat;
 	padding-top:100px;
 }
 
 .mensaje_ok{
-	background:url(../imagenes/mensaje-ok.png) 50% 0 no-repeat;
+	background:url(../../images/mensaje-ok.png) 50% 0 no-repeat;
 }
 

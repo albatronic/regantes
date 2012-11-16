@@ -16,7 +16,7 @@
 }
 
 .proyecto1, .proyecto2, .proyecto3 {
-	background:url(../imagenes/fondo-album.png) 0 0 no-repeat;
+	background:url(../../images/fondo-album.png) 0 0 no-repeat;
 	width:205px;
 	overflow:hidden;
 	float:left;

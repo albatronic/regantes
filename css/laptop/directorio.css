@@ -10,7 +10,7 @@ ul#contenedorEnlaces {
 
 
 ul#contenedorEnlaces li  {
-	background:url(../imagenes/icono-pie-lista.png) 0 2px no-repeat;
+	background:url(../../images/icono-pie-lista.png) 0 2px no-repeat;
 	padding-left: 15px;
 	margin-bottom: 30px;
 	width:768px;
@@ -40,7 +40,7 @@ h3 a {
 	color:#4F4F4F;
 	line-height:1.4em;
 	float:left;
-	background:url(../imagenes/icono-tic.png) 0 8px no-repeat;
+	background:url(../../images/icono-tic.png) 0 8px no-repeat;
 }
 
 h3 a:hover {
@@ -104,36 +104,36 @@ ul#contenedorEnlaces li ul.submenu li{
 }
 
 ul#contenedorEnlaces li ul.submenu li.direccion_directorio {
-	background:url(../imagenes/icono-casa.png) 0 0 no-repeat;
+	background:url(../../images/icono-casa.png) 0 0 no-repeat;
 	padding-left:30px;
 }
 
 ul#contenedorEnlaces li ul.submenu li.pagina_directorio {
-	background:url(../imagenes/icono-web.png) 0 0 no-repeat;
+	background:url(../../images/icono-web.png) 0 0 no-repeat;
 	padding-left:30px;
 }
 
 ul#contenedorEnlaces li ul.submenu li.mail_directorio {
-	background:url(../imagenes/icono-sobre.png) 0 0 no-repeat;
+	background:url(../../images/icono-sobre.png) 0 0 no-repeat;
 	padding-left:30px;
 }
 
 ul#contenedorEnlaces li ul.submenu li.info_directorio {
-	background:url(../imagenes/icono-info.png) 0 0 no-repeat;
+	background:url(../../images/icono-info.png) 0 0 no-repeat;
 	padding-left:30px;
 }
 
 ul#contenedorEnlaces li ul.submenu li.telefono_directorio {
-	background:url(../imagenes/icono-tlf.png) 0 0 no-repeat;
+	background:url(../../images/icono-tlf.png) 0 0 no-repeat;
 	padding-left:30px;
 }
 
 ul#contenedorEnlaces li ul.submenu li.movil_directorio {
-	background:url(../imagenes/icono-movil.png) 0 0 no-repeat;
+	background:url(../../images/icono-movil.png) 0 0 no-repeat;
 	padding-left:30px;
 }
 
 ul#contenedorEnlaces li ul.submenu li.fax_directorio {
-	background:url(../imagenes/icono-fax.png) 0 0 no-repeat;
+	background:url(../../images/icono-fax.png) 0 0 no-repeat;
 	padding-left:30px;
 }

@@ -10,7 +10,7 @@ ul#contenedorEnlaces {
 
 
 ul#contenedorEnlaces li  {
-	background:url(../imagenes/icono-pie-lista.png) 0 2px no-repeat;
+	background:url(../../images/icono-pie-lista.png) 0 2px no-repeat;
 	padding-left: 15px;
 	margin-bottom: 30px;
 	width:768px;
@@ -40,7 +40,7 @@ h3 a {
 	color:#4F4F4F;
 	line-height:1.4em;
 	float:left;
-	background:url(../imagenes/icono-tic.png) 0 8px no-repeat;
+	background:url(../../images/icono-tic.png) 0 8px no-repeat;
 }
 
 h3 a:hover {

@@ -7,14 +7,14 @@
 
 	<div id="col_izqda">
             {% for evento in values.eventos.left %}    
-                {{ mariquita.noticia (evento) }} 
+                {{ macro.noticia (evento) }} 
             {% endfor %}
 	</div>
 
 
 	<div id="col_drcha">
             {% for evento in values.eventos.right %}    
-                {{ mariquita.noticia (evento) }}
+                {{ macro.noticia (evento) }}
             {% endfor %}
 	</div>
 	

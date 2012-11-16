@@ -35,3 +35,19 @@
         </a>
 </div>
 {% endmacro %}
+
+
+{# MACRO GALERIA DE IMÁGENES #}
+{# Al igual que en los vídeos, son 3 thumbnails por cada fila. #}
+{# Las imágenes entran en un <div class="proyectosFila"> y cada "proyectosFila" contiene 3 imágenes,
+ con lo que al recibir más thumbnails se genera otro <div class="proyectosFila"> quedando siempre filas de 3 thumbnails o menos, pero nunca más. #}
+{# El array de un proyecto contiene: TÍTULO DE LA GALERÍA, que se muestra bajo el thumbnail, IMAGEN del proyecto, NOMBRE de la imagen, ENLACE a otras imágenes de la galería de fotos. #}
+{# Es importante la variable 'key' porque la imagen 3 y sus múltiplos van a tener estilos diferenes que la imagen 1 y la imagen 2. #}
+{% macro galeria (arrayGaleria, key)%}
+<div class="proyecto{{key}}">
+        <a href="{{arrayGaleria.enlaceImagen}}" rel="gallery" class="pirobox_gall2" title="{{arrayGaleria.nombre}}"><img src="{{arrayGaleria.imagen}}" alt="{{arrayGaleria.nombre}}" title="{{arrayGaleria.nombre}}" /></a>
+        <div class="textoAlbum"><h4>{{arrayGaleria.tituloGaleria}}</h4></div>
+
+                <a href="{{arrayGaleria.enlaceImagen}}" rel="gallery" class="pirobox_gall2" title="{{arrayGaleria.nombre}}"></a>
+</div>
+{% endmacro %}

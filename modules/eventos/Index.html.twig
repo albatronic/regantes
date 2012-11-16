@@ -7,14 +7,14 @@
 
 	<div id="col_izqda">
             {% for evento in values.eventos.left %}    
-                {% include '/Eventos/eventoIndividual.html.twig' %}
+                {{ macro.noticia (evento) }} 
             {% endfor %}
 	</div>
 
 
 	<div id="col_drcha">
             {% for evento in values.eventos.right %}    
-                {% include '/Eventos/eventoIndividual.html.twig' %}
+                {{ macro.noticia (evento) }} 
             {% endfor %}
 	</div>
 	
