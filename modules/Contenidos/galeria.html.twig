@@ -1,0 +1,19 @@
+<div id="carrusel">
+
+	<div class="contenidoTop"></div>
+	<div class="contenidoInter">
+            <h6>Galería</h6>
+            <ul class="galeria">
+                {% for key, galeria in values.galeriaFotos.thumbnail %}
+                    <li {% if values.galeriaFotos.nThumbnail==key %}class="ultimo"{% endif %}>
+                        <a href="{{galeria.enlaceImagen}}" rel="gallery" class="pirobox_gall" title="{{galeria.nombre}}"><img src="{{app.path}}/{{galeria.imagen}}" alt="{{galeria.nombre}}" title="{{galeria.nombre}}" /></a>
+                    </li>
+                {% endfor %} 
+            </ul>
+
+		<a href="{{galeria.enlaceImagen}}" rel="gallery" class="pirobox_gall" title="{{galeria.nombre}}"></a>
+				
+        </div>
+	<div class="contenidoBottom"></div>
+
+</div>

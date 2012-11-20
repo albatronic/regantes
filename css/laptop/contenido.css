@@ -1,4 +1,4 @@
-#contenedorNoticia {
+.contenedorNoticia {
 	width:100%;
 	float:left;
 	*margin-bottom:40px;
@@ -13,7 +13,7 @@
 }
 
 
-#contenedorNoticia h1 {
+.contenedorNoticia h1 {
 	width:100%;
 	float:left;
 	color:#00a2df;
@@ -22,7 +22,7 @@
 	line-height:1.2em;
 }
 
-#contenedorNoticia h2 {
+.contenedorNoticia h2 {
 	width:100%;
 	float:left;
 	color:#94bc28;
@@ -30,7 +30,7 @@
 	margin-bottom:20px;
 }
 
-#contenedorNoticia h3 {
+.contenedorNoticia h3 {
 	font-size:13px;
 	line-height:1.4em;
 	margin-bottom:15px;
@@ -44,7 +44,7 @@
 }
 
 
-#contenedorNoticia h4 {
+.contenedorNoticia h4 {
 	font-size:22px;
 	color:#a4b069;
 	line-height:25px;
@@ -57,7 +57,7 @@
 	margin-top:20px;
 }
 
-#contenedorNoticia h5 {
+.contenedorNoticia h5 {
 	font-size:18px;
 	color:#777;
 	line-height:25px;
@@ -77,18 +77,18 @@ margin-top:20px;
 margin-bottom:40px;
 }
 
-#contenedorNoticia p {
+.contenedorNoticia p {
 	width:100%;
 	float:left;
 	margin:5px 0 25px 0;
 }
 
-#contenedorNoticia p a {
+.contenedorNoticia p a {
 	text-decoration:underline;
 	color:#94bc28;
 }
 
-#contenedorNoticia p a:hover {
+.contenedorNoticia p a:hover {
 	color:#637d1b;
 }
 
@@ -352,7 +352,7 @@ ul.galeria li img {
 /*******************************
    VIDEOS YOUTUBE
 ********************************/
-#contenedorNoticia .videos_youtube {
+.contenedorNoticia .videos_youtube {
 	margin-top:5px;
 	margin-bottom:40px;
 	width:100%;

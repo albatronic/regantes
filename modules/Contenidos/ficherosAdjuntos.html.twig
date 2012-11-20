@@ -1,0 +1,21 @@
+{# Preguntar aquí: Si array de ficherosAdjuntos es mayor que 0, pintar el div class="ficherosAdjuntos", si no, no. #}
+<div class="ficherosAdjuntos"> 
+
+    <div class="contenidoTop"></div>
+    <div class="contenidoInter">
+            <h6>Archivos Adjuntos</h6>
+            <ul>
+                {% for archivo in values.archivosAdjuntos.left %}
+                    <li><a href="{{archivo.enlace}}" title="{{archivo.nombre}}" rel="pop-up">{{archivo.nombre}}</a></li>
+                {% endfor %}
+            </ul>
+
+            <ul class="right">
+                {% for archivo in values.archivosAdjuntos.right %}
+                    <li><a href="{{archivo.enlace}}" title="{{archivo.nombre}}" rel="pop-up">{{archivo.nombre}}</a></li>
+                {% endfor %}
+            </ul>
+    </div> 
+    <div class="contenidoBottom"></div>
+		
+</div>
