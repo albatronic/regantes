@@ -11,7 +11,7 @@
  * @since 10-jun-2011
  *
  */
-class Entity {
+class Entity  {
 
     /**
      * Objeto de conexion a la base de datos
@@ -84,7 +84,7 @@ class Entity {
             $this->conecta();
 
             if (is_resource($this->_dbLink)) {
-                $query = "SELECT * FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE (`{$this->_primaryKeyName}`='{$this->getPrimaryKeyValue()}') AND (Deleted = '0')";
+                $query = "SELECT * FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE `{$this->_primaryKeyName}`='{$this->getPrimaryKeyValue()}'";
 
                 if ($this->_em->query($query)) {
                     $this->setStatus($this->_em->numRows());
@@ -118,7 +118,7 @@ class Entity {
         if (is_resource($this->_dbLink)) {
             // Auditoria
             $this->setModifiedAt(date('Y-m-d H:i:s'));
-            $this->setModifiedBy($_SESSION['USER']['user']['Id']);
+            $this->setModifiedBy($_SESSION['USER']['user']['id']);
 
             // Compongo los valores iterando el objeto
             $values = '';
@@ -157,7 +157,10 @@ class Entity {
         if (is_resource($this->_dbLink)) {
             // Auditoria
             $this->setCreatedAt(date('Y-m-d H:i:s'));
-            $this->setCreatedBy($_SESSION['USER']['user']['Id']);
+            $this->setCreatedBy($_SESSION['USER']['user']['id']);
+            $this->setFechaPublicacion(date('Y-m-d H:i:s'));
+            $this->setVigenteDesde($_SESSION['varEntorno']['VigenteDesde']);
+            $this->setVigenteHasta($_SESSION['varEntorno']['VigenteHasta']);
 
             // Compongo las columnas y los valores iterando el objeto
             $columns = '';
@@ -182,11 +185,10 @@ class Entity {
             } else {
                 $lastId = $this->_em->getInsertId();
                 $this->setPrimaryKeyValue($lastId);
-                $this->setPrimaryKeyMD5(md5($lastId));
-                if ($this->getSortOrder() == '0')
-                    $this->setSortOrder($lastId);
+                $this->setOrden($lastId);
                 $this->save();
             }
+            $this->_em->desConecta();
         }
         unset($this->_em);
         return $lastId;
@@ -198,7 +200,7 @@ class Entity {
      * Hace las validaciones de integridad previas al borrado pero NO
      * hace el borrado físico.
      *
-     * @return boolean
+     * @return bollean
      */
     public function delete() {
 
@@ -209,20 +211,11 @@ class Entity {
 
             if (is_resource($this->_dbLink)) {
                 // Auditoria
-                $fecha = date('Y-m-d H:i:s');
-                $query = "UPDATE `{$this->_dataBaseName}`.`{$this->_tableName}` SET `Deleted` = '1', `DeletedAt` = '{$fecha}', `DeletedBy` = '{$_SESSION['USER']['user']['Id']}' WHERE `{$this->_primaryKeyName}` = '{$this->getPrimaryKeyValue()}'";
+                $this->setDeletedAt(date('Y-m-d H:i:s'));
+                $this->setDeletedBy($_SESSION['USER']['user']['id']);
+                $query = "UPDATE `{$this->_dataBaseName}`.`{$this->_tableName}` SET `Deleted` = '1' WHERE `{$this->_primaryKeyName}` = '{$this->getPrimaryKeyValue()}'";
                 if (!$this->_em->query($query))
                     $this->_errores = $this->_em->getError();
-                else {
-                    // Borrar la eventual url amigable
-                    $url = new CpanUrlAmigables();
-                    $url->borraUrl($this->getClassName(), $this->getPrimaryKeyValue());
-                    unset($url);
-                    // Borrar los eventuales documentos
-                    $doc = new CpanDocs();
-                    $doc->borraDocs($this->getClassName(), $this->getPrimaryKeyValue(), "%");
-                    unset($doc);
-                }
                 $this->_em->desConecta();
             } else
                 $this->_errores = $this->_em->getError();
@@ -251,16 +244,6 @@ class Entity {
                 $query = "DELETE FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE `{$this->_primaryKeyName}` = '{$this->getPrimaryKeyValue()}'";
                 if (!$this->_em->query($query))
                     $this->_errores = $this->_em->getError();
-                else {
-                    // Borrar la eventual url amigable
-                    $url = new CpanUrlAmigables();
-                    $url->borraUrl($this->getClassName(), $this->getPrimaryKeyValue());
-                    unset($url);
-                    // Borrar los eventuales documentos
-                    $doc = new CpanDocs();
-                    $doc->borraDocs($this->getClassName(), $this->getPrimaryKeyValue(), "%");
-                    unset($doc);
-                }
                 $this->_em->desConecta();
             } else
                 $this->_errores = $this->_em->getError();
@@ -272,10 +255,8 @@ class Entity {
     }
 
     /**
-     * Carga las propiedades del objeto con los valores pasados en el array $datos.
-     *
+     * Carga las propiedades del objeto con los valores pasados en el array.
      * Los índices del array deben coincidir con los nombre de las propiedades.
-     *
      * Las propiedades que no tengan correspondencia con elementos del array
      * no serán cargadas.
      *
@@ -284,41 +265,19 @@ class Entity {
      *
      * @param array $datos
      */
-    public function bind(array $datos) {
+    public function bind($datos) {
         foreach ($datos as $key => $value) {
             $this->{"set$key"}($value);
         }
     }
 
     /**
-     * Carga las propiedades del objeto con los valores pasados en el array $valores.
-     *
-     * El array $valores tendrá tantos elmentos como columnas, y para cada elemento
-     * debe haber un subelemento llamado 'default', cuyo valor será el que se cargue.
-     *
-     * Los índices del array deben coincidir con los nombre de las propiedades.
-     *
-     * Las propiedades que no tengan correspondencia con elementos del array
-     * no serán cargadas.
-     *
-     * @param array $valores Array con los valores pon defecto
-     */
-    public function setDefaultValues(array $valores) {
-        foreach ($valores as $key => $values) {
-            $this->{"set$key"}($values['default']);
-        }
-    }
-    
-    /**
      * Valida la información cargada en las propiedades del objeto
      * respecto a las reglas pasadas en el array $rules y que
      * provienen del nodo <validator> del archivo config.yml
      * correspondiente al controller del objeto.
      *
-     * Si alguna columna no cumple la regla, le carga el valor por defecto
-     *
-     * Tambien hace la validación lógica y el número máximo de records y
-     * número máximo de páginas contra la tabla urlamigables
+     * Tambien hace la validación lógica.
      *
      * Carga los array de errores y alertas si procede.
      *
@@ -328,75 +287,54 @@ class Entity {
     public function valida(array $rules) {
         unset($this->_errores);
 
-        if ($rules['GLOBALES']['numMaxRecords'] > 0) {
-            if ($this->getNumberOfRecords() > $rules['GLOBALES']['numMaxRecords'])
-                $this->_errores[] = "Ha superado el número máximo de registros contratado. Por favor, consulte con el webmaster";
-        }
+        foreach ($rules as $key => $value) {
+            switch ($value['type']) {
+                case 'string':
+                    //Validar los items que no pueden ser nulos
+                    $this->{$key} = trim($this->{$key});
+                    if ($this->{$key} == '') {
+                        $this->_errores[] = $value['title'] . ": " . $value['message'];
+                    }
+                    break;
 
-        if ($rules['GLOBALES']['numMaxPages'] > 0) {
-            $urls = new CpanUrlAmigables();
-            if ($urls->getNumberOfRecords() > $rules['GLOBALES']['numMaxPages'])
-                $this->_errores[] = "Ha superado el número máximo de páginas contratado. Por favor, consulte con el webmaster";
-            unset($urls);
-        }
+                case 'integer':
+                case 'decimal':
+                    $valor = $this->{$key};
+                    $minimo = (integer) $value['minimo'];
+                    $maximo = (integer) $value['maximo'];
+                    $controlRango = ($minimo || $maximo);
 
-        unset($rules['GLOBALES']);
-
-        if (count($this->_errores) == 0) {
-            foreach ($rules as $key => $value) {
-
-                // Si no tiene valor, le pongo el de por defecto
-                if ($this->{$key} == '')
-                    $this->{$key} = $value['default'];
-
-                switch ($value['type']) {
-                    case 'string':
-                        //Validar los items que no pueden ser nulos
-                        $this->{$key} = trim($this->{$key});
-                        if ($this->{$key} == '') {
-                            $this->_errores[] = $value['title'] . ": " . $value['message'];
-                        }
-                        break;
-
-                    case 'integer':
-                    case 'decimal':
-                        $valor = $this->{$key};
-                        $minimo = (integer) $value['minimo'];
-                        $maximo = (integer) $value['maximo'];
-                        $controlRango = ($minimo || $maximo);
-
-                        if (is_numeric($valor)) {
-                            if ($controlRango) {
-                                if (($valor < $minimo) || ($valor > $maximo)) {
-                                    $this->_errores[] = $value['title'] . ": Valor fuera del rango (" . $minimo . "-" . $maximo . ")";
-                                }
+                    if (is_numeric($valor)) {
+                        if ($controlRango) {
+                            if (($valor < $minimo) || ($valor > $maximo)) {
+                                $this->_errores[] = $value['title'] . ": Valor fuera del rango (" . $minimo . "-" . $maximo . ")";
                             }
-                        } else {
-                            $this->_errores[] = $value['title'] . ": " . $valor . " " . $value['message'];
                         }
-                        break;
+                    } else {
+                        $this->_errores[] = $value['title'] . ": " . $valor . " " . $value['message'];
+                    }
+                    break;
 
-                    case 'date':
-                        break;
+                case 'date':
+                    break;
 
-                    case 'datetime':
-                        break;
+                case 'datetime':
+                    break;
 
-                    case 'cif':
-                        break;
+                case 'cif':
+                    break;
 
-                    case 'email':
-                        $email = new Mail();
-                        if (!$email->compruebaEmail($this->{$key})) {
-                            $this->_errores[] = $value['title'] . ": No cumple las reglas de un email correcto.";
-                        }
-                        unset($email);
-                        break;
-                }
+                case 'email':
+                    $email = new Mail();
+                    if (!$email->compruebaEmail($this->{$key})) {
+                        $this->_errores[] = $value['title'] . ": No cumple las reglas de un email correcto.";
+                    }
+                    unset($email);
+                    break;
             }
-
-            $this->validaLogico();
         }
+
+        $this->validaLogico();
 
         return ( count($this->_errores) == 0 );
     }
@@ -409,10 +347,7 @@ class Entity {
      * Este método lo debe implementar la entidad que lo necesite
      */
     protected function validaLogico() {
-        if ($this->BelongsTo == $this->getPrimaryKeyValue()) {
-            $this->BelongsTo = '';
-            $this->_alertas[] = "El objeto no puede pertenecer a el mismo";
-        }
+
     }
 
     /**
@@ -428,24 +363,20 @@ class Entity {
     protected function validaBorrado() {
         unset($this->_errores);
 
-        if ($this->IsDefault)
-            $this->errores[] = "No se puede eliminar. Es un valor predeterminado";
-
-        if (count($this->errores) == 0) {
-            // Validacion de integridad referencial respecto a entidades padre
-            if (is_array($this->_parentEntities)) {
-                foreach ($this->_parentEntities as $entity) {
-                    $entidad = new $entity['ParentEntity']();
-                    $condicion = $entity['ParentColumn'] . "='" . $this->$entity['SourceColumn'] . "'";
-                    $rows = $entidad->cargaCondicion($entity['ParentColumn'], $condicion);
-                    $n = count($rows);
-                    if ($n > 0)
-                        $this->_errores[] = "Imposible eliminar. Hay {$n} relaciones con {$entity['ParentEntity']}";
-                }
+        // Validacion de integridad referencial respecto a entidades padre
+        if (is_array($this->_parentEntities)) {
+            foreach ($this->_parentEntities as $entity) {
+                $entidad = new $entity['ParentEntity']();
+                $condicion = $entity['ParentColumn'] . "='" . $this->$entity['SourceColumn'] . "'";
+                $rows = $entidad->cargaCondicion($entity['ParentColumn'], $condicion);
+                $n = count($rows);
+                if ($n > 0)
+                    $this->_errores[] = "Imposible eliminar. Hay {$n} relaciones con {$entity['ParentEntity']}";
             }
         }
 
         // Validacion de integridad referencial respecto a entidades hijas
+
 
         return (count($this->_errores) == 0);
     }
@@ -454,8 +385,8 @@ class Entity {
      * Carga datos en un array en funcion de una condicion where y orderBy
      *
      * @param string $columnas Relacion de las columnas seperadas por coma
-     * @param string $condicion Condicion de filtrado que se utiliza en la clausula where (sin la cláusula WHERE)
-     * @param string $orderBy Ordenacion, debe incluir la/s columna/s y el tipo ASC/DESC (sin la cláusula ORDER BY)
+     * @param string $condicion Condicion de filtrado que se utiliza en la clausula where (sin WHERE)
+     * @param string $orderBy Ordenacion, debe incluir la/s columna/s y el tipo ASC/DESC (sin ORDER BY)
      * @param boolean $showDeleted Devolver o no los registros marcados como borrados, por defecto no se devuelven
      * @return array $rows Array con las columnas devueltas
      */
@@ -487,21 +418,14 @@ class Entity {
      *
      * @param string $columna El nombre de la columna
      * @param variant $valor El valor a buscar
-     * @param boolean $showDeleted Devolver o no los registros marcados como borrados, por defecto no se devuelven
      * @return this El objeto encontrado
      */
-    public function find($columna, $valor, $showDeleted = FALSE) {
-
-        $condicion = "({$columna} = '{$valor}')";
-
-        if ($showDeleted == FALSE)
-            $condicion .= " AND (Deleted = '0')";
-
+    public function find($columna, $valor) {
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
 
-            $query = "SELECT {$this->_primaryKeyName} FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE ({$condicion})";
+            $query = "SELECT {$this->_primaryKeyName} FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE ({$columna} = '{$valor}')";
             $this->_em->query($query);
             $this->setStatus($this->_em->numRows());
             $rows = $this->_em->fetchResult();
@@ -514,8 +438,6 @@ class Entity {
 
     /**
      * Devuelve un array con todos los registros de la entidad
-     *
-     * No devuelve los objetos marcados como borrados
      *
      * Cada elemento tiene la primarykey y el valor de $column
      *
@@ -535,15 +457,14 @@ class Entity {
      * @param boolean $default Si se añade o no el valor 'Indique Valor'
      * @return array Array de valores Id, Value
      */
-    public function fetchAll($column = '', $default = TRUE) {
-
+    public function fetchAll($column = '', $default = true) {
         if ($column == '')
             $column = $this->getPrimaryKeyName();
 
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
-            $query = "SELECT " . $this->getPrimaryKeyName() . " as Id, $column as Value FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE (Deleted = '0') ORDER BY $column ASC";
+            $query = "SELECT " . $this->getPrimaryKeyName() . " as Id, $column as Value FROM `{$this->_dataBaseName}`.`{$this->_tableName}` ORDER BY $column ASC";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $this->setStatus($this->_em->numRows());
@@ -551,10 +472,8 @@ class Entity {
             unset($this->_em);
         }
 
-        if ($default == TRUE) {
+        if ($default == TRUE)
             $rows[] = array('Id' => '', Value => ':: Indique un Valor');
-            sort($rows);
-        }
 
         return $rows;
     }
@@ -564,11 +483,11 @@ class Entity {
      *
      * @return mixed el valor de la primary key de menor valor
      */
-    public function getFirstId() {
+    public function getFirst() {
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
-            $query = "SELECT `{$this->getPrimaryKeyName()}` FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE Deleted = '0' ORDER BY `{$this->getPrimaryKeyName()}` ASC Limit 1";
+            $query = "SELECT `{$this->getPrimaryKeyName()}` FROM `{$this->_dataBaseName}`.`{$this->_tableName}` ORDER BY `{$this->getPrimaryKeyName()}` ASC Limit 1";
             $this->_em->query($query);
             $row = $this->_em->fetchResult();
             $this->setStatus($this->_em->numRows());
@@ -576,16 +495,6 @@ class Entity {
             unset($this->_em);
             return($row[0][$this->getPrimaryKeyName()]);
         }
-    }
-
-    /**
-     * Localiza el primer registro en orden ascendente segun la Primary Key
-     *
-     * @return Entity El objeto cuya primaryKey es menor
-     */
-    public function getFirstObject() {
-        $clase = get_class($this);
-        return new $clase($this->getFirstId());
     }
 
     /**
@@ -593,11 +502,11 @@ class Entity {
      *
      * @return mixed el valor de la primary key de mayor valor
      */
-    public function getLastId() {
+    public function getLast() {
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
-            $query = "SELECT `{$this->getPrimaryKeyName()}` FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE Deleted = '0' ORDER BY `{$this->getPrimaryKeyName()}` DESC Limit 1";
+            $query = "SELECT `{$this->getPrimaryKeyName()}` FROM `{$this->_dataBaseName}`.`{$this->_tableName}` ORDER BY `{$this->getPrimaryKeyName()}` DESC Limit 1";
             $this->_em->query($query);
             $row = $this->_em->fetchResult();
             $this->setStatus($this->_em->numRows());
@@ -608,108 +517,24 @@ class Entity {
     }
 
     /**
-     * Localiza el ultimo registro en orden ascendente segun la Primary Key
-     *
-     * @return Entity El objeto cuya primaryKey es mayor
-     */
-    public function getLastObject() {
-        $clase = get_class($this);
-        return new $clase($this->getLastId());
-    }
-
-    /**
-     * Devuelve el número de registros activos (deleted=0)
-     * que tiene la entidad
-     *
-     * @param string $criterio Clausa para el WHERE para poder contar un subconjunto de registros
-     * @return integer
-     */
-    public function getNumberOfRecords($criterio = '1') {
-        $this->conecta();
-
-        if (is_resource($this->_dbLink)) {
-            $query = "SELECT COUNT({$this->getPrimaryKeyName()}) as NumeroDeRegistros FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE ({$criterio}) AND (Deleted = '0')";
-            $this->_em->query($query);
-            $row = $this->_em->fetchResult();
-            $this->_em->desConecta();
-            unset($this->_em);
-        }
-
-        return $row[0]['NumeroDeRegistros'];
-    }
-
-    /**
      * Devuelve un array con objetos documentos asociados
      * a la entidad e id de entidad en curso
      *
-     * @param string $tipo El tipo de documento, se admite '%'
-     * @param string $criterio Expresión lógica a incluir en el criterio de filtro
-     * @param string $orderCriteria El criterio de ordenación
      * @return array Array de objetos documentos
      */
-    public function getDocuments($tipo = 'image%', $criterio = '1', $orderCriteria = 'SortOrder ASC') {
-
-        $docs = new CpanDocs();
-
-        $arrayDocs = $docs->getDocs($this->getClassName(), $this->getPrimaryKeyValue(), $tipo, $criterio, $orderCriteria);
-        unset($docs);
-
-        return $arrayDocs;
+    public function getDocuments($tipo='images') {
+        $docs = new Documents($this->getClassName(), $this->getPrimaryKeyValue(), $tipo);
+        return $docs->getDocuments();
     }
 
     /**
      * Devuelve el número de documentos asociados a la entidad
      *
-     * @param string $tipo El tipo de documento, se admite '%'
-     * @param string $criterio Expresión lógica a incluir en el criterio de filtro
      * @return integer El número de documentos
      */
-    public function getNumberOfDocuments($tipo = 'image%', $criterio = '1') {
-
-        $docs = new CpanDocs();
-
-        $nDocs = $docs->getNumberOfDocs($this->getClassName(), $this->getPrimaryKeyValue(), $tipo, $criterio);
-        unset($docs);
-
-        return $nDocs;
-    }
-
-    /**
-     * Generar un árbol genealógico con las entidades hijas
-     * de la entidad cuyo id es $idPadre
-     *
-     * @param integer $idOrigen El id de la entidad origen
-     * @param integer $idPadre El id de la entidad padre
-     * @return array Array con los objetos hijos
-     */
-    public function getChildEntities($idOrigen, $idPadre) {
-
-        $padre = new $this($idPadre);
-
-
-        $arbol = array(
-            'id' => $idPadre,
-            'titulo' => $padre->__tostring(),
-            'hijos' => array(),
-        );
-        /**
-          $arbol = array(
-          'padre' => $padre,
-          );
-         *
-         */
-        $hijos = $padre->cargaCondicion('Id, Titulo', "BelongsTo='{$idPadre}'", "SortOrder ASC");
-
-        foreach ($hijos as $key => $hijo) {
-            if ($hijo['Id'] != $idOrigen) {
-                $nietos = $padre->getChildEntities($idOrigen, $hijo['Id']);
-                if (count($nietos))
-                    $arbol['hijos'][] = $nietos;
-            }
-        }
-        unset($padre);
-
-        return $arbol;
+    public function getNumberOfDocuments($tipo='images') {
+        $docs = new Documents($this->getClassName(), $this->getPrimaryKeyValue(), $tipo);
+        return $docs->getNumberOfDocuments();
     }
 
     /**
@@ -726,30 +551,6 @@ class Entity {
                 $values[$key] = $value;
         }
         return $values;
-    }
-
-    /**
-     * Devuelve con los nombres de las propiedades de la entidad.
-     *
-     * No devuelve las propiedades que empiezan por guión bajo "_"
-     *
-     * El array es del tipo ('Id'=> ..., 'Value'=>....)
-     *
-     * @return array Array con los valores de las propiedades de la entidad
-     */
-    public function getColumnsNames() {
-
-        $columns = array();
-
-        foreach ($this as $key => $value) {
-            if (substr($key, 0, 1) != "_")
-                $columns[] = array(
-                    'Id' => $key,
-                    'Value' => $key
-                );
-        }
-
-        return $columns;
     }
 
     /**
@@ -841,11 +642,7 @@ class Entity {
      * @return string Nombre de la conexión
      */
     public function getConectionName() {
-
-        if ($this->_conectionName == '') {
-            $this->_conectionName = $_SESSION['project']['conection'];
-        }
-        return $this->_conectionName;
+        return str_replace("#", $_SESSION['emp'], $this->_conectionName);
     }
 
     /**

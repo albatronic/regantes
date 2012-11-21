@@ -22,9 +22,9 @@ config:
   conections:
     regantes:
       dbEngine: mysql
-      host: 192.168.1.101
-      user: root
-      password: Peces2010
+      host: localhost
+      user: regantes
+      password: regantes
       database: regantes
 
   # MOTOR DE ENVIO DE CORREOS

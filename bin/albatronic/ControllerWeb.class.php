@@ -67,150 +67,76 @@ class ControllerWeb {
          * PROCESOS PARA AUTOMATIZAR VIA CRON: BORRAR VISITAS NO HUMANAS, WS LOCALIZACION IPS, ETC
          * VOLCADOS DE LOGS
          */
+        // LECTURA DE METATAGS      
 
-
-        // LECTURA DE METATAGS
-
-        /* MENÚ DESPLEGABLE */
-         $this->values['menuDesplegable'][] = array(
-            'seccion' => 'Enlaces',
-            'subseccion' => array(
-                'Sub pepito' => 'http://asdfasdf',
-                'Sub pepito2' => 'http://asdfasdf',
-                'Sub pepito3' => 'http://asdfasdf',
-            )
-           );
-         
-         $this->values['menuDesplegable'][] = array(
-            'seccion' => 'Contenido3',
-            'url' => 'http://adfadf', 
-            ); 
-          
-          $this->values['menuDesplegable'][] = array(
-            'seccion' => 'Contenido4',
-            'subseccion' => array(
-                'Sub pepito7' => 'http://asdfasdf',
-                'Sub pepito8' => 'http://asdfasdf',
-                'Sub pepito9' => 'http://asdfasdf',
-                'Sub pepito10' => 'http://asdfasdf',
-                'Sub pepito11' => 'http://asdfasdf',
-            )
-           );          
-       
-          
         /* RUTA // CONSTRUIR AQUÍ EL ARRAY DE LAS RUTAS */
-         $this->values['ruta'] = array(
-            'seccion1' => array (
+        $this->values['ruta'] = array(
+            'seccion1' => array(
                 'nombre' => 'Inicio',
                 'url' => 'app.path',
             ),
-            'seccion2' => array (
+            'seccion2' => array(
                 'nombre' => 'Contenido Actual',
                 'url' => ''
             ),
+        );
 
-           );          
-          
-         
+
         /* MENU CABECERA */
-         $this->values['menuCabecera'][] = array (
-            'nombre' => 'INICIO',
-            'url' => '',
-             'controller' => 'Index',
-         );
+        $menu = new GconSecciones();
+        $filtro = "MostrarEnMenu1='1' AND Publish='1'";
+        $rows = $menu->cargaCondicion("Id", $filtro, "OrdenMenu1 ASC Limit 0,6");
+        unset($menu);
+        foreach ($rows as $value) {
+            $seccion = new GconSecciones($value['Id']);
+            $this->values['menuCabecera'][] = array(
+                'nombre' => $seccion->getEtiquetaWeb1(),
+                'url' => $seccion->getHref(),
+                'controller' => $seccion->getObjetoUrlAmigable()->getController(),
+            );
+        }
+        unset($seccion);
 
-         $this->values['menuCabecera'][] = array (
-            'nombre' => 'Enlaces',
-            'url' => 'enlaces',
-             'controller' => 'Enlaces',
-             
-         );
-         
-         $this->values['menuCabecera'][] = array (
-            'nombre' => 'NOTICIAS',
-            'url' => 'Noticias',
-             'controller' => 'Noticias',
-             
-         );
-         
-         $this->values['menuCabecera'][] = array (
-            'nombre' => 'EVENTOS',
-            'url' => 'Eventos',
-             'controller' => 'Eventos',
-             
-         );
-         
-         $this->values['menuCabecera'][] = array (
-            'nombre' => 'GALERIA',
-            'url' => 'Galeria',
-             'controller' => 'Galeria',
-            
-         ); 
-         
-         $this->values['menuCabecera'][] = array (
-            'nombre' => 'VÍDEOS',
-            'url' => 'Videos',
-             'controller' => 'Videos',
-             
-         ); 
-         
-         $this->values['menuCabecera'][] = array (
-            'nombre' => 'CONTACTO',
-            'url' => 'Contacto',
-             'controller' => 'Contacto',
-             
-         );          
+        /* MENÚ DESPLEGABLE */
+        $menu = new GconSecciones();
+        $filtro = "MostrarEnMenu2='1' AND BelongsTo='0' AND Publish='1'";
+        $rows = $menu->cargaCondicion("Id", $filtro, "OrdenMenu2 ASC");
+        unset($menu);
+        foreach ($rows as $value) {
+            $seccion = new GconSecciones($value['Id']);
+            $this->values['menuDesplegable'][] = array(
+                'seccion' => $seccion->getEtiquetaWeb2(),
+                'url' => $seccion->getHref(),
+                'subseccion' => $seccion->getArraySubsecciones(),
+            );
+        }
+        unset($seccion);
 
-         
-        /* MENU PIE */
-         $this->values['menuPie'][left][] = array (
-            'nombre' => 'Inicio',
-            'url' => '',
-             'controller' => 'Index',
-         );
+        /* MENU PIE LEFT */
+        $menu = new GconSecciones();
+        $filtro = "MostrarEnMenu3='1' AND Publish='1'";
+        $rows = $menu->cargaCondicion("*", $filtro, "OrdenMenu3 ASC");
+        unset($menu);
+        foreach ($rows as $value) {
+            $this->values['menuPie']['left'][] = array(
+                'nombre' => $value['EtiquetaWeb3'],
+                'url' => $value['UrlFriendly'],
+                'controller' => $value['Controller'],
+            );
+        }
 
-         $this->values['menuPie'][left][] = array (
-            'nombre' => 'Enlaces',
-            'url' => 'enlaces',
-             'controller' => 'Enlaces',
-             
-         );
-         
-         $this->values['menuPie'][left][] = array (
-            'nombre' => 'Noticias',
-            'url' => 'Noticias',
-             'controller' => 'Noticias',
-             
-         );
-         
-         $this->values['menuPie'][left][] = array (
-            'nombre' => 'Eventos',
-            'url' => 'Eventos',
-             'controller' => 'Eventos',
-             
-         );
-         
-         $this->values['menuPie'][right][] = array (
-            'nombre' => 'Galería',
-            'url' => 'Galeria',
-             'controller' => 'Galeria',
-            
-         ); 
-         
-         $this->values['menuPie'][right][] = array (
-            'nombre' => 'Vídeos',
-            'url' => 'Videos',
-             'controller' => 'Videos',
-             
-         ); 
-         
-         $this->values['menuPie'][right][] = array (
-            'nombre' => 'Contacto',
-            'url' => 'Contacto',
-             'controller' => 'Contacto',
-             
-         );            
-        
+        /* MENU PIE RIGHT */
+        $menu = new GconSecciones();
+        $filtro = "MostrarEnMenu4='1' AND Publish='1'";
+        $rows = $menu->cargaCondicion("*", $filtro, "OrdenMenu4 ASC");
+        unset($menu);
+        foreach ($rows as $value) {
+            $this->values['menuPie']['right'][] = array(
+                'nombre' => $value['EtiquetaWeb4'],
+                'url' => $value['UrlFriendly'],
+                'controller' => $value['Controller'],
+            );
+        }
     }
 
     public function IndexAction() {
