@@ -9,13 +9,7 @@
 	<h1>Galería de Vídeos</h1>
         
         <div id="mosaicoProyectos"> 
-            {#
-            <div class="proyectosFila">
-                {% for key, video in values.galeriaVideos.thumbnail %}        
-                    {{ macro.video (video, key) }}
-                {% endfor %}           
-            </div>
-            #}
+
 
             {% for key, video in values.galeriaVideos.thumbnail %}
                 
@@ -34,6 +28,6 @@
                 
             {% endfor %}
 
-	</div> 
-    </div>	
+            </div> 
+    </div>    
 {% endblock %}

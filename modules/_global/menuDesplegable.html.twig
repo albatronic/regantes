@@ -12,11 +12,14 @@
         {% endif %}
         </h3>
         
+        {% if titulo!="" %}
         <ul class="menu_body">
          {% for titulo, url in menu.subseccion %}   
             <li><a href="{{url}}" title="{{titulo}}">{{titulo}}</a></li>
          {% endfor %}
         </ul>
+        {% endif %}
+        
         {% endfor %}
         
     </div>

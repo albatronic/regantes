@@ -162,6 +162,22 @@ class ControllerWeb {
          );          
 
          
+         $this->values['menuCabecera'][] = array (
+            'nombre' => 'otro',
+            'url' => 'Contacto',
+             'controller' => 'Contacto',
+             
+         );          
+
+         
+         $this->values['menuCabecera'][] = array (
+            'nombre' => 'este es el nombre de un item',
+            'url' => 'Contacto',
+             'controller' => 'Contacto',
+             
+         );          
+         
+         
         /* MENU PIE */
          $this->values['menuPie'][left][] = array (
             'nombre' => 'Inicio',
