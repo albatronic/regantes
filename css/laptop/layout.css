@@ -293,6 +293,9 @@ p.descripcion {
 
 #nav {
 	float:right;
+        width: 790px;
+        height: 47px;
+        overflow: hidden;
 }
 
 #nav li{
@@ -301,6 +304,7 @@ p.descripcion {
 	text-transform:uppercase;
 	font-size:14px;
 	color:#666;
+
 }
 
 #nav li a{
