@@ -1,26 +1,14 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of IndexController
+ * Description of OldBrowserController
  *
- * @author Administrador
+ * @author Sergio Pérez <sergio.perez@albatronic.com>
+ * @copyright ÁRTICO ESTUDIO
+ * @date 06-nov-2012
  */
-class OldBrowserController extends ControllerWeb {
+class OldBrowserController extends ControllerProject {
 
     var $entity = "OldBrowser";
-    
-    public function IndexAction() {
-        
-        return array(
-            "template" => $this->entity . "/Index.html.twig",
-            "values" => $this->values,
-        );
-    }
 
 }
 

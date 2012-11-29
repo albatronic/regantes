@@ -1,26 +1,16 @@
 <?php
 
 /**
- * Description of IndexController
+ * Description of PoliticaController
  *
  * @author Sergio Pérez <sergio.perez@albatronic.com>
  * @copyright ÁRTICO ESTUDIO
- * @date 06-nov-2012
+ * @date 26-nov-2012
  *
  */
-class PoliticaController extends ControllerWeb {
+class PoliticaController extends ControllerProject {
 
     protected $entity = "Politica";
-
-    public function IndexAction() {
-
-                
-        
-        return array(
-            'template' => $this->entity . '/Index.html.twig',
-            'values' => $this->values
-        );
-    }
 
 }
 

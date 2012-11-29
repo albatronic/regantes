@@ -589,17 +589,8 @@ class EntityComunes extends Entity {
         $this->NumberVisits = $NumberVisits;
     }
 
-    /**
-     * Devuelve el número de visitas que ha tenido este objeto
-     * El valor está en la entidad CpanUrlFriendlys
-     *
-     * @return integer El número de visitas
-     */
     public function getNumberVisits() {
-        $url = new CpanUrlAmigables();
-        $rows = $url->cargaCondicion("NumberVisits", "Entity='{$this->getClassName()}' AND IdEntity='{$this->getPrimaryKeyValue()}'");
-        unset($url);
-        return $rows[0]['NumberVisits'];
+        return $this->NumberVisits;
     }
 
     public function setMetatagTitle($MetatagTitle) {

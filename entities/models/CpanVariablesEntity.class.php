@@ -34,7 +34,7 @@ class CpanVariablesEntity extends EntityComunes {
 	 * Nombre de la conexion a la BD
 	 * @var string
 	 */
-	protected $_conectionName = 'regantes';
+	protected $_conectionName = '';
 	/**
 	 * Nombre de la tabla física
 	 * @var string

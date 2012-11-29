@@ -8,19 +8,9 @@
  * @date 06-nov-2012
  *
  */
-class AvisoLegalController extends ControllerWeb {
+class AvisoLegalController extends ControllerProject {
 
     protected $entity = "AvisoLegal";
-
-    public function IndexAction() {
-
-                
-        
-        return array(
-            'template' => $this->entity . '/Index.html.twig',
-            'values' => $this->values
-        );
-    }
 
 }
 

@@ -48,6 +48,28 @@
         <a href="{{arrayGaleria.enlaceImagen}}" rel="gallery" class="pirobox_gall2" title="{{arrayGaleria.nombre}}"><img src="{{arrayGaleria.imagen}}" alt="{{arrayGaleria.nombre}}" title="{{arrayGaleria.nombre}}" /></a>
         <div class="textoAlbum"><h4>{{arrayGaleria.tituloGaleria}}</h4></div>
 
-                <a href="{{arrayGaleria.enlaceImagen}}" rel="gallery" class="pirobox_gall2" title="{{arrayGaleria.nombre}}"></a>
+        <a href="{{arrayGaleria.enlaceImagen}}" rel="gallery" class="pirobox_gall2" title="{{arrayGaleria.nombre}}"></a>
 </div>
+{% endmacro %}
+
+{#
+    MACRO PARA CREAR ENLACES HREF
+
+    @param string titulo    El texto que se mostrará para el enlace y en el title
+    @param string url       La url donde apunta el link
+    @param boolean esPopup  Si se abre en nueva ventana o no
+    @param string id        El id (opcional)
+    @param string claseCss  La clase css (opcional)
+#}
+{% macro link (titulo, url, esPopup, id, claseCss) %}
+        {% if url == "" %} 
+            {{titulo}}
+        {% else %}
+            <a href="{{url}}" 
+               title="{{titulo}}" 
+               {% if esPopup == "1" %} rel="pop-up" {% endif %} 
+               {% if id != "" %} id="{{id}}" {% endif %}               
+               {% if claseCss != "" %} class="{{claseCss}}" {% endif %}
+               >{{titulo}}</a>
+        {% endif %}
 {% endmacro %}

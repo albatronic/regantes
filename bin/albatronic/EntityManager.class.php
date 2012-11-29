@@ -6,24 +6,22 @@
  * config/config.xml O EN EL INDICADO EN EL SEGUNDO PARAMETRO DEL CONSTRUCTOR
  *
  * SE ADMITEN DIFERENTES MOTORES DE BASE DE DATOS. ACTUALMENTE ESTAN
- * IMPLEMENTADOS PARA MYSQL Y MSSQL.
+ * IMPLEMENTADOS PARA MYSQL, MSSQL E INTERBASE.
  *
  * SI LA CONEXION ES EXITOSA $dbLink TENDRA VALOR,
  * EN CASO CONTRARIO ALMACENA EL MENSAJE DE ERROR PRODUCIDO QUE SE
  * PUEDE CONOCER CON EL METODO getError()
  */
-
-
-
 class EntityManager {
 
     /**
      * Fichero de configuracion de conexiones por defecto
      * Es el fichero que se utilizará si no se indica otro en la
      * llamada al constructor.
-     * @var
+     * @var string
      */
     private $file = "config/config.yml";
+
     /**
      * Link a la conexión establecida
      * @var Link conexion DB
@@ -36,6 +34,7 @@ class EntityManager {
     private $dataBase;
     private $result = null;
     private $affectedRows = null;
+
     /**
      * Guardar el eventual error producido en la conexión
      * @var array
@@ -44,33 +43,63 @@ class EntityManager {
 
     /**
      * Estable la conexion a la base de datos.
-     * Abre el fichero de configuracion '$fileConfig', o en su defecto config/config.xml
+     * Abre el fichero de configuracion '$fileConfig', o en su defecto config/config.yml
      * y lee el nodo $conection donde se definen los parametros de conexion.
+     * 
+     * Si no se indica valor para el parámetro $conection, se tomarán los valores
+     * de la primera conexión definida en el archivo de configuración. De esta forma, y en el caso
+     * de trabajar con una sola base de datos, no es necesario indicar el nombre de conexión para
+     * cada tabla en el modelo de datos.
      *
+     * En entorno de desarrollo los parámetros de conexión se fuerzan a:
+     *
+     *      user    =   $conection
+     *      password=   $conection
+     *      dataBase=   $conection
+     *
+     * 
      * Si la conexion es exitosa, getDblink() devolvera valor y si no getError() nos indica
      * el error producido.
      *
-     * @param string $conection Nombre de la conexion
-     * @param string $fileConfig Nombre del fichero de configuracion
+     * @param string $conection Nombre de la conexion, opcional
+     * @param string $fileConfig Nombre del fichero de configuracion, opcional
      */
-    public function __construct($conection, $fileConfig='') {
+    public function __construct($conection = '', $fileConfig = '') {
+
         if ($fileConfig == '')
             $fileConfig = $_SERVER['DOCUMENT_ROOT'] . $_SESSION['appPath'] . "/" . $this->file;
 
         if (file_exists($fileConfig)) {
             $yaml = sfYaml::load($fileConfig);
 
+            // Si no se ha indicado el nombre de la conexión, se tomara la primera
+            if ($conection == '')
+                list($conection, $nada) = each($yaml['config']['conections']);
+
             $params = $yaml['config']['conections'][$conection];
+
             $this->dbEngine = $params['dbEngine'];
             $this->host = $params['host'];
-            $this->user = $params['user'];
-            $this->password = $params['password'];
-            $this->dataBase = $params['database'];
+
+            if ($_SESSION['EntornoDesarrollo']) {
+                // En entorno de desarrollo se fuerzan los valores
+                // al nombre de la conexión
+                $this->user = $conection;
+                $this->password = $conection;
+                $this->dataBase = $conection;
+            } else {
+                // En entorno de producción se respetan los valores
+                // indicados en el config/config.yml
+                $this->user = $params['user'];
+                $this->password = $params['password'];
+                $this->dataBase = $params['database'];
+            }
             $this->conecta();
         } else {
             $this->error[] = "EntityManager []: ERROR AL LEER EL ARCHIVO DE CONFIGURACION. " . $fileConfig . " NO EXISTE\n";
         }
     }
+
 
     /**
      * Conecta a la base de datos con los parametros de conexión indicados

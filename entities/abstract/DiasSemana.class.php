@@ -12,10 +12,10 @@ class DiasSemana extends Tipos {
     protected $tipos = array(
         array('Id' => '1', 'Value' => 'Lunes'),
         array('Id' => '2', 'Value' => 'Martes'),
-        array('Id' => '3', 'Value' => 'Miércoles'),
+        array('Id' => '3', 'Value' => 'Miercoles'),
         array('Id' => '4', 'Value' => 'Jueves'),
         array('Id' => '5', 'Value' => 'Viernes'),
-        array('Id' => '6', 'Value' => 'Sábado'),
+        array('Id' => '6', 'Value' => 'Sabado'),
         array('Id' => '7', 'Value' => 'Domingo'),
     );
 }

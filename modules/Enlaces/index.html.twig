@@ -1,0 +1,22 @@
+{% extends layout %}
+
+{% block title parent() ~ " - Inicio" %}
+
+
+{% block contenido %}
+<div class="col_drcha">
+    {% include '_global/ruta.html.twig' %}
+        <h1>Enlaces de interés</h1>
+        <div class="contenedor_100">
+            <ul id="contenedorEnlaces">
+                {% for enlace in values.enlacesInteres %}
+                    <li>
+                        <h3>{% if enlace.seccion=="" %}{{enlace.titulo}}{% else %}<a href="{{app.path}}/{{enlace.seccion}}" title="{{enlace.titulo}}">{{enlace.titulo}}</a>{% endif %}</h3>
+                        <h4><a href="{{enlace.url}}" title="{{enlace.titulo}}" rel="pop-up">{{enlace.nombre}}</a></h4>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+{% endblock %}

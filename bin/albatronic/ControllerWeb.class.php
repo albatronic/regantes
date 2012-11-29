@@ -48,101 +48,38 @@ class ControllerWeb {
         // Cargar lo que viene en el request
         $this->request = $request;
 
-        // Cargar la configuracion del modulo (modules/moduloName/config.yml)
-        $this->form = new Form($this->entity);
+        // Borrar la tabla temporal de visitas
+        if (!$_SESSION['borradoTemporalVisitas']) {
+            $temp = new VisitVisitasTemporal();
+            $temp->borraTemporal();
+            unset($temp);
+        }
 
+        // Control de visitas UNICAS a la url amigable
+        $temp = new VisitVisitasTemporal();
+        $temp->anotaVisitaUrlUnica($this->request['IdUrlAmigable']);
+        unset($temp);
 
+        // Anotar en el registro de visitas
+        $visita = new VisitVisitas();
+        $visita->anotaVisita($this->request);
+        unset($visita);
+        
         /**
-         * CONTROL DE VISITAS
-         *
-         * 1. TABLA DE CONTROL DE SESION (sesion, entity, identity, fecha)
-         * 2. SE BORRAN (SI NO SE HAN BORRADO ANTES, VAR SESISON DE BORRADO)
-         *    LOS REGISTROS DE LA TABLA QUE SEAN ANTERIORES A HOY
-         * 3. COMPRUEBO QUE ES UNICO EL TRIO SESION, ENTIDAD, ID.; SIN NO HAGO INSERT
-         * 4. INCREMENTAR EL N. VISITAS EN URL AMIGABLES ( SI HE HECHO EL INSERT)
-         *
-         * 5. CONTROL DETALLE VISITA APOYANDONOS EN LA TABLA ITINERARIO VISITAS
-         *
          *
          * PROCESOS PARA AUTOMATIZAR VIA CRON: BORRAR VISITAS NO HUMANAS, WS LOCALIZACION IPS, ETC
          * VOLCADOS DE LOGS
+         * 
          */
-        // LECTURA DE METATAGS      
-
-        /* RUTA // CONSTRUIR AQUÍ EL ARRAY DE LAS RUTAS */
-        $this->values['ruta'] = array(
-            'seccion1' => array(
-                'nombre' => 'Inicio',
-                'url' => 'app.path',
-            ),
-            'seccion2' => array(
-                'nombre' => 'Contenido Actual',
-                'url' => ''
-            ),
-        );
-
-
-        /* MENU CABECERA */
-        $menu = new GconSecciones();
-        $filtro = "MostrarEnMenu1='1' AND Publish='1'";
-        $rows = $menu->cargaCondicion("Id", $filtro, "OrdenMenu1 ASC Limit 0,6");
-        unset($menu);
-        foreach ($rows as $value) {
-            $seccion = new GconSecciones($value['Id']);
-            $this->values['menuCabecera'][] = array(
-                'nombre' => $seccion->getEtiquetaWeb1(),
-                'url' => $seccion->getHref(),
-                'controller' => $seccion->getObjetoUrlAmigable()->getController(),
-            );
-        }
-        unset($seccion);
-
-        /* MENÚ DESPLEGABLE */
-        $menu = new GconSecciones();
-        $filtro = "MostrarEnMenu2='1' AND BelongsTo='0' AND Publish='1'";
-        $rows = $menu->cargaCondicion("Id", $filtro, "OrdenMenu2 ASC");
-        unset($menu);
-        foreach ($rows as $value) {
-            $seccion = new GconSecciones($value['Id']);
-            $this->values['menuDesplegable'][] = array(
-                'seccion' => $seccion->getEtiquetaWeb2(),
-                'url' => $seccion->getHref(),
-                'subseccion' => $seccion->getArraySubsecciones(),
-            );
-        }
-        unset($seccion);
-
-        /* MENU PIE LEFT */
-        $menu = new GconSecciones();
-        $filtro = "MostrarEnMenu3='1' AND Publish='1'";
-        $rows = $menu->cargaCondicion("*", $filtro, "OrdenMenu3 ASC");
-        unset($menu);
-        foreach ($rows as $value) {
-            $this->values['menuPie']['left'][] = array(
-                'nombre' => $value['EtiquetaWeb3'],
-                'url' => $value['UrlFriendly'],
-                'controller' => $value['Controller'],
-            );
-        }
-
-        /* MENU PIE RIGHT */
-        $menu = new GconSecciones();
-        $filtro = "MostrarEnMenu4='1' AND Publish='1'";
-        $rows = $menu->cargaCondicion("*", $filtro, "OrdenMenu4 ASC");
-        unset($menu);
-        foreach ($rows as $value) {
-            $this->values['menuPie']['right'][] = array(
-                'nombre' => $value['EtiquetaWeb4'],
-                'url' => $value['UrlFriendly'],
-                'controller' => $value['Controller'],
-            );
-        }
+        
+        // LECTURA DE METATAGS 
+               
     }
 
     public function IndexAction() {
 
         return array(
-            'template' => $this->entity . "/Index.html.twig",
+            'template' => $this->entity . "/index.html.twig",
             'values' => $this->values,
         );
     }

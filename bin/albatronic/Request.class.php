@@ -215,6 +215,16 @@ class Request {
         return $isOld;
     }
 
+    /**
+     * Devuelve TRUE / FALSE dependiendo si estás en entorno
+     * de desarrollo o de producción respectivamente.
+     *
+     * @return boolean TRUE si estás en entorno desarrollo
+     */
+    public function isDevelopment() {
+        return ( ($_SERVER['SERVER_NAME'] == 'localhost') or (substr($_SERVER['SERVER_NAME'], 0, 3) != 'www') );
+    }
+
 }
 
 ?>

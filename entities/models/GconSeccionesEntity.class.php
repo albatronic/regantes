@@ -3,7 +3,7 @@
 /**
  * @author Sergio Perez <sergio.perez@albatronic.com>
  * @copyright INFORMATICA ALBATRONIC SL
- * @date 06.11.2012 23:55:15
+ * @date 30.10.2012 18:44:57
  */
 
 /**
@@ -157,10 +157,16 @@ class GconSeccionesEntity extends EntityComunes {
     protected $MostrarSubsecciones = '1';
 
     /**
+     * @var integer
+     * @assert NotBlank(groups="GconSecciones")
+     */
+    protected $NivelJerarquico = '1';
+
+    /**
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'regantes';
+    protected $_conectionName = '';
 
     /**
      * Nombre de la tabla física
@@ -421,6 +427,14 @@ class GconSeccionesEntity extends EntityComunes {
         if (!($this->MostrarSubsecciones instanceof ValoresSN))
             $this->MostrarSubsecciones = new ValoresSN($this->MostrarSubsecciones);
         return $this->MostrarSubsecciones;
+    }
+
+    public function setNivelJerarquico($NivelJerarquico) {
+        $this->NivelJerarquico = $NivelJerarquico;
+    }
+
+    public function getNivelJerarquico() {
+        return $this->NivelJerarquico;
     }
 
 }
