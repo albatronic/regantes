@@ -9,7 +9,10 @@
     </div>
 
     <div id="datos_legales">
-        <a href="http://www.articoestudio.com" title="&Aacute;rtico Estudio | Dise&ntilde;o Web en Granada" rel="pop-up" id="diseno_web">Dise&ntilde;o Web Granada<img src="{{app.path}}/images/artico-estudio-paginas-web.png" alt="&Aacute;rtico Estudio | Dise&ntilde;o Web en Granada" title="&Aacute;rtico Estudio | Dise&ntilde;o Web en Granada" class="articoestudio" /></a>
+        <a href="{{values.firma.url}}" title="{{values.firma.service}} | {{values.firma.location}}" rel="pop-up" id="diseno_web">
+            {{values.firma.service}} {{values.firma.location}}
+            <img src="{{app.path}}/images/artico-estudio-paginas-web.png" alt="&Aacute;rtico Estudio | {{values.firma.service}} {{values.firma.location}}" title="&Aacute;rtico Estudio | {{values.firma.service}} {{values.firma.location}}" class="articoestudio" />
+        </a>
         <a href="{{app.path}}/AvisoLegal" rel="iframe-800-550"  class="pirobox_gal2" title="Aviso Legal" id="aviso_legal">Aviso Legal</a>
     </div>
 </div>

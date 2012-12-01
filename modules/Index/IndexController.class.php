@@ -11,9 +11,25 @@
 class IndexController extends ControllerProject {
 
     protected $entity = "Index";
-
+    protected $nivel = "";
+    
+    public function pintaArbol($arbol) {
+        echo "<ul style='margin-left: 40px;'>";
+        foreach ($arbol as $hijo => $familia) {
+            echo "<li>{$hijo}";
+            echo $this->pintaArbol($familia);
+            echo "</li>";
+        }
+        echo "</ul>";
+    }
+    
     public function IndexAction() {
 
+        $seccion = new GconSecciones(1);
+        $arbol = $seccion->getHijos();
+        //$this->pintaArbol($arbol);
+        echo "<pre>";print_r($arbol);echo "</pre>";
+        
         /* SLIDER DE IMAGENES */
         $this->values['sliderImagenes'][0] = array(
             'imagen' => 'images/xxxslider3.jpg',
@@ -43,61 +59,13 @@ class IndexController extends ControllerProject {
         );
 
         /* SLIDER NOTICIAS */
-        $this->values['sliderNoticias'][0] = array(
-            'titulo' => 'Primer título de la notica. Maecenas dapibus rutrum rhoncus. Integer ut dui ligula',
-            'subtitulo' => '',
-            'url' => 'hhtp://www.google.es',
-            'descripcion' => 'Suspendisse aliquam, quam nec interdum auctor, felis enim faucibus ligula, in pellentesque libero tortor lectus. Quisque ornare suscipit rhoncus.',
-            'imagen' => 'images/xxximagen-noticia.jpg',
-        );
-
-        $this->values['sliderNoticias'][1] = array(
-            'titulo' => 'Segundo título de la notica. Maecenas dapibus rutrum rhoncus. Integer ut dui ligula',
-            'subtitulo' => 'Maecenas dapibus rutrum rhoncus. Integer ut dui ligula',
-            'url' => 'hhtp://www.google.es',
-            'descripcion' => 'Suspendisse aliquam, quam nec interdum auctor, felis enim faucibus ligula, in pellentesque libero tortor lectus. Quisque ornare suscipit rhoncus.',
-            'imagen' => '',
-        );
-
-        $this->values['sliderNoticias'][2] = array(
-            'titulo' => 'Tercer título de la notica. Maecenas dapibus rutrum rhoncus. Integer ut dui ligula',
-            'subtitulo' => 'Maecenas dapibus rutrum rhoncus. Integer ut dui ligula',
-            'url' => 'hhtp://www.google.es',
-            'descripcion' => '',
-            'imagen' => '',
-        );
-
-
+        $this->values['sliderNoticias'] = $this->getNoticias();
 
         /* EVENTOS */
-        $this->values['eventos'][0] = array(
-            'fecha' => '29/10/2012',
-            'titulo' => 'Primer título de la notica. Maecenas dapibus rutrum rhoncus. Integer ut dui ligula',
-            'subtitulo' => 'Maecenas dapibus rutrum rhoncus. Integer ut dui ligula',
-            'url' => 'hhtp://www.google.es',
-            'descripcion' => 'Suspendisse aliquam, quam nec interdum auctor, felis enim faucibus ligula, in pellentesque libero tortor lectus. Quisque ornare suscipit rhoncus.',
-            'imagen' => 'images/xxximagen-eventos1.jpg',
-        );
-
-        $this->values['eventos'][1] = array(
-            'fecha' => '29/10/2012',
-            'titulo' => 'Primer título de la notica. Maecenas dapibus rutrum rhoncus. Integer ut dui ligula',
-            'subtitulo' => 'Maecenas dapibus rutrum rhoncus. Integer ut dui ligula',
-            'url' => 'hhtp://www.google.es',
-            'descripcion' => 'Suspendisse aliquam, quam nec interdum auctor, felis enim faucibus ligula, in pellentesque libero tortor lectus. Quisque ornare suscipit rhoncus.',
-            'imagen' => '',
-        );
-
+        $this->values['eventos'] = $this->getEventos(2);
 
         /* NOTICIAS MAS LEIDAS */
-        $this->values['noticias'][0] = array(
-            'fecha' => '29/10/2012',
-            'titulo' => 'Primer título de la notica. Maecenas dapibus rutrum rhoncus. Integer ut dui ligula',
-            'subtitulo' => 'Maecenas dapibus rutrum rhoncus. Integer ut dui ligula',
-            'url' => 'hhtp://www.google.es',
-            'descripcion' => 'Suspendisse aliquam, quam nec interdum auctor, felis enim faucibus ligula, in pellentesque libero tortor lectus. Quisque ornare suscipit rhoncus.',
-            'imagen' => 'images/xxximagen-eventos1.jpg',
-        );
+        $this->values['noticias'] = $this->getNoticiasMasLeidas(3);
 
         /* CONTENIDOS */
         $this->values['contenidosVisitados']['left'][] = array(

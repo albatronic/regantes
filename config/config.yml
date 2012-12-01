@@ -50,6 +50,18 @@ config:
     path: /regantes
     framework: bin/albatronic/
 
+  # SEMILLA PARA CONSTRUIR CLAVES MD5
+  semillaMD5: verano
+
+  # FIRMAS DE LA WEB
+  signatures:
+    links: 'www.articoestudio.com'
+    services:
+      'es': 'Diseño web,Venta Online,Posicionamiento web,Imagen corporativa'
+      'en': 'Web design,eCommerce,SEO'
+      'fr': ''
+    locations: 'Granada,Madrid,Malaga,Sevilla,Valencia'
+    
   # MOTOR DE ENVIO DE CORREOS
   mailer:
     plugin_dir: bin/PHPMailer_v2.0.0/
@@ -94,7 +106,7 @@ config:
   conections:
     regantes:
       dbEngine: mysql
-      host: 192.168.1.101
+      host: localhost
       user: regantes
       password: regantes
       database: regantes

@@ -53,6 +53,18 @@ class Entity {
     protected $_dataBaseName;
 
     /**
+     * Array con los ids de las entidades hijas
+     * @var array 
+     */
+    private $_hijos = array();
+
+    /**
+     * Array con los ids de las entidades padre
+     * @var array
+     */
+    private $_padres = array();
+
+    /**
      * CONSTRUCTOR
      */
     public function __construct($primaryKeyValue = '') {
@@ -308,7 +320,7 @@ class Entity {
             $this->{"set$key"}($values['default']);
         }
     }
-    
+
     /**
      * Valida la información cargada en las propiedades del objeto
      * respecto a las reglas pasadas en el array $rules y que
@@ -413,6 +425,18 @@ class Entity {
             $this->BelongsTo = '';
             $this->_alertas[] = "El objeto no puede pertenecer a el mismo";
         }
+
+        if (trim($this->UrlTarget) != '') {
+            // Desactivar la gestion de url amigable
+            $this->LockUrlPrefix = 1;
+            $this->UrlPrefix = '';
+            $this->LockSlug = 1;
+            $this->Slug = '';
+            $this->UrlFriendly = '';
+            $urlAmigable = new CpanUrlAmigables();
+            $urlAmigable->borraUrl($this->getClassName(), $this->getPrimaryKeyValue(), FALSE);
+            unset($urlAmigable);
+        }
     }
 
     /**
@@ -446,6 +470,10 @@ class Entity {
         }
 
         // Validacion de integridad referencial respecto a entidades hijas
+        $hijos = $this->cargaCondicion($this->getPrimaryKeyName(), "BelongsTo='{$this->getPrimaryKeyValue()}'");
+        $n = count($hijos);
+        if ($n != 0)
+            $this->_errores[] = "Imposible eliminar. Hay {$n} relaciones con elementos hijos";
 
         return (count($this->_errores) == 0);
     }
@@ -675,41 +703,75 @@ class Entity {
     }
 
     /**
+     * Genera el árbol genealógico con las entidades hijas de la
+     * entidad $idPadre.
+     * 
+     * El árbol se genera de forma recursiva sin límite de profundidad.
+     * 
+     * El array lleva valor únicamente en el índice, y dicho valor es el
+     * id de las entidades.
+     * 
+     * @param integer $idPadre El id de la entidad padre
+     * @return array
+     */
+    public function getHijos($idPadre = '') {
+
+        if ($idPadre == '')
+            $idPadre = $this->getPrimaryKeyValue();
+
+        $this->getChildrens($idPadre);
+        return $this->_hijos[$idPadre];
+    }
+
+    /**
+     * Devuelve un array con los antepasados del objeto $idHijo
+     * 
+     * El primer elemento del array es el antepasado más antiguo, el segundo es
+     * el hijo de éste. El último elemento es el padre directo.
+     * 
+     * El índice del array indica el nivel de profundidad, y el valor es el id del objeto
+     * 
+     * @param integer $idHijo El id del objeto hijo
+     * @return array
+     */
+    public function getPadres($idHijo = '') {
+
+        if ($idHijo == '')
+            $idHijo = $this->getPrimaryKeyValue();
+
+        $this->getParents($idHijo);
+        return $this->_padres;
+    }
+
+    /**
      * Generar un árbol genealógico con las entidades hijas
      * de la entidad cuyo id es $idPadre
      *
-     * @param integer $idOrigen El id de la entidad origen
      * @param integer $idPadre El id de la entidad padre
      * @return array Array con los objetos hijos
      */
-    public function getChildEntities($idOrigen, $idPadre) {
+    private function getChildrens($idPadre) {
 
-        $padre = new $this($idPadre);
+        // Obtener todos los hijos del padre actual
+        $hijos = $this->cargaCondicion('Id', "BelongsTo='{$idPadre}'", "SortOrder ASC");
 
-
-        $arbol = array(
-            'id' => $idPadre,
-            'titulo' => $padre->__tostring(),
-            'hijos' => array(),
-        );
-        /**
-          $arbol = array(
-          'padre' => $padre,
-          );
-         *
-         */
-        $hijos = $padre->cargaCondicion('Id, Titulo', "BelongsTo='{$idPadre}'", "SortOrder ASC");
-
-        foreach ($hijos as $key => $hijo) {
-            if ($hijo['Id'] != $idOrigen) {
-                $nietos = $padre->getChildEntities($idOrigen, $hijo['Id']);
-                if (count($nietos))
-                    $arbol['hijos'][] = $nietos;
-            }
+        foreach ($hijos as $hijo) {
+            $this->_hijos[$idPadre][$hijo['Id']] = $this->getChildrens($hijo['Id']);
         }
-        unset($padre);
 
-        return $arbol;
+        return $this->_hijos[$idPadre];
+    }
+
+    private function getParents($idHijo) {
+
+        $hijo = new $this($idHijo);
+        $idPadre = $hijo->BelongsTo;
+        if ($idPadre == 0) {
+            return;
+        } else {
+            array_unshift($this->_padres, $idPadre);
+            $this->getParents($idPadre);
+        }
     }
 
     /**
@@ -729,7 +791,7 @@ class Entity {
     }
 
     /**
-     * Devuelve con los nombres de las propiedades de la entidad.
+     * Devuelve un array con los nombres de las propiedades de la entidad.
      *
      * No devuelve las propiedades que empiezan por guión bajo "_"
      *

@@ -1,24 +1,18 @@
-
-
+{#
+    ESTA USTED EN....
+#}
 <div id="usted_esta_en">
-	<div id="usted_top"></div>
-	<div id="usted_inter">
-		<h6>{{values.ustedEstaEn.titulo}}</h6>
-		{#<ul>
-			<li><a href="" title="">'.$titulo8.'</a></li>
-			<li><a href="" title="">'.$titulo3.'</a></li>
-			<li><a href="" title="">'.$titulo9.'</a></li>
-			<li><a href="" title="">'.$titulo8.'</a></li>
-		</ul>#}
-
-            {% for titulo, url in values.ustedEstaEn.subsecciones %}    
-            <ul>
-                <li><a href="{{url}}" title="{{titulo}}">{{titulo}}</a></li>
-            </ul>
-            {% endfor %}        
-	</div>
-	<div id="usted_bottom"></div>
-	<a href="#" title="Subir un nivel"><img src="{{app.path}}/images/subir-nivel.png" alt="Subir un nivel" title="Subir un nivel" /></a>
+    <div id="usted_top"></div>
+    <div id="usted_inter">
+        <h6>{{values.ustedEstaEn.titulo}}</h6>
+        {% for subseccion in values.ustedEstaEn.subsecciones %}    
+        <ul>
+            <li>{{ macro.link(subseccion.titulo,subseccion.url.url,subseccion.url.targerBlank)}}</li>
+        </ul>
+        {% endfor %}        
+    </div>
+    <div id="usted_bottom"></div>
+    <a href="#" title="Subir un nivel"><img src="{{app.path}}/images/subir-nivel.png" alt="Subir un nivel" title="Subir un nivel" /></a>
 </div>
 
 

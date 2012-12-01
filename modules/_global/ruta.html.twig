@@ -1,7 +1,8 @@
 <div id="ruta">
-	<a href="{{app.path}}/" title="">{{values.ruta.seccion1.nombre}}</a>
-		&nbsp;&nbsp;>&nbsp;&nbsp;
-	{{values.ruta.seccion2.nombre}}	
+    {% for ruta in values.ruta %}{{ruta.nombre}}
+        {{ macro.link(ruta.nombre,ruta.url.url,ruta.url.targetBlank) }}
+        &nbsp;&nbsp;>&nbsp;&nbsp;
+    {% endfor %}
 </div>
 
 <span class="raya azul"></span>
