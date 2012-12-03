@@ -307,6 +307,8 @@ class ControllerWeb {
     /**
      * Genera el array con las noticias
      * 
+     * CONTROLAR LA NOTICAS PUBLICAS, PRIVADAS O AMBAS
+     * 
      * @param boolean $enPortada Si TRUE se devuleven solo las que están marcadas como portada, 
      * en caso contrario se devuelven todas las noticias
      * @param integer $nItems El numero de elementos a devolver. (0=todos)
