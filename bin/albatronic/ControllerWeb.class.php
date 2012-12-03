@@ -202,7 +202,6 @@ class ControllerWeb {
      * @return array Array con los elmentos de 'ustedEntaEn'
      */
     protected function getUstedEstaEn() {
-
         $objeto = new $this->request['Entity']($this->request['IdEntity']);
         $array = array(
             'titulo' => $objeto->getTitulo(),

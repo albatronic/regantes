@@ -47,10 +47,7 @@ else
 $yaml = sfYaml::load('config/config.yml');
 $config = $yaml['config'];
 
-$_SESSION['audit'] = $config['audit_mode'];
-
 $app = $config['app'];
-$app['audit'] = $_SESSION['audit'];
 
 $_SESSION['appPath'] = $app['path'];
 $_SESSION['frecuenciaHorasBorrado'] = $config['frecuenciaHorasBorrado'];
@@ -139,7 +136,7 @@ $_SESSION['EntornoDesarrollo'] = $rq->isDevelopment();
 // EN ENTORNO DE PRODUCCION, OBTENER EL ORIGEN DE LA PETICION PARA
 // LA GESTION DE VISITAS
 // ----------------------------------------------------------------
-if ( (!$_SESSION['EntornoDesarrollo']) and (!$_SESSION['origen']) ){
+if ((!$_SESSION['EntornoDesarrollo']) and (!$_SESSION['origen'])) {
     $_SESSION['origen'] = WebService::getOrigenVisitante($config['wsControlVisitas'] . $rq->getRemoteAddr());
 }
 

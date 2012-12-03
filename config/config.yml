@@ -107,6 +107,6 @@ config:
     regantes:
       dbEngine: mysql
       host: localhost
-      user: regantes
-      password: regantes
-      database: regantes
+      user: 
+      password: 
+      database: 
