@@ -100,7 +100,6 @@ class EntityManager {
         }
     }
 
-
     /**
      * Conecta a la base de datos con los parametros de conexión indicados
      * en config/config.yml.
@@ -240,7 +239,7 @@ class EntityManager {
      * @param integer $offset
      * @return array Las filas encontradas
      */
-    public function fetchResultLimit($limit, $rowNumber='') {
+    public function fetchResultLimit($limit, $rowNumber = '') {
         $rows = array();
         $nfilas = 0;
         if ($rowNumber < 0)
@@ -426,7 +425,7 @@ class EntityManager {
      * @param string $method El nombre del método que capturó el error
      * @param string $error Mensaje de error personalizado (opcional)
      */
-    public function setError($method, $error='') {
+    public function setError($method, $error = '') {
 
         $mensaje = "EntityManager [{$method}]: ";
 
@@ -435,7 +434,7 @@ class EntityManager {
         else {
             switch ($this->dbEngine) {
                 case 'mysql':
-                    switch (mysql_errno ()) {
+                    switch (mysql_errno()) {
                         case '1062':
                             $mensaje .= "Datos duplicados. " . mysql_error();
                             break;
