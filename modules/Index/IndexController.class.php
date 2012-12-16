@@ -28,7 +28,7 @@ class IndexController extends ControllerProject {
         $seccion = new GconSecciones(1);
         $arbol = $seccion->getHijos();
         //$this->pintaArbol($arbol);
-        echo "<pre>";print_r($arbol);echo "</pre>";
+        //echo "<pre>";print_r($arbol);echo "</pre>";
         
         /* SLIDER DE IMAGENES */
         $this->values['sliderImagenes'][0] = array(

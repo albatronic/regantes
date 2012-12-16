@@ -77,7 +77,7 @@ class EntityManager {
                 list($conection, $nada) = each($yaml['config']['conections']);
 
             $params = $yaml['config']['conections'][$conection];
-
+            
             $this->dbEngine = $params['dbEngine'];
             $this->host = $params['host'];
 

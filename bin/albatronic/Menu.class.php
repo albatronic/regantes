@@ -72,7 +72,7 @@ class Menu {
             echo $em->getError();
 
         if ($idPerfil == '')
-            $rows[] = array_push(&$rows, array('Id' => '0', 'Value' => ':: Indique una Opción'));
+            $rows[] = array_push($rows, array('Id' => '0', 'Value' => ':: Indique una Opción'));
 
         unset($em);
 
@@ -100,7 +100,7 @@ class Menu {
             echo $em->getError();
 
         if ($idPerfil == '')
-            $rows[] = array_push(&$rows, array('Id' => '0', 'Value' => ':: Indique una Opción'));
+            $rows[] = array_push($rows, array('Id' => '0', 'Value' => ':: Indique una Opción'));
 
         unset($em);
 

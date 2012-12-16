@@ -10,6 +10,11 @@
         <script type="text/javascript">var appPath = "{{appPath}}";</script>     
         
         {% include values.archivoJs %}
+        
+        <!-- Obtener la resolución del dispositivo de navegación del cliente web -->
+        {% if not chequeadaResolucionVisitante %}
+        <script type="text/javascript">chequeaResolucionVisitante();</script>
+        {% endif %}
     </head>
 
     <body {% block bodyContacto %}{%endblock%}>
