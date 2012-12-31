@@ -11,7 +11,7 @@
 #featured { 
 	width: 783px !important;
 	height: 366px;
-	background:#fff url(../images/slider/orbit/loading.gif) no-repeat center center;
+	background:#fff url(../images/loading.gif) no-repeat center center;
 	overflow: hidden; }
 #featured>img,  
 #featured>div,
@@ -19,6 +19,8 @@
 
 #featured img {
 	width:743px;
+        height: 366px;
+        float: left;
 	margin-left:20px;
 } /* -----------------------------------------------------------------   seguir probando slider */
 

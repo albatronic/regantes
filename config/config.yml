@@ -2,6 +2,7 @@
 #
 # PERSONALIZACION PARA CADA PROYECTO:
 #
+#     0.- EN EL NODO 'projectId' POR EL ID DE PROYECTO-APP CORRESPONDIENTE AL PCAE
 #     1.- EN EL NODO 'app', SUSTITUIR 'DOMINIO' POR EL NOMBRE DEL DOMINIO O IP DONDE ESTARÁ
 #         EL PROYECTO. EN DESARROLO PUEDE SER 'localhost'
 #     2.- EN EL NODO 'app', SUSTITUIR 'FOLDER' POR EL NOMBRE DE LA CARPETA DONDE ESTARÁ EL PROYECTO
@@ -35,6 +36,9 @@ config:
   # CONTROL DE ACCESO POR IP
   ip_control: true
   
+  # EL ID DEL PROYECTO-APP CORRESPONDIENTE AL PCAE
+  projectId: 3
+  
   # WEB SERVICE PARA CONTROL DE VISITAS
   wsControlVisitas: http://api.ip-adress.com/?u=1062c309c5c054edc08fe578ef8f0dd94720c0&h=
   
@@ -45,7 +49,7 @@ config:
   # SI LA APP ESTÁ EN EL RAIZ, 'path' debe estar vacío
   # NORMALMENTE, EN PRODUCCION 'path' estará vacio
   app:
-    name: ERP Albatronic
+    name: Virgen de la Salud
     url: http://localhost/regantes
     path: /regantes
     framework: bin/albatronic/
@@ -81,7 +85,7 @@ config:
 
   # MOTOR DE TEMPLATES
   twig:
-    motor: bin/Twig-1.7.0/lib/Twig/Autoloader.php
+    motor: bin/Twig-1.11.1/lib/Twig/Autoloader.php
     templates_folder: modules
     debug_mode: true
     cache_folder: tmp

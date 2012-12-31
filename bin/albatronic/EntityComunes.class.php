@@ -34,7 +34,7 @@ class EntityComunes extends Entity {
      * @var entities\ValoresSN
      */
     protected $IsSuper = '0';
-    
+
     /**
      * @orm Column(type="tinyint")
      * @var entities\ValoresSN
@@ -52,6 +52,12 @@ class EntityComunes extends Entity {
      * @var integer(11)
      */
     protected $BelongsTo = '0';
+
+    /**
+     * @orm Column(type="tinyint")
+     * @var entities\ValoresSN
+     */
+    protected $AllowsChildren = '0';
 
     /**
      * @orm Column(type="integer")
@@ -302,7 +308,7 @@ class EntityComunes extends Entity {
     protected $CodigoAppAsociada = NULL;
     protected $IdAlbumExterno = NULL;
     protected $IdSliderAsociado = NULL;
-    
+
     /**
      * Fecha y hora última visita en formato UNIX
      * @var integer
@@ -345,10 +351,7 @@ class EntityComunes extends Entity {
             $url = $this->getUrlFriendly();
             $prefijo = $_SESSION['appPath'];
         } else {
-            if ($this->UrlIsHttps)
-                $prefijo = "https://";
-            else
-                $prefijo = "http://";
+            $prefijo = ($this->UrlIsHttps) ? "https://" : "http://";
         }
 
         $url = $prefijo . $url . $this->getUrlParameters();
@@ -397,7 +400,7 @@ class EntityComunes extends Entity {
             $this->IsSuper = new ValoresSN($this->IsSuper);
         return $this->IsSuper;
     }
-    
+
     public function setChecked($Checked) {
         $this->Checked = $Checked;
     }
@@ -430,6 +433,16 @@ class EntityComunes extends Entity {
         }
 
         return $this->BelongsTo;
+    }
+
+    public function setAllowsChildren($AllowsChildren) {
+        $this->AllowsChildren = $AllowsChildren;
+    }
+
+    public function getAllowsChildren() {
+        if (!($this->AllowsChildren instanceof ValoresSN))
+            $this->AllowsChildren = new ValoresSN($this->AllowsChildren);
+        return $this->AllowsChildren;
     }
 
     public function setCreatedBy($CreateBy) {

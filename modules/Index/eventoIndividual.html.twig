@@ -1,11 +1,11 @@
 <div class="evento_indiv">
-	{% if evento.imagen!="" %}
-        <div class="imagen_evento">
-		<img src="{{evento.imagen}}" alt="{{evento.titulo}}" title="{{evento.titulo}}" />
-		<a href="{{evento.url}}" title="{{evento.url}}"><span class="fecha_evento arriba">{{evento.fecha}}</span></a>
-	</div>
-        {% endif %}
-	<h2><a href="contenido-aislado.php" title="#">{{evento.titulo}}</a></h2>
-	<h3>{{evento.subtitulo}}</h3>
-	<p>{{evento.descripcion}}</p>
+    {% if evento.imagen %}
+    <div class="imagen_evento">
+        <img src="{{evento.imagen}}" alt="{{evento.titulo}}" title="{{evento.titulo}}" />
+        <a href="{{evento.url.url}}" title="{{evento.titulo}}"><span class="fecha_evento arriba">{{evento.fecha}}</span></a>
+    </div>
+    {% endif %}
+    <h2><a href="contenido-aislado.php" title="{{evento.titulo}}">{{evento.titulo}}</a></h2>
+    <h3>{{evento.subtitulo}}</h3>
+    <p>{% autoescape false %}{{evento.desarrollo}}{% endautoescape %}</p>
 </div>

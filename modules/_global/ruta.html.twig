@@ -1,6 +1,6 @@
 <div id="ruta">
     {% for ruta in values.ruta %}{{ruta.nombre}}
-        {{ macro.link(ruta.nombre,ruta.url.url,ruta.url.targetBlank) }}
+        {{ macro.link(ruta.nombre,none,ruta.url.url,ruta.url.targetBlank) }}
         &nbsp;&nbsp;>&nbsp;&nbsp;
     {% endfor %}
 </div>

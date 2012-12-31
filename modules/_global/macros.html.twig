@@ -3,17 +3,17 @@
 {#  MACRO NOTICIA #}
 {# Es el resumen de una noticia y puede estar en las siguientes secciones: INDEX, NOTICIAS, EVENTOS #}
 {# El contenido de un resumen de noticia sería: IMAGEN (puede llevar o no), FECHA (puede llevar o no), TÍTULO, SUBTÍTULO (puede llevar o no), PÁRRAFO #}
-{% macro noticia (arrayNoticia)%}
+{% macro noticia (noticia) %}
 <div class="evento_indiv">
-	{% if arrayNoticia.imagen!="" %}
-        <div class="imagen_evento">
-		<img src="{{arrayNoticia.imagen}}" alt="{{arrayNoticia.titulo}}" title="{{arrayNoticia.titulo}}" />
-		<a href="{{arrayNoticia.url}}" title="{{arrayNoticia.url}}"><span class="fecha_evento arriba">{{arrayNoticia.fecha}}</span></a>
-	</div>
-        {% endif %}
-	<h2><a href="contenido-aislado.php" title="#">{{arrayNoticia.titulo}}</a></h2>
-	<h3>{{arrayNoticia.subtitulo}}</h3>
-	<p>{{arrayNoticia.descripcion}}</p>
+    {% if noticia.imagen %}
+    <div class="imagen_evento">
+        <img src="{{noticia.imagen}}" alt="{{noticia.titulo}}" title="{{noticia.titulo}}" />
+        <a href="{{noticia.url.url}}" title="{{noticia.url.url}}"><span class="fecha_evento arriba">{{noticia.fecha}}</span></a>
+    </div>
+    {% endif %}
+    <h2>{{_self.link(noticia.titulo,none,noticia.url.url,noticia.url.targetBlank)}}</h2>
+    <h3>{{noticia.subtitulo}}</h3>
+    <p>{{noticia.resumen}}</p>
 </div>    
 {% endmacro %}
 
@@ -24,14 +24,14 @@
  con lo que al recibir más vídeos se genera otro <div class="proyectosFila"> quedando siempre filas de 3 vídeos o menos, pero nunca más. #}
 {# El array de un vídeo contiene: IMAGEN del vídeo, TITULO, ENLACE al vídeo individual #}
 {# Es importante la variable 'key' porque el video 3 y sus múltiplos van a tener estilos diferenes que el 1 y el 2. #}
-{% macro video (arrayVideo, key, nCaracteres)%}
+{% macro video (video, key, nCaracteres)%}
 {% set nCar=nCaracteres | default(100) %}
 <div class="mosaic-block bar proyecto{{key}}">
     <div class="mosaic-backdrop"> 
-        <img src="{{arrayVideo.imagen}}" alt="{{arrayVideo.titulo}}" title="{{arrayVideo.titulo}}" />
+        <img src="{{video.imagen}}" alt="{{video.titulo}}" title="{{video.titulo}}" />
     </div>
-        <a href="{{arrayVideo.enlaceVideo}}" class="mosaic-overlay">
-            <span class="details">{{arrayVideo.titulo|slice(0, nCar)}}{% if arrayVideo.titulo | length > nCar %}...{% endif %}</span>
+        <a href="{{video.enlaceVideo}}" class="mosaic-overlay">
+            <span class="details">{{video.titulo|slice(0, nCar)}}{% if video.titulo | length > nCar %}...{% endif %}</span>
         </a>
 </div>
 {% endmacro %}
@@ -43,12 +43,12 @@
  con lo que al recibir más thumbnails se genera otro <div class="proyectosFila"> quedando siempre filas de 3 thumbnails o menos, pero nunca más. #}
 {# El array de un proyecto contiene: TÍTULO DE LA GALERÍA, que se muestra bajo el thumbnail, IMAGEN del proyecto, NOMBRE de la imagen, ENLACE a otras imágenes de la galería de fotos. #}
 {# Es importante la variable 'key' porque la imagen 3 y sus múltiplos van a tener estilos diferenes que la imagen 1 y la imagen 2. #}
-{% macro galeria (arrayGaleria, key)%}
+{% macro galeria (galeria, key)%}
 <div class="proyecto{{key}}">
-        <a href="{{arrayGaleria.enlaceImagen}}" rel="gallery" class="pirobox_gall2" title="{{arrayGaleria.nombre}}"><img src="{{arrayGaleria.imagen}}" alt="{{arrayGaleria.nombre}}" title="{{arrayGaleria.nombre}}" /></a>
-        <div class="textoAlbum"><h4>{{arrayGaleria.tituloGaleria}}</h4></div>
+        <a href="{{galeria.enlaceImagen}}" rel="gallery" class="pirobox_gall2" title="{{galeria.nombre}}"><img src="{{galeria.imagen}}" alt="{{galeria.nombre}}" title="{{galeria.nombre}}" /></a>
+        <div class="textoAlbum"><h4>{{galeria.tituloGaleria}}</h4></div>
 
-        <a href="{{arrayGaleria.enlaceImagen}}" rel="gallery" class="pirobox_gall2" title="{{arrayGaleria.nombre}}"></a>
+        <a href="{{galeria.enlaceImagen}}" rel="gallery" class="pirobox_gall2" title="{{galeria.nombre}}"></a>
 </div>
 {% endmacro %}
 
@@ -56,20 +56,21 @@
     MACRO PARA CREAR ENLACES HREF
 
     @param string titulo    El texto que se mostrará para el enlace y en el title
+    @param string title     El texto que se pone en title="". Si está vacio se pone el valor de titulo
     @param string url       La url donde apunta el link
     @param boolean esPopup  Si se abre en nueva ventana o no
     @param string id        El id (opcional)
     @param string claseCss  La clase css (opcional)
 #}
-{% macro link (titulo, url, esPopup, id, claseCss) %}
-        {% if url == "" %} 
-            {{titulo}}
-        {% else %}
-            <a href="{{url}}" 
-               title="{{titulo}}" 
-               {% if esPopup == "1" %} rel="pop-up" {% endif %} 
-               {% if id != "" %} id="{{id}}" {% endif %}               
-               {% if claseCss != "" %} class="{{claseCss}}" {% endif %}
-               >{{titulo}}</a>
-        {% endif %}
+{% macro link (titulo, title, url, esPopup, id, claseCss) %}
+    {% if url == "" %} 
+        {{titulo}}
+    {% else %}
+        <a href="{{url}}" 
+           title="{{title|default(titulo)}}" 
+           {% if esPopup == "1" %} rel="pop-up" {% endif %} 
+           {% if id != "" %} id="{{id}}" {% endif %}               
+           {% if claseCss != "" %} class="{{claseCss}}" {% endif %}
+           >{{titulo}}</a>
+    {% endif %}
 {% endmacro %}

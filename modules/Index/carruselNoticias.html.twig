@@ -1,0 +1,24 @@
+{# SLIDER DE NOTICIAS #}
+
+<div class="slider_noticias">
+    <div class="flechas">
+        <ul class="widget_custom_portfolio_entries_slides responsiveContentSlider">
+
+            {% for noticia in values.carruselNoticias %}
+                <li><h2>{{ macro.link(noticia.titulo,none,noticia.url.url,noticia.url.targetBlank) }}</h2>
+                    {% if noticia.subtitulo %}
+                    <h3>{{ macro.link(noticia.subtitulo,none,noticia.url.url,noticia.url.targetBlank) }}</h3>
+                    {% endif %}
+                    
+                    {% if noticia.imagen %}
+                    <img src="{{app.path}}/{{noticia.imagen}}" alt="{{noticia.titulo}}" title="{{noticia.titulo}}" class="img_noticias" />
+                    {% endif %}
+                    
+                    <p>{{noticia.resumen}}</p>
+                    {{ macro.link('+','Seguir leyendo',noticia.url.url,noticia.url.targetBlank,none,'saber_mas') }}	
+                </li>
+            {% endfor %}
+
+        </ul>
+    </div>
+</div>

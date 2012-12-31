@@ -514,6 +514,10 @@ p.descripcion {
 	border-top:1px solid #d6d6d6;
 }
 
+.imagen_evento img {
+    width: 130px;
+    height: 130px;
+}
 
 .fecha_evento {
 	position:relative;

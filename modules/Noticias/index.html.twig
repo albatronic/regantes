@@ -6,14 +6,14 @@
     <h1>Noticias</h1>
 
     <div id="col_izqda">
-        {% for evento in values.eventos.left %}    
-            {{ macro.noticia (evento) }} 
+        {% for key,noticia in values.noticias %}    
+            {% if key is even %} {{ macro.noticia (noticia) }} {% endif %}
         {% endfor %}
     </div>
 
     <div id="col_drcha">
-        {% for evento in values.eventos.right %}    
-            {{ macro.noticia (evento) }}
+        {% for key,noticia in values.noticias %}    
+            {% if key is odd %} {{ macro.noticia (noticia) }} {% endif %}
         {% endfor %}
     </div>
 

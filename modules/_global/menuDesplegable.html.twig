@@ -8,14 +8,14 @@
             {% if seccion.subsecciones %}
                 {{seccion.seccion}}
             {% else %}
-                {{ macro.link(seccion.seccion, seccion.url.url, seccion.url.targetBlank) }}
+                {{ macro.link(seccion.seccion, none, seccion.url.url, seccion.url.targetBlank) }}
             {% endif %}
         </h3>
         
         {% if seccion.subsecciones %}
             <ul class="menu_body">
             {% for subseccion in seccion.subsecciones %}   
-                <li>{{ macro.link(subseccion.titulo, subseccion.url.url, subseccion.url.targetBlank) }}</li>
+                <li>{{ macro.link(subseccion.titulo, none, subseccion.url.url, subseccion.url.targetBlank) }}</li>
             {% endfor %}
             </ul>
         {% endif %}

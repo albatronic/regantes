@@ -6,7 +6,7 @@
             {% else %}
                 {% set claseCss = "" %}
             {% endif %}
-            {{ macro.link(seccion.nombre,seccion.url.url,seccion.url.targerBlank,none,claseCss) }}
+            {{ macro.link(seccion.nombre,none,seccion.url.url,seccion.url.targerBlank,none,claseCss) }}
         </li>
     {% endfor %}
 </ul>

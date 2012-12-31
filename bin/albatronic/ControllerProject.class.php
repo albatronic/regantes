@@ -20,9 +20,10 @@ class ControllerProject extends ControllerWeb {
         $this->values['ruta'] = $this->getRuta();
         $this->values['calendario'] = $this->getCalendario();
         $this->values['ustedEstaEn'] = $this->getUstedEstaEn();
-        $this->values['menuCabecera'] = $this->getMenuCabecera();
+        $this->values['menuCabecera'] = $this->getMenuN(2);
         $this->values['menuDesplegable'] = $this->getMenuDesplegable();
-        $this->values['menuPie'] = $this->getMenuPie();
+        $this->values['menuPie'] = $this->getMenuN(3);
+
     }
 
 }
