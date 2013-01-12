@@ -192,11 +192,22 @@ class ControllerWeb {
     protected function getRuta() {
 
         $array = array();
+        $array[] = array(
+            'nombre' => 'Inicio',
+            'url' => array('url' => $_SESSION['appPath'], 'targetBlank' => 0),
+        );
 
         $seccion = new GconSecciones($this->request['IdEntity']);
-        $ruta = $seccion->getPadres();
-        foreach ($ruta as $IdPadre) {
-            $seccion = new GconSecciones($IdPadre);
+        if ($seccion->getBelongsTo()->getId() > 0) {
+            $ruta = $seccion->getPadres();
+            foreach ($ruta as $IdPadre) {
+                $seccion = new GconSecciones($IdPadre);
+                $array[] = array(
+                    'nombre' => $seccion->getTitulo(),
+                    'url' => $seccion->getHref(),
+                );
+            }
+        } else {
             $array[] = array(
                 'nombre' => $seccion->getTitulo(),
                 'url' => $seccion->getHref(),
@@ -245,6 +256,7 @@ class ControllerWeb {
      * @return array Array con los elmentos de 'ustedEntaEn'
      */
     protected function getUstedEstaEn() {
+
         switch ($this->request['Entity']) {
             case 'GconSecciones':
                 break;
@@ -255,7 +267,7 @@ class ControllerWeb {
         $objeto = new $this->request['Entity']($this->request['IdEntity']);
         $array = array(
             'titulo' => $objeto->getTitulo(),
-            'subsecciones' => $objeto->getArraySubsecciones(),
+                //'subsecciones' => $objeto->getArraySubsecciones(),
         );
         unset($objeto);
 
@@ -268,9 +280,10 @@ class ControllerWeb {
      *      MostrarEnMenuN = 1
      *      Publish = 1
      * 
-     * El array tiene cinco elementos:
+     * Los elementos del array son:
      * 
      * - etiquetaWeb => texto de la etiquetaWebN
+     * - subetiquetaWeb => texto de la subetiquetaWebN
      * - titulo => el titulo de la seccion
      * - subtitulo => el subtitulo de la seccion
      * - url => array(url => texto, targetBlank => boolean)
@@ -284,7 +297,9 @@ class ControllerWeb {
 
         $array = array();
 
-        $limite = ($nItems <= 0) ? "" : "LIMIT 0,{$nItems}";
+        if (($nMenu < 1) or ($nMenu > 5))
+            $nMenu = 1;
+        $limite = ($nItems <= 0) ? "" : "LIMIT {$nItems}";
 
         $seccion = new GconSecciones();
         $filtro = "MostrarEnMenu{$nMenu}='1' AND Publish='1'";
@@ -294,6 +309,7 @@ class ControllerWeb {
             $seccion = new GconSecciones($row['Id']);
             $array[] = array(
                 'etiquetaWeb' => $seccion->{"getEtiquetaWeb$nMenu"}(),
+                'subetiquetaWeb' => $seccion->{"getSubetiquetaWeb$nMenu"}(),
                 'titulo' => $seccion->getTitulo(),
                 'subtitulo' => $seccion->getSubtitulo(),
                 'url' => $seccion->getHref(),
@@ -304,41 +320,46 @@ class ControllerWeb {
 
         return $array;
     }
-    
+
     /**
      * Genera el array del menu desplegable en base a las secciones que:
      * 
-     *      MostrarEnMenu1 = 1
+     *      MostrarEnMenuN = 1
      *      BelongsTo = 0
      *      Publish = 1
      * 
-     * El array tiene tres elementos:
+     * Los elementos del array son:
      * 
-     * - seccion => texto de la etiquetaWeb1
+     * - seccion => texto de la etiquetaWebN
+     * - subetiquetaWeb => texto de la subetiquetaWebN
      * - url => array(url => texto, targetBlank => boolean)
      * - subsecciones => array de 0 a N (
      *                          titulo => texto
      *                          url => array(url => texto, targetBlank => boolean)
      *                      )
-     * 
+     *
+     * @param int $nMenu El número de menu a mostrar (de 1 a 5). Por defecto 2
      * @param integer $nItems El numero máximo de elementos a devolver. Opcional. (0=todos)
      * @return array Array con las secciones
      */
-    protected function getMenuDesplegable($nItems = 0) {
+    protected function getMenuDesplegable($nMenu = 2, $nItems = 0) {
 
         $array = array();
 
-        $limite = ($nItems <= 0) ? "" : "LIMIT 0,{$nItems}";
+        if (($nMenu < 1) or ($nMenu > 5))
+            $nMenu = 2;
+        $limite = ($nItems <= 0) ? "" : "LIMIT {$nItems}";
 
         $menu = new GconSecciones();
-        $filtro = "MostrarEnMenu1='1' AND BelongsTo='0' AND Publish='1'";
-        $rows = $menu->cargaCondicion("Id", $filtro, "OrdenMenu1 ASC {$limite}");
+        $filtro = "MostrarEnMenu{$nMenu}='1' AND BelongsTo='0' AND Publish='1'";
+        $rows = $menu->cargaCondicion("Id", $filtro, "OrdenMenu{$nMenu} ASC {$limite}");
         unset($menu);
 
         foreach ($rows as $row) {
             $subseccion = new GconSecciones($row['Id']);
             $array[] = array(
-                'seccion' => $subseccion->getEtiquetaWeb1(),
+                'seccion' => $subseccion->{"getEtiquetaWeb$nMenu"}(),
+                'subetiquetaWeb' => $subseccion->{"getSubetiquetaWeb$nMenu"}(),                        
                 'url' => $subseccion->getHref(),
                 'subsecciones' => $subseccion->getArraySubsecciones(),
             );
@@ -348,17 +369,32 @@ class ControllerWeb {
         return $array;
     }
 
-    protected function getContenido($idContenido, $arrayColumnas) {
-
-        $array = array();
+    /**
+     * Devuelve un array con las columnas del contenido $idContenido
+     * indicadas en el array $arrayColumnas
+     * 
+     * Además añade al array devuelto el elemento 'url'
+     * 
+     * @param int $idContenido El id del contenido
+     * @param array $arrayColumnas Array con las columnas
+     * @return array Array con las columnas del contenido
+     */
+    protected function getContenido($idContenido, $arrayColumnas = '') {
 
         $contenido = new GconContenidos($idContenido);
 
-        foreach ($arrayColumnas as $columna) {
-            $array[$columna] = $contenido->{"get$columna"}();
-        }
+        if (is_array($arrayColumnas)) {
+            $array = array();
 
-        return $array;
+            $array['url'] = $contenido->getHref();
+
+            foreach ($arrayColumnas as $columna) {
+                $array[$columna] = $contenido->{"get$columna"}();
+            }
+
+            return $array;
+        } else
+            return $contenido;
     }
 
     /**
@@ -388,31 +424,34 @@ class ControllerWeb {
      * @param integer $nItems El numero máximo de elementos a devolver. Opcional.
      * Si no se indica valor, se mostrará el número de noticias indicado en las variables
      * web 'NumNoticasMostrarHome' o 'NumNoticasPorPagina' dependiendo de $enPortada
+     * @param integer $nImagenDiseno El número de la imagen de diseño. Por defecto la primera
      * @return array Array con las noticias
      */
-    protected function getNoticias($enPortada = true, $nItems = 0) {
+    protected function getNoticias($enPortada = true, $nItems = 0, $nImagenDiseno = 1) {
 
         $array = array();
 
+        $this->setVariables('Mod', 'GconContenidos');
+
         if ($nItems <= 0) {
-            $this->setVariables('Mod', 'GconContenidos');
             $nItems = ($enPortada) ?
                     $this->varWeb['Mod']['GconContenidos']['NumNoticasMostrarHome'] :
                     $this->varWeb['Mod']['GconContenidos']['NumNoticasPorPagina'];
         }
 
-        $limite = ($nItems <= 0) ? "" : "LIMIT 0,{$nItems}";
+        $limite = ($nItems <= 0) ? "" : "LIMIT {$nItems}";
         $filtro = "NoticiaPublicar='1' AND Publish='1'";
         if ($enPortada)
             $filtro .= " AND NoticiaMostrarEnPortada='{$enPortada}'";
         $criterioOrden = $this->varWeb['Mod']['GconContenidos']['CriterioOrdenNoticias'];
 
         $noticia = new GconContenidos();
+
         $rows = $noticia->cargaCondicion("Id", $filtro, "{$criterioOrden} {$limite}");
 
         foreach ($rows as $row) {
             $noticia = new GconContenidos($row['Id']);
-            $documentos = $noticia->getDocuments('image1');
+            $documentos = $noticia->getDocuments('image' . $nImagenDiseno);
             $imagen = ($documentos[0]) ? $documentos[0]->getPathName() : "";
             $array[] = array(
                 'fecha' => $noticia->getPublishedAt(),
@@ -453,9 +492,10 @@ class ControllerWeb {
      * 
      * @param integer $nItems El numero máximo de elementos a devolver. Opcional.
      * Si no se indica valor, se mostrarán las indicadas en la VW 'NumNoticasMostrarHome'
+     * @param integer $nImagenDiseno El número de la imagen de diseño. Por defecto la primera
      * @return array Array con las noticias
      */
-    protected function getNoticiasMasLeidas($nItems = 0) {
+    protected function getNoticiasMasLeidas($nItems = 0, $nImagenDiseno = 1) {
 
         $array = array();
 
@@ -464,7 +504,7 @@ class ControllerWeb {
             $nItems = $this->varWeb['Mod']['GconContenidos']['NumNoticasMostrarHome'];
         }
 
-        $limite = ($nItems <= 0) ? "" : "LIMIT 0,{$nItems}";
+        $limite = ($nItems <= 0) ? "" : "LIMIT {$nItems}";
 
         $noticia = new GconContenidos();
         $filtro = "NoticiaPublicar='1' AND Publish='1'";
@@ -473,7 +513,7 @@ class ControllerWeb {
 
         foreach ($rows as $row) {
             $noticia = new GconContenidos($row['Id']);
-            $documentos = $noticia->getDocuments('image1');
+            $documentos = $noticia->getDocuments('image' . $nImagenDiseno);
             $imagen = ($documentos[0]) ? $documentos[0]->getPathName() : "";
             $array[] = array(
                 'fecha' => $noticia->getPublishedAt(),
@@ -509,7 +549,7 @@ class ControllerWeb {
 
         $array = array();
 
-        $limite = ($nItems <= 0) ? "" : "LIMIT 0,{$nItems}";
+        $limite = ($nItems <= 0) ? "" : "LIMIT {$nItems}";
 
         $contenido = new GconContenidos();
         $filtro = "Publish='1'";
@@ -532,7 +572,7 @@ class ControllerWeb {
      * Devuelve un array con contenidos que son EVENTOS.
      * 
      * Los contenidos que se devuelven deben estar marcados con EVENTO,
-     * tener asignados fechas de evento y estar marcados com publicados.
+     * tener asignados fechas de evento y estar marcados como publicados.
      * 
      * Están ordenados DESCENDENTEMENTE por Fecha y Hora de inicio
      * 
@@ -559,7 +599,7 @@ class ControllerWeb {
         if ($desdeFecha == "")
             $desdeFecha = date('Y-m-d');
 
-        $limite = ($nItems <= 0) ? "" : "LIMIT 0,{$nItems}";
+        $limite = ($nItems <= 0) ? "" : "LIMIT {$nItems}";
 
         $evento = new EvenEventos();
         $filtro = "Fecha>='{$desdeFecha}'";
@@ -610,7 +650,7 @@ class ControllerWeb {
     protected function getNovedades($nItems = 5) {
 
         $array = array();
-        $limite = ($nItems <= 0) ? "" : "LIMIT 0,{$nItems}";
+        $limite = ($nItems <= 0) ? "" : "LIMIT {$nItems}";
 
         $novedad = new GconContenidos();
         $filtro = "NoticiaPublicar='1' AND NoticiaPublicarEnPortada='1' AND Publish='1'";
@@ -643,7 +683,7 @@ class ControllerWeb {
      * 
      * El array tiene 5 elementos:
      * 
-     * - titulo => el titulo dl slider
+     * - titulo => el titulo del slider
      * - subtitulo => el subtitulo del slider
      * - resumen => el resumen del slider si MostrarTextos = TRUE
      * - url => array(url => texto, targetBlank => boolean)
@@ -658,7 +698,7 @@ class ControllerWeb {
 
         $array = array();
 
-        $limite = ($nItems <= 0) ? "" : "LIMIT 0,{$nItems}";
+        $limite = ($nItems <= 0) ? "" : "LIMIT {$nItems}";
 
         // Valido el tipo de slider. Si no es correcto lo pongo a tipo 0 (variable)
         $tipoSlider = new TiposSliders($tipo);
@@ -666,7 +706,8 @@ class ControllerWeb {
             $tipo = 0;
 
         $slider = new SldSliders();
-        $filtro = "IdZona='{$idZona}' AND IdTipo='{$tipoSlider}' AND Publish='1'";
+        $filtro = "IdZona='{$idZona}' AND IdTipo='{$tipo}' AND Publish='1'";
+
         $rows = $slider->cargaCondicion("Id", $filtro, "Id ASC {$limite}");
         unset($slider);
 
@@ -704,13 +745,86 @@ class ControllerWeb {
     }
 
     /**
+     * Devuelve un array con BANNERS.
+     * 
+     * Están ordenados ASCEDENTEMENTE por Id u OrdenMostrarEnListado en el caso
+     * que se vayan a devolver solo los que sean mostrarEnListado TRUE.
+     * 
+     * Si el registro de banner existe pero no tiene imagen de diseño 1
+     * o, teniéndola no está marcada publicar, no se tendrá en cuenta.
+     * 
+     * El array tiene 5 elementos:
+     * 
+     * - titulo => el titulo del banner
+     * - subtitulo => el subtitulo del banner
+     * - resumen => el resumen del banner
+     * - url => array(url => texto, targetBlank => boolean)
+     * - imagen => Path de la imagen de diseño 1
+     * 
+     * @param int $idZona La zona de banner a filtrar. Opcional. Defecto = 1
+     * @param int $tipo El tipo de banner. Un valor negativo significa todos los tipos. Por defecto 0 (fijo). Valores posibles en entities/abstract/TiposBanners.class.php
+     * @param boolean $mostrarEnListado Un valor negativo para todos, 0 para los NO y 1 para los SI mostrar en listado
+     * @param int $nItems Número máximo de banners a devolver. Opcional. Defecto todos
+     * @return array Array de banners
+     */
+    protected function getBanners($idZona = 1, $tipo = 0, $mostrarEnListado = 0, $nItems = 0) {
+
+        $array = array();
+
+        $limite = ($nItems <= 0) ? "" : "LIMIT {$nItems}";
+
+        // Valido el tipo de banner. Si no es correcto lo pongo a tipo 0 (fijo)
+        if ($tipo < 0)
+            $filtroTipo = "(1)";
+        else {
+            $tipoBanner = new TiposBanners($tipo);
+            if ($tipoBanner->getIDTipo() == null)
+                $tipo = 0;
+            $filtroTipo = "(IdTipo='{$tipo}')";
+        }
+
+        // Filtro de 'mostrarEnListado'
+        $filtroMostrarEnListado = ($mostrarEnListado < 0) ? "(1)" : "MostrarEnListado='{$mostrarEnListado}'";
+
+        // Criterio de orden
+        $orden = ($mostrarEnListado) ? "OrdenMostrarEnListado ASC" : "Id ASC";
+
+        $filtro = "IdZona='{$idZona}' AND {$filtroTipo} AND {$filtroMostrarEnListado} AND Publish='1'";
+        $banner = new BannBanners();
+
+        $rows = $banner->cargaCondicion("Id", $filtro, "{$orden} {$limite}");
+        unset($banner);
+
+        foreach ($rows as $row) {
+            $banner = new BannBanners($row['Id']);
+            $documentos = $banner->getDocuments('image1');
+            $imagen = ($documentos[0]) ? $documentos[0]->getPathName() : "";
+
+            // No se tiene en cuenta los banners que no tienen imagen de diseño 1
+            if ($imagen) {
+                $array[] = array(
+                    'titulo' => $banner->getTitulo(),
+                    'subtitulo' => $banner->getSubtitulo(),
+                    'resumen' => $banner->getResumen(),
+                    'url' => $banner->getHref(),
+                    'imagen' => $imagen,
+                );
+            }
+        }
+        unset($banner);
+        unset($documentos);
+
+        return $array;
+    }
+
+    /**
      * Devuelve un array con álbumes fotográficos
      * 
      * En el array habrá tantos elementos como álbumes devueltos.
      * 
      * Cada uno de estos elementos tiene la siguiente estructura:
      * 
-     * - Titulo => el título del álbum
+     * - titulo => el título del álbum
      * - bloqueThumbnail => array(
      *      0 => array( 
      *              PathName => el path de la imagen
@@ -736,30 +850,78 @@ class ControllerWeb {
      */
     protected function getAlbumes($portada = 1, $idSeccion = 0, $nAlbumes = 1, $nImagenes = 1) {
 
+        $albumes = array();
+
         if ($nAlbumes <= 0)
-            $nAlbumes = 9999;
+            $nAlbumes = 999999;
         if ($nImagenes <= 0)
-            $nImagenes = 9999;
+            $nImagenes = 999999;
 
         $filtro = ($idSeccion <= 0) ? "(1)" : "(IdSeccion='{$idSeccion}')";
 
-        if ($portada) {
+        if ($portada > 0) {
             $filtro .= " AND (MostrarEnPortada='1')";
             $orden = "OrdenPortada ASC";
         } else
             $orden = "SortOrder ASC";
 
         $album = new AlbmAlbumes();
-        $rows = $album->cargaCondicion("Id,Titulo", $filtro, "{$orden} limit {$nAlbumes}");
+        $rows = $album->cargaCondicion("Id", $filtro, "{$orden} LIMIT {$nAlbumes}");
         unset($album);
 
         foreach ($rows as $key => $row) {
-            $rows[$key]['bloqueThumbnail'] = $this->getGaleria('AlbmAlbumes', $row['Id'], 0, $nImagenes);
-            $rows[$key]['restoImagenes'] = $this->getGaleria('AlbmAlbumes', $row['Id'], $nImagenes);
-            unset($rows[$key]['Id']);
-        }
+            $album = new AlbmAlbumes($row['Id']);
+            $imagen = $album->getDocuments('image1');
 
-        return $rows;
+            $albumes[$key] = $this->getAlbum($row['Id'], $nImagenes);
+            $albumes[$key]['titulo'] = $album->getTitulo();
+            $albumes[$key]['subtitulo'] = $album->getSubtitulo();
+            $albumes[$key]['resumen'] = $album->getResumen();
+            $albumes[$key]['autor'] = $album->getAutor();
+            $albumes[$key]['imagen'] = (is_object($imagen[0])) ? $imagen[0]->getPathName() : "";
+        }
+        unset($album);
+        unset($imagen);
+
+        return $albumes;
+    }
+
+    /**
+     * Devuelve un array con las imagenes del albúm fotográfico EXTERNO asociado 
+     * al contenido $idContenido
+     * 
+     * @param int $idContenido El id de contenido
+     * @param int $nImagenes El número de imagenes
+     * @return array
+     */
+    protected function getAlbumExterno($idContenido, $nImagenes) {
+
+        $array = array();
+
+        $contenido = new GconContenidos($idContenido);
+        $albumExterno = $contenido->getIdAlbumExterno();
+        if ($albumExterno->getId())
+            $array = $this->getAlbum($albumExterno->getId(), $nImagenes);
+        unset($contenido);
+
+        return $array;
+    }
+
+    /**
+     * Devuelve un array con las imágenes del album fotográfico $idAlbum
+     * 
+     * @param int $idAlbum El id del álbum fotográfico
+     * @param int $nImagenes El número de imágenes a devolver
+     * @return array
+     */
+    protected function getAlbum($idAlbum, $nImagenes) {
+
+        $array = array();
+
+        $array['bloqueThumbnail'] = $this->getGaleria('AlbmAlbumes', $idAlbum, 0, $nImagenes);
+        $array['restoImagenes'] = $this->getGaleria('AlbmAlbumes', $idAlbum, $nImagenes);
+
+        return $array;
     }
 
     /**
@@ -767,18 +929,19 @@ class ControllerWeb {
      * @param type $entidad
      * @param type $idEntidad
      * @param int $posicionInicio
-     * @param int $nImagenes
+     * @param int $nImagenes Número máximo de imágenes a devolver. Opcional (por defecto todas)
      * @return array
      */
     protected function getGaleria($entidad, $idEntidad, $posicionInicio = 0, $nImagenes = 999999) {
 
-        if ($posicionInicio < 0) $posicionInicio = 0;
-        if ($nImagenes <= 0) $nImagenes = 999999;
-        
+        if ($posicionInicio < 0)
+            $posicionInicio = 0;
+        $nImagenes = ($nImagenes <= 0) ? 999999 : $nImagenes - 1;
+
         $limite = "{$posicionInicio},{$nImagenes}";
-        
+
         $dcto = new CpanDocs();
-        $rows = $dcto->cargaCondicion("Id,PathName,Title,ShowCaption", "Entity='{$entidad}' and IdEntity='{$idEntidad}' and Type='galery' and IsThumbnail='0'", "SortOrder ASC limit {$limite}");
+        $rows = $dcto->cargaCondicion("Id,PathName,Title,ShowCaption", "Entity='{$entidad}' and IdEntity='{$idEntidad}' and Type='galery' and IsThumbnail='0'", "SortOrder ASC LIMIT {$limite}");
 
         foreach ($rows as $key => $row) {
             $thumbnail = $dcto->cargaCondicion("PathName", "BelongsTo='{$row['Id']}'");
@@ -791,6 +954,186 @@ class ControllerWeb {
         unset($dcto);
 
         return $rows;
+    }
+
+    /**
+     * Devuelve un array con los enlaces de interes asociados
+     * al contenido $idContenido
+     * 
+     * @param int $idContenido EL id del contenido
+     * @param int $nItems El número máximo de enlaces a devolver. Opcional (por defecto todos)
+     * @return array El array de enlaces de interes
+     */
+    protected function getEnlacesRelacionados($idContenido, $nItems = 999999) {
+
+        if ($nItems <= 0)
+            $nItems = 999999;
+
+        $contenido = new GconContenidos($idContenido);
+        $seccionEnlace = $contenido->getIDSeccionEnlaces();
+        unset($contenido);
+
+        $array = $this->getEnlacesDeInteres($seccionEnlace->getId(), $nItems);
+
+        unset($seccionEnlace);
+
+        return $array;
+    }
+
+    /**
+     * Devuelve un array con los enlaces de interes de la
+     * seccion de enlaces $idSeccion, con un máximo de $nItems enlaces
+     * 
+     * El array tiene dos elementos:
+     * 
+     * - seccion: array()
+     * - enlaces: array()
+     * 
+     * Cada elemento del subarray 'seccion' es de la forma:
+     *
+     * - titulo: el titulo del enlace
+     * - subtitulo: el subtitulo del enlace
+     * - reusmen: el resumen del enlace
+     * - url: array ('url'=>, targetBlank=> boolean)
+     *  
+     * Cada elemento del subarray 'enlaces' es de la forma:
+     * 
+     * - titulo: el titulo del enlace
+     * - subtitulo: el subtitulo del enlace
+     * - reusmen: el resumen del enlace
+     * - url: array ('url'=>, targetBlank=> boolean)
+     * 
+     * @param int $idSeccion El id de la seccion de enlaces de interes
+     * @param int $nItems El número máximo de enlaces a devolver
+     * @return array El array de enlaces de interes
+     */
+    protected function getEnlacesDeInteres($idSeccion, $nItems = 999999) {
+
+        $array = array();
+
+        if ($nItems <= 0)
+            $nItems = 999999;
+
+        $array['seccion'] = $this->getSecciondeEnlaces($idSeccion);
+
+        $enlace = new EnlEnlaces();
+        $rows = $enlace->cargaCondicion("Id", "IdSeccion='{$idSeccion}' and Publish='1'", "SortOrder ASC LIMIT {$nItems}");
+
+        foreach ($rows as $row) {
+            $enlace = new EnlEnlaces($row['Id']);
+            $array['enlaces'][] = array(
+                'titulo' => $enlace->getTitulo(),
+                'subtitulo' => $enlace->getSubtitulo(),
+                'resumen' => $enlace->getResumen(),
+                'url' => $enlace->getHref(),
+            );
+        }
+        unset($enlace);
+
+        return $array;
+    }
+
+    /**
+     * Devuelve un array con las secciones de enlaces de interes con
+     * un máximo de $nItems secciones
+     * 
+     * Cada elemento del array es de la forma:
+     * 
+     * - titulo: el titulo de la seccion
+     * - subtitulo: el subtitulo de la seccion
+     * - resumen: el resumen de la seccion
+     * - url: array ('url'=>, targetBlank=> boolean)
+     *  
+     * @param int $nItems Número máximo de secciones a devolver
+     * @return array Array de secciones de enlaces
+     */
+    protected function getSeccionesDeEnlaces($nItems = 999999) {
+
+        $array = array();
+
+        if ($nItems <= 0)
+            $nItems = 999999;
+
+        $seccion = new EnlSecciones();
+        $rows = $seccion->cargaCondicion("Id", "Publish='1'", "SortOrder ASC LIMIT {$nItems}");
+        unset($seccion);
+
+        foreach ($rows as $row)
+            $array[] = $this->getSecciondeEnlaces($row['Id']);
+
+        return $array;
+    }
+
+    protected function getSecciondeEnlaces($idSeccion) {
+
+        $seccion = new EnlSecciones($idSeccion);
+        $array = array(
+            'titulo' => $seccion->getTitulo(),
+            'subtitulo' => $seccion->getSubtitulo(),
+            'resumen' => $seccion->getResumen(),
+            'url' => $seccion->getHref(),
+        );
+        unset($seccion);
+
+        return $array;
+    }
+
+    /**
+     * Devuelve un array con videos.
+     * 
+     * El array tiene los siguientes elementos:
+     * 
+     * - id
+     * - titulo
+     * - subtitulo
+     * - resumen
+     * - autor
+     * - mostrarEnPortada
+     * - videos => array con objetos docs del tipo 'video'
+     * 
+     * @param type $idZona El id de la zona de videos. Si es <= 0 se muestran todas las zonas.
+     * @param int $mostrarEnPortada Menor a 0 para todos, 0 para los NO portada, 1 para los SI portada
+     * @param int $nItems Número máximo de videos a devolver.
+     * @return array Array con los videos
+     */
+    protected function getVideos($idZona = 1, $mostrarEnPortada = 0, $nItems = 999999) {
+
+        $filtroZona = ($idZona <= 0) ? "(1)" : "(IdZona='{$idZona}')";
+
+        if ($mostrarEnPortada < 0)
+            $filtroPortada = "(1)";
+        else
+            $filtroPortada = ($mostrarEnPortada == 0) ? "(MostrarEnPortada='0')" : "(MostrarEnPortada='1')";
+
+        if ($nItems <= 0)
+            $nItems = 999999;
+
+        $filtro = "{$filtroZona} AND {$filtroPortada} AND Publish='1'";
+        $orden = ($mostrarEnPortada > 0) ? "OrdenPortada ASC" : "SortOrder ASC";
+
+        $video = new VidVideos();
+        $rows = $video->cargaCondicion("Id", $filtro, $orden . " LIMIT {$nItems}");
+        unset($video);
+
+        $videos = array();
+
+        foreach ($rows as $row) {
+            $video = new VidVideos($row['Id']);
+
+            $videos[] = array(
+                'id' => $video->getId(),
+                'titulo' => $video->getTitulo(),
+                'subtitulo' => $video->getSubtitulo(),
+                'resumen' => $video->getResumen(),
+                'autor' => $video->getAutor(),
+                'mostrarEnPortada' => $video->getMostrarEnPortada()->getIDTipo(),
+                'videos' => $video->getDocuments('video'),
+            );
+        }
+
+        unset($video);
+
+        return $videos;
     }
 
     /**

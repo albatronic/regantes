@@ -2,10 +2,10 @@
     {% if evento.imagen %}
     <div class="imagen_evento">
         <img src="{{evento.imagen}}" alt="{{evento.titulo}}" title="{{evento.titulo}}" />
-        <a href="{{evento.url.url}}" title="{{evento.titulo}}"><span class="fecha_evento arriba">{{evento.fecha}}</span></a>
+        <a href="{{evento.url.url}}" title="{{evento.titulo}}"><span class="fecha_evento arriba">{{evento.fecha|date('d/m/Y')}}</span></a>
     </div>
     {% endif %}
-    <h2><a href="contenido-aislado.php" title="{{evento.titulo}}">{{evento.titulo}}</a></h2>
+    <h2>{{ macro.link(evento.titulo,none,evento.url.url,evento.url.targetBlank)}}</h2>
     <h3>{{evento.subtitulo}}</h3>
     <p>{% autoescape false %}{{evento.desarrollo}}{% endautoescape %}</p>
 </div>

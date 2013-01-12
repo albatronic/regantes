@@ -154,14 +154,14 @@ setlocale(LC_MONETARY, $rq->getLanguage());
 // Si el navegador es antiguo muestro template especial
 $url = new CpanUrlAmigables();
 if ($rq->isOldBrowser()) {
-    $rows = $url->cargaCondicion("*", "UrlFriendly='/oldbrowser'");
+    $rows = $url->cargaCondicion("Id,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='/oldbrowser'");
 } else {
     // Localizar la url amigable
-    $rows = $url->cargaCondicion("*", "UrlFriendly='{$rq->getUrlFriendly($app['path'])}'");
+    $rows = $url->cargaCondicion("Id,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='{$rq->getUrlFriendly($app['path'])}'");
 
     if (count($url->getErrores()) == 0) {
         if (!$rows)
-            $rows = $url->cargaCondicion("*", "UrlFriendly='/error404'");
+            $rows = $url->cargaCondicion("Id,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='/error404'");
     } else {
         print_r($url->getErrores());
         die("Error de conexión a la BD");
@@ -196,8 +196,10 @@ switch ($rq->getMethod()) {
         $request['METHOD'] = "POST";
         $controller = ucfirst($request['controller']);
         $action = $request['action'];
-        //$controller = $row['Controller'];
-        //$action = $row['Action'];
+        $request['IdUrlAmigable'] = $row['Id'];
+        $request['Parameters'] = $row['Parameters'];
+        $request['Entity'] = $row['Entity'];
+        $request['IdEntity'] = $row['IdEntity'];
         break;
 }
 
@@ -239,8 +241,8 @@ $result['values']['archivoJs'] = getArchivoJs($result['template']);
 if ($config['debug_mode']) {
     $result['values']['_debugMode'] = true;
     $result['values']['_auditMode'] = (string) $config['audit_mode'];
-    $result['values']['_user'] = print_r($_SESSION['USER'], true);
-    $result['values']['_debugValues'] = print_r($result['values'], true);
+    $result['values']['_user'] = sfYaml::dump($_SESSION['USER'], 5);
+    $result['values']['_debugValues'] = sfYaml::Dump($result['values'],100);
 }
 
 // Si el método no devuelve template o no exite, muestro un template de error.
@@ -271,7 +273,7 @@ $twig->loadTemplate($result['template'])
         ));
 
 //------------------------------------------------------------
-echo "<pre>";print_r($result['values']);echo "</pre>";
+
 unset($rq);
 unset($con);
 unset($loader);

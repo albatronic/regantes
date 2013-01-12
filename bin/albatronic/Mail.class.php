@@ -18,24 +18,22 @@
  * @copyright Informática ALBATRONIC, SL
  * @since 29.05.2011
  */
-
-
-
 class Mail {
 
     private $mailer;
     private $mensaje = null;
 
-    public function __construct($mailer='') {
+    public function __construct($mailer = '') {
         if (is_object($mailer))
             $this->mailer = $mailer;
-        else {
+        elseif (is_array($mailer)) {
             // Busco el motor para enviar correos, que debe estar
             // indicado en el nodo 'mailer' del fichero de configuracion
             $config = sfYaml::load('config/config.yml');
             $config = $config['config']['mailer'];
+
             // Cargo la clase
-            if (file_exists($config['plugin_dir'].$config['plugin_file'])) {
+            if (file_exists($config['plugin_dir'] . $config['plugin_file'])) {
                 include_once $config['plugin_dir'] . $config['plugin_file'];
 
                 // Instancio un objeto de la clase mailer. La clase que se utilizará
@@ -43,18 +41,22 @@ class Mail {
                 $this->mailer = new $config['motor']();
 
                 // Cargo los parametros que necesita el objeto mailer
+                $this->mailer->IsSendmail();
                 $this->mailer->PluginDir = $config['plugin_dir'];
-                $this->mailer->Mailer = $config['socket'];
-                $this->mailer->Host = $config['host'];
-                $this->mailer->SMTPAuth = $config['smtp_auth'];
-                $this->mailer->Username = $config['user_name'];
-                $this->mailer->Password = $config['password'];
-                $this->mailer->Timeout = (double) $config['timeout'];
-                $this->mailer->From = $config['from'];
-                $this->mailer->FromName = $config['from_name'];
-                $this->mailer->setLanguage(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'],0,2),$config['plugin_dir']."language/");
-            } else $this->mensaje = "Error: no se ha podido crear el objeto mailer.";
-        }
+                $this->mailer->Mailer = $mailer['socket'];
+                $this->mailer->Host = $mailer['host'];
+                $this->mailer->SMTPAuth = $mailer['smtp_auth'];
+                $this->mailer->Port = $mailer['port'];
+                //$this->mailer->SMTPSecure = "tls";
+                $this->mailer->Username = $mailer['user_name'];
+                $this->mailer->Password = $mailer['password'];
+                $this->mailer->Timeout = (double) $mailer['timeout'];
+                $this->mailer->From = $mailer['from'];
+                $this->mailer->FromName = $mailer['from_name'];
+                $this->mailer->setLanguage(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), $config['plugin_dir'] . "language/");
+            } else
+                $this->mensaje = "Error: no se ha podido crear el objeto mailer.";
+        } else $this->mensaje = "Error: no se ha definido el soporte para enviar correos.";
     }
 
     /**
@@ -70,8 +72,7 @@ class Mail {
      */
     public function send($para, $de, $deNombre, $asunto, $mensaje, array $adjuntos) {
 
-        if ( ($this->valida($para, $mensaje) == null) and ($this->mensaje == null) ){
-
+        if ($this->valida($para, $mensaje)) {
             if (trim($de) != '')
                 $this->mailer->From = $de;
             if (trim($deNombre) != '')
@@ -85,21 +86,19 @@ class Mail {
             $this->mailer->Body = trim($mensaje);
             $this->mailer->IsHTML(true);
 
-            if ($this->mailer->Send())
-                $this->mensaje = "Envio con exito.";
-            else
+            if (!$this->mailer->Send())
                 $this->mensaje = "Error en el envio: " . $this->mailer->ErrorInfo;
         }
-        return $this->mensaje;
+        return ($this->mensaje == null);
     }
 
     /**
      * Comprueba que los parámetros sean válidos
-     * Devuelve el mensaje de error o NULL si es todo correcto
+     * Devuelve TRUE si es correcto
      *
      * @param email_address $email
      * @param string $contenido
-     * @return string
+     * @return boolean TRUE si es correcto
      */
     private function valida($email, $contenido) {
         if (!$this->compruebaEmail($email))
@@ -107,7 +106,7 @@ class Mail {
         if (trim($contenido) == "")
             $this->mensaje = "No ha indicado ningun contenido.";
 
-        return $this->mensaje;
+        return ($this->mensaje == null);
     }
 
     /**
@@ -142,6 +141,10 @@ class Mail {
             return true;
         else
             return false;
+    }
+
+    public function getError() {
+        return $this->mensaje;
     }
 
 }

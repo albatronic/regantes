@@ -19,13 +19,13 @@ class IndexController extends ControllerProject {
         $this->values['sliderImagenes'] = $this->getSliders();
 
         /* SLIDER NOTICIAS */
-        $this->values['carruselNoticias'] = $this->getNoticias();
+        $this->values['carruselNoticias'] = $this->getNoticias(true,2,1);
 
         /* EVENTOS */
         $this->values['eventos'] = $this->getEventos('',2);
 
         /* LAS NOTICIAS MÁS LEIDAS */
-        $this->values['noticias'] = $this->getNoticiasMasLeidas();
+        $this->values['noticias'] = $this->getNoticiasMasLeidas(0,2);
 
         /* LOS CONTENIDOS MAS VISITADOS */
         $this->values['contenidosVisitados'] = $this->getContenidosMasVisitados(6);
@@ -41,7 +41,6 @@ class IndexController extends ControllerProject {
             'titulo' => 'Título del vídeo tararí que te vi',
             'embed' => 'u4Qjff2BMsk',
         );
-
 
         return parent::IndexAction();
     }

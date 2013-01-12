@@ -10,9 +10,8 @@
         
         <div id="mosaicoProyectos"> 
 
+            {% for key, video in values.galeriaVideos %}
 
-            {% for key, video in values.galeriaVideos.thumbnail %}
-                
                 {% if nuevaFila %}
                     <div class="proyectosFila">
                 {% endif %}
@@ -28,6 +27,6 @@
                 
             {% endfor %}
 
-            </div> 
+        </div> 
     </div>    
 {% endblock %}

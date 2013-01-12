@@ -1,14 +1,19 @@
 <div class="col_izqda">
     <ul class="menu_pie ancho">
-        {% for seccion in values.menuPie %}
-            {% if values.controller==seccion.controller %} {% set claseCss="activo" %} {% else %} {% set claseCss=none %} {% endif %}
-            <li>{{macro.link(seccion.nombre, none, seccion.url.url,seccion.url.targetBlank,none,claseCss)}}</li>
+        {% for key,seccion in values.menuPie %}
+            {% if key is even %}
+                {% if values.controller==seccion.controller %} {% set claseCss="activo" %} {% else %} {% set claseCss=none %} {% endif %}
+                <li>{{macro.link(seccion.etiquetaWeb, none, seccion.url.url,seccion.url.targetBlank,none,claseCss)}}</li>
+            {% endif %}
         {% endfor %}
     </ul>
 
     <ul class="menu_pie estrecho ultimo">
-        {% for seccion in values.menuPie.right %}
-            <li><a href="{{seccion.url}}" title="{{seccion.nombre}}" {% if values.controller==seccion.controller %}class="activo"{% endif %}>{{seccion.nombre}}</a></li>
+        {% for key,seccion in values.menuPie %}
+            {% if key is odd %}
+                {% if values.controller==seccion.controller %} {% set claseCss="activo" %} {% else %} {% set claseCss=none %} {% endif %}
+                <li>{{macro.link(seccion.etiquetaWeb, none, seccion.url.url,seccion.url.targetBlank,none,claseCss)}}</li>
+            {% endif %}
         {% endfor %}
     </ul>
 </div>

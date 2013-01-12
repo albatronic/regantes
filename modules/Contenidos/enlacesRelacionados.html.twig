@@ -1,3 +1,7 @@
+
+{% set nEnlaces = values.enlacesRelacionados|length %}
+
+{% if nEnlaces > 0 %}
 <div class="ficherosAdjuntos">
 
     <div class="contenidoTop"></div>
@@ -5,17 +9,22 @@
     <div class="contenidoInter">
             <h6>Enlaces Relacionados</h6>
             <ul class="enlaces_rel">
-                {% for enlace in values.enlacesRelacionados.left %}
-                    <li>{{enlace.nombre}}<br /><a href="{{enlace.url}}" title="{{enlace.enlace}}" rel="pop-up"><span class="url_enlace">{{enlace.enlace}}</span></a></li>
+                {% for key,enlace in values.enlacesRelacionados %}
+                    {% if key is even %}
+                    <li>{{enlace.titulo}}<br /><a href="{{enlace.url.url}}" title="{{enlace.url.url}}" rel="pop-up"><span class="url_enlace">{{enlace.url.url}}</span></a></li>
+                    {% endif %}
                 {% endfor %}
             </ul>
 
             <ul class="enlaces_rel right">
-                {% for enlace in values.enlacesRelacionados.right %}
-                    <li>{{enlace.nombre}}<br /><a href="{{enlace.url}}" title="{{enlace.enlace}}" rel="pop-up"><span class="url_enlace">{{enlace.enlace}}</span></a></li>
+                {% for key,enlace in values.enlacesRelacionados %}
+                    {% if key is odd %}
+                    <li>{{enlace.titulo}}<br /><a href="{{enlace.url.url}}" title="{{enlace.url.url}}" rel="pop-up"><span class="url_enlace">{{enlace.url.url}}</span></a></li>
+                    {% endif %}
                 {% endfor %}
             </ul>
     </div>
     <div class="contenidoBottom"></div>
 		
 </div>
+{% endif %}

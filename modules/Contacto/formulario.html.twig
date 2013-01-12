@@ -1,20 +1,42 @@
 <div id="formulario">
-    <form>
-        <div id="input_oculto">
-            <input type="text" name="buzon" value="" />
-            <input type="text" name="action" value="" />
-        </div>
+    {% if values.formContacta.accion == '' %}
+        <form name="formEnvio" id="formEnvio" action="" method="POST">
+            <input name="controller" value="Contacto" type="hidden" />
+            <input name="action" value="Index" type="hidden" />
 
-            <input type="text" name="" value="Nombre" class="celdaError" onFocus="if (this.value=='Nombre') this.value='';" />
-            <input type="text" name="" value="Email" class="celda" onFocus="if (this.value=='Email') this.value='';" />
-            <textarea name="mensaje" class="celda" rows="10" cols="" onFocus="if (this.value=='Mensaje') this.value='';">Mensaje</textarea>
+            <input type="text" name="campos[Nombre][valor]" id="nombre" 
+                   value="{{values.formContacta.campos.Nombre.valor}}" 
+                   class="{% if values.formContacta.campos.Nombre.error %}celdaError {% else %}celda{% endif %}" 
+                   onFocus="if (this.value=='Nombre') this.value='';" />
+            <input type="text" name="campos[Email][valor]" id="email" 
+                   value="{{values.formContacta.campos.Email.valor}}" 
+                   class="{% if values.formContacta.campos.Email.error %}celdaError {% else %}celda{% endif %}" 
+                   onFocus="if (this.value=='Email') this.value='';" />
+            <textarea name="campos[Mensaje][valor]" id="mensaje" 
+                      class="{% if values.formContacta.campos.Mensaje.error %}celdaError {% else %}celda{% endif %}" 
+                      rows="10" cols="" 
+                      onFocus="if (this.value=='Mensaje') this.value='';">{{values.formContacta.campos.Mensaje.valor}}
+            </textarea>
 
             <div id="contenedorEnviar">
-                    <div class="checboxesCaja">
-                            <input type="checkbox" value="SI" />He le&iacute;do y acepto la <a href="{{app.path}}/Politica" rel="iframe-800-360" class="pirobox_gal" title="Pol&iacute;tica de Privacidad">pol&iacute;tica de privacidad.</a>
-                    </div>
+                <div id="politicaPrivacidad" class="{% if values.formContacta.campos.leidoPolitica.error %}celdaError {% else %}checboxesCaja{% endif %}">
+                    <input name="campos[leidoPolitica][valor]" type="checkbox" id="leidoPolitica" {%if values.formContacta.campos.leidoPolitica.valor == 'on' %} CHECKED{% endif %} />
+                    He le&iacute;do y acepto la <a href="{{app.path}}/politica-privacidad" rel="iframe-800-360" class="pirobox" title="Pol&iacute;tica de Privacidad">pol&iacute;tica de privacidad.</a>
+                </div>
 
-                    <a href="#" title="enviar" class="boton right">enviar</a>
+                <a href="#" 
+                   title="enviar" 
+                   class="boton right"
+                   onclick="$('#formEnvio').submit();">enviar</a>
             </div>
-    </form>
+        </form>
+    {% else %}
+        <div class="mensaje">{{values.resultado}}
+            {% if values.formContacta.resultado %}
+                <div class="exito mensaje_enviado">Su mensaje ha sido enviado correctamente.</div>
+            {% else %}
+                <div class="error">Por problemas t&eacute;cnicos, el mensaje no ha podido ser procesado en estos momentos.</div>
+            {% endif %}
+        </div>
+    {% endif %}
 </div>

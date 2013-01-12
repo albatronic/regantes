@@ -7,26 +7,22 @@
 
 
 <div class="contenedorNoticia">
-{% for contenido in values.contenidoDesarrollado %}    
-    {% if contenido.fecha!="" %}<div class="fecha">{{contenido.fecha}}</div>{% endif %}
+    {% set contenido = values.contenido %}    
+    
+    {% if contenido.ShowPublishedAt.IDTipo == '1' %}<div class="fecha">{{contenido.PublishedAt | date("d/m/Y")}}</div>{% endif %}
 
-    {% if contenido.titulo!="" %}<h1>{{contenido.titulo}}</h1>{% endif %}
+    {% if (contenido.MostrarTituloContenido.IDTipo and contenido.Titulo) %}<h1>{{contenido.Titulo}}</h1>{% endif %}
 
-    {% if contenido.subtitulo!="" %}<h2>{{contenido.subtitulo}}</h2>{% endif %}
+    {% if (contenido.MostrarSubtituloContenido.IDTipo and contenido.Subtitulo) %}<h2>{{contenido.Subtitulo}}</h2>{% endif %}
 
-    {% if contenido.intro!="" %}<h3>{{contenido.intro}}</h3>{% endif %}
+    {% if (contenido.MostrarResumenContenido.IDTipo and contenido.Resumen) %}<h3>{{contenido.Resumen}}</h3>{% endif %}
 
-    {% if contenido.parrafo!="" %}<p>{{contenido.parrafo}}</p>{% endif %}
-
-    {% if contenido.imagen.urlImagen!="" %}<div class="imagen_noticia"><img src="{{app.path}}/images/{{contenido.imagen.urlImagen}}" alt="{{contenido.imagen.nombreImagen}}" title="{{contenido.imagen.nombreImagen}}" /></div>{% endif %}
-
-    {% if contenido.parrafo!="" %}<p>{{contenido.parrafo}}</p>{% endif %}
+    {% if contenido.Desarrollo!="" %}<p>{% autoescape false%}{{contenido.Desarrollo}}{% endautoescape%}</p>{% endif %}
 
     {% if contenido.videoYoutube.video!="" %}
     <div class="videos_youtube">
             <iframe width="{{contenido.videoYoutube.ancho}}" height="{{contenido.videoYoutube.alto}}" src="http://www.youtube.com/embed/{{contenido.videoYoutube.video}}" frameborder="{{contenido.videoYoutube.anchoBorde}}"></iframe>
     </div>
     {% endif %}
-    
-{% endfor %}    
+      
 </div>

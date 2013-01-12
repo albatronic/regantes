@@ -73,7 +73,7 @@ class Request {
     public function __construct() {
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->request = $_REQUEST;
-        $this->request['FILES'] = $_FILES;        
+        $this->request['FILES'] = $_FILES;
         $this->acceptLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
         $this->remoteAddr = $_SERVER['REMOTE_ADDR'];
         $this->userAgent = $_SERVER['HTTP_USER_AGENT'];
@@ -104,7 +104,15 @@ class Request {
      */
     public function getUrlFriendly($appPath) {
         // Cojo la url, incluido el path a la aplicacion
-        $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        switch ($this->method) {
+            case 'GET' :
+                $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+                break;
+            case 'POST':
+                $url = $this->request['controller'];
+                break;
+        }
+
         // A la url le quito la parte del path a la aplicacion
         $urlSinPath = str_replace($appPath, "", $url);
 

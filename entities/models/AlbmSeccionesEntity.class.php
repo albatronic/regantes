@@ -36,12 +36,6 @@ class AlbmSeccionesEntity extends EntityComunes {
     protected $Resumen;
 
     /**
-     * @var entities\TiposSeccionAlbumes
-     * @assert NotBlank(groups="AlbmSecciones")
-     */
-    protected $IdTipo = '1';
-
-    /**
      * Nombre de la conexion a la BD
      * @var string
      */
@@ -72,7 +66,6 @@ class AlbmSeccionesEntity extends EntityComunes {
      * @var string
      */
     protected $_childEntities = array(
-        'TiposSeccionAlbumes',
         'ValoresSN',
         'ValoresPrivacy',
         'ValoresDchaIzq',
@@ -115,16 +108,6 @@ class AlbmSeccionesEntity extends EntityComunes {
 
     public function getResumen() {
         return $this->Resumen;
-    }
-
-    public function setIdTipo($IdTipo) {
-        $this->IdTipo = $IdTipo;
-    }
-
-    public function getIdTipo() {
-        if (!($this->IdTipo instanceof TiposSeccionAlbumes))
-            $this->IdTipo = new TiposSeccionAlbumes($this->IdTipo);
-        return $this->IdTipo;
     }
 
 }

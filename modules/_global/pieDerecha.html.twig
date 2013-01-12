@@ -2,9 +2,9 @@
     <div id="corporativo">
         <a href="{{app.path}}" title="Comunidad de Regantes | Virgen de la Salud"><img src="{{app.path}}/images/comunidad-regantes-virgen-de-la-salud-agua.png" alt="Comunidad de Regantes | Virgen de la Salud" title="Comunidad de Regantes | Virgen de la Salud" /></a>
         <ul>
-            <li id="direccion">Avda. de Jete, 6  |  18612 &Iacute;TRABO (Granada)</li>
-            <li id="telefono">958 621 127</li>
-            <li id="mail" class="ultimo"><a href="mailto:info@regantesvirgensalud.com" title="escr&iacute;benos a: info@regantesvirgensalud.com">info@regantesvirgensalud.com</a></li>
+            <li id="direccion">{{values.datosContacto.direccion}}  |  {{values.datosContacto.codigoPostal}} {{values.datosContacto.poblacion}} ({{values.datosContacto.provincia}})</li>
+            <li id="telefono">{{values.datosContacto.telefono}}</li>
+            <li id="mail" class="ultimo"><a href="mailto:{{values.datosContacto.emailInfo}}" title="escr&iacute;benos a: {{values.datosContacto.emailInfo}}">{{values.datosContacto.emailInfo}}</a></li>
         </ul>
     </div>
 
@@ -13,7 +13,7 @@
             {{values.firma.service}} {{values.firma.location}}
             <img src="{{app.path}}/images/artico-estudio-paginas-web.png" alt="&Aacute;rtico Estudio | {{values.firma.service}} {{values.firma.location}}" title="&Aacute;rtico Estudio | {{values.firma.service}} {{values.firma.location}}" class="articoestudio" />
         </a>
-        <a href="{{app.path}}/AvisoLegal" rel="iframe-800-550"  class="pirobox_gal2" title="Aviso Legal" id="aviso_legal">Aviso Legal</a>
+        <a href="{{app.path}}/aviso-legal" rel="iframe-800-550"  class="pirobox" title="Aviso Legal" id="aviso_legal">Aviso Legal</a>
     </div>
 </div>
 

@@ -15,6 +15,8 @@ class VideosController extends ControllerProject {
 
 
         /* GALERIA VIDEO */
+        $this->values['galeriaVideos'] = $this->getVideos(0,-1);
+        /**
         $this->values['galeriaVideos']['thumbnail'][1] = array(
             'titulo' => 'Lorem ipsum dolor sit amet',
             'imagen' => 'images/xxx-video.jpg',
@@ -45,11 +47,11 @@ class VideosController extends ControllerProject {
             'imagen' => 'images/xxximagen-eventos2.jpg',
             'enlaceVideo' => 'video',
         );
-
+*/
         return parent::IndexAction();
     }
 
-    public function VideoIndividualAction() {
+    public function ShowItemAction() {
 
         /* VIDEO YOUTUBE */
         $this->values['video'] = array(

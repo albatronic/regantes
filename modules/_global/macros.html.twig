@@ -8,7 +8,7 @@
     {% if noticia.imagen %}
     <div class="imagen_evento">
         <img src="{{noticia.imagen}}" alt="{{noticia.titulo}}" title="{{noticia.titulo}}" />
-        <a href="{{noticia.url.url}}" title="{{noticia.url.url}}"><span class="fecha_evento arriba">{{noticia.fecha}}</span></a>
+        <a href="{{noticia.url.url}}" title="{{noticia.url.url}}"><span class="fecha_evento arriba">{{noticia.fecha | date('d/m/Y')}}</span></a>
     </div>
     {% endif %}
     <h2>{{_self.link(noticia.titulo,none,noticia.url.url,noticia.url.targetBlank)}}</h2>
@@ -30,9 +30,9 @@
     <div class="mosaic-backdrop"> 
         <img src="{{video.imagen}}" alt="{{video.titulo}}" title="{{video.titulo}}" />
     </div>
-        <a href="{{video.enlaceVideo}}" class="mosaic-overlay">
-            <span class="details">{{video.titulo|slice(0, nCar)}}{% if video.titulo | length > nCar %}...{% endif %}</span>
-        </a>
+    <a href="{{video.enlaceVideo}}" class="mosaic-overlay">
+        <span class="details">{{video.titulo|slice(0, nCar)}}{% if video.titulo | length > nCar %}...{% endif %}</span>
+    </a>
 </div>
 {% endmacro %}
 

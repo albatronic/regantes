@@ -1,19 +1,24 @@
-<div id="carrusel">
+{% set nThumbnail = values.galeriaFotos.bloqueThumbnail|length %}
 
-	<div class="contenidoTop"></div>
-	<div class="contenidoInter">
+{% if nThumbnail > 0 %}
+    <div id="carrusel">
+
+        <div class="contenidoTop"></div>
+        <div class="contenidoInter">
             <h6>Galería</h6>
             <ul class="galeria">
-                {% for key, galeria in values.galeriaFotos.thumbnail %}
+                {% for key, galeria in values.galeriaFotos.bloqueThumbnail %}
                     <li {% if values.galeriaFotos.nThumbnail==key %}class="ultimo"{% endif %}>
-                        <a href="{{galeria.enlaceImagen}}" rel="gallery" class="pirobox_gall" title="{{galeria.nombre}}"><img src="{{app.path}}/{{galeria.imagen}}" alt="{{galeria.nombre}}" title="{{galeria.nombre}}" /></a>
+                        <a href="{{app.path}}/{{galeria.PathName}}" rel="gallery" class="pirobox_gall" title="{{galeria.Title}}"><img src="{{app.path}}/{{galeria.PathNameThumbnail}}" alt="{{galeria.Title}}" title="{{galeria.Title}}" /></a>
                     </li>
                 {% endfor %} 
             </ul>
-
-		<a href="{{galeria.enlaceImagen}}" rel="gallery" class="pirobox_gall" title="{{galeria.nombre}}"></a>
-				
+            
+            {% for galeria in values.galeriaFotos.restoImagenes %}
+                <a href="{{app.path}}/{{galeria.PathName}}" rel="gallery" class="pirobox_gall" title="{{galeria.Title}}"></a>
+            {% endfor %}
         </div>
-	<div class="contenidoBottom"></div>
+        <div class="contenidoBottom"></div>
 
-</div>
+    </div>
+{% endif %}

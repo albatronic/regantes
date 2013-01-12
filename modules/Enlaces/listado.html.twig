@@ -1,0 +1,23 @@
+{% extends layout %}
+
+{% block title parent() ~ " - Inicio" %}
+
+{% block contenido %}
+<div class="col_drcha">
+    {% include '_global/ruta.html.twig' %}
+    <h1>Enlaces de interés</h1>
+    <div class="contenedor_100">
+        <h2>{{values.enlacesInteres.seccion.titulo}}</h2>
+
+        <ul id="contenedorEnlaces">
+            {% for enlace in values.enlacesInteres.enlaces %}
+                <li>
+                    <h3>{{ macro.link(enlace.titulo,none,enlace.url.url,enlace.url.targetBlank) }}</h3>
+                    <h4>{{ macro.link(enlace.titulo,none,enlace.url.url,enlace.url.targetBlank) }}</h4>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="javascript:history.back()" title="volver atr&aacute;s" class="boton left">volver</a>        
+    </div>          
+</div>
+{% endblock %}

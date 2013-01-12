@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Description of NoticiasController
  *
@@ -15,7 +14,7 @@ class NoticiasController extends ControllerProject {
     public function IndexAction() {
 
         /* NOTICIAS */
-        $this->values['noticias'] = $this->getNoticias(false);
+        $this->values['noticias'] = $this->getNoticias(false,0,2);
 
         return parent::IndexAction();
     }

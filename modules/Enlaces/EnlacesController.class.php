@@ -15,61 +15,23 @@ class EnlacesController extends ControllerProject {
     public function IndexAction() {
 
         /* ENLACES DE INTERES */
-        $this->values['enlacesInteres'][] = array(
-            'titulo' => 'Nullam iaculis tortor id diam iaculis convallis. In porttitor mollis lobortis. Integer tempor malesuada nisl, vitae ultricies tellus sollicitudin hendrerit. Fusce tempor tellus sit amet odio scelerisque ut rutrum lectus hendrerit. Vestibulum semper commodo sagittis.',
-            'seccion' => 'enlaceDesarrollado',
-            'nombre' => 'www.ideal.es',
-            'url' => 'http://www.ideal.es',
-        );
-
-        $this->values['enlacesInteres'][] = array(
-            'titulo' => 'Nullam iaculis tortor id diam iaculis convallis. In porttitor mollis lobortis. Integer tempor malesuada nisl, vitae ultricies tellus sollicitudin hendrerit. Fusce tempor tellus sit amet odio scelerisque ut rutrum lectus hendrerit. Vestibulum semper commodo sagittis.',
-            'seccion' => 'sdfsfsdf',
-            'nombre' => 'www.ideal.es',
-            'url' => 'http://www.ideal.es',
-        );
-
+        $this->values['seccionesEnlaces'] = $this->getSeccionesDeEnlaces();
 
         return parent::IndexAction();
     }
 
-    public function EnlaceDesarrolladoAction() {
-
-        /* USTED ESTA EN */
-        $this->values['ustedEstaEn'] = array(
-            'titulo' => 'Contacto',
-            'subsecciones' => array(
-                'Sub pepito' => 'http://asdfasdf',
-                'Sub manolito' => 'http://asdfasdfasdfasdf',
-                'Sub sdfg' => 'http://asdfasdfasdfasdf',
-                'Aenean consequat iaculis arcu sit amet faucibus. Fusce posuere posuere scelerisque.' => 'http://asdfasdfasdfasdf',
-            ),
-        );
-
+    /**
+     * Muestra los enlaces de interés de una sección de enlaces.
+     * 
+     * @return array
+     */
+    public function ListadoAction() {
 
         /* ENLACES DE INTERES */
-        $this->values['enlacesInteres'] = array(
-            'tituloSeccion' => 'Fusce tempor tellus sit amet odio scelerisque ut rutrum lectus hendrerit.',
-        );
-
-        $this->values['enlaceIndividual'][] = array(
-            'titulo' => 'Integer tempor malesuada nisl, vitae ultricies tellus sollicitudin hendrerit. Fusce tempor tellus sit amet odio scelerisque ut rutrum lectus hendrerit. Vestibulum semper commodo sagittis.',
-            'seccion' => '',
-            'nombre' => 'www.ideal.es',
-            'url' => 'http://www.ideal.es',
-        );
-
-        $this->values['enlaceIndividual'][] = array(
-            'titulo' => 'Fusce tempor tellus sit amet odio scelerisque ut rutrum lectus hendrerit. Vestibulum semper commodo sagittis.',
-            'seccion' => '',
-            'nombre' => 'www.ideal.es',
-            'url' => 'http://www.ideal.es',
-        );
-
-
+        $this->values['enlacesInteres'] = $this->getEnlacesDeInteres($this->request['IdEntity']);
 
         return array(
-            'template' => $this->entity . '/enlaceDesarrollado.html.twig',
+            'template' => $this->entity . '/listado.html.twig',
             'values' => $this->values
         );
     }

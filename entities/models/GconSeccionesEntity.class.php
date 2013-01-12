@@ -91,7 +91,17 @@ class GconSeccionesEntity extends EntityComunes {
     /**
      * @var string
      */
+    protected $SubetiquetaWeb1;
+
+    /**
+     * @var string
+     */
     protected $EtiquetaWeb2;
+
+    /**
+     * @var string
+     */
+    protected $SubetiquetaWeb2;
 
     /**
      * @var string
@@ -101,12 +111,27 @@ class GconSeccionesEntity extends EntityComunes {
     /**
      * @var string
      */
+    protected $SubetiquetaWeb3;
+
+    /**
+     * @var string
+     */
     protected $EtiquetaWeb4;
 
     /**
      * @var string
      */
+    protected $SubetiquetaWeb4;
+
+    /**
+     * @var string
+     */
     protected $EtiquetaWeb5;
+
+    /**
+     * @var string
+     */
+    protected $SubetiquetaWeb5;
 
     /**
      * @var integer
@@ -327,12 +352,28 @@ class GconSeccionesEntity extends EntityComunes {
         return $this->EtiquetaWeb1;
     }
 
+    public function setSubetiquetaWeb1($SubetiquetaWeb1) {
+        $this->SubetiquetaWeb1 = trim($SubetiquetaWeb1);
+    }
+
+    public function getSubetiquetaWeb1() {
+        return $this->SubetiquetaWeb1;
+    }
+
     public function setEtiquetaWeb2($EtiquetaWeb2) {
         $this->EtiquetaWeb2 = trim($EtiquetaWeb2);
     }
 
     public function getEtiquetaWeb2() {
         return $this->EtiquetaWeb2;
+    }
+
+    public function setSubetiquetaWeb2($SubetiquetaWeb2) {
+        $this->SubetiquetaWeb2 = trim($SubetiquetaWeb2);
+    }
+
+    public function getSubetiquetaWeb2() {
+        return $this->SubetiquetaWeb2;
     }
 
     public function setEtiquetaWeb3($EtiquetaWeb3) {
@@ -343,6 +384,14 @@ class GconSeccionesEntity extends EntityComunes {
         return $this->EtiquetaWeb3;
     }
 
+    public function setSubetiquetaWeb3($SubetiquetaWeb3) {
+        $this->SubetiquetaWeb3 = trim($SubetiquetaWeb3);
+    }
+
+    public function getSubetiquetaWeb3() {
+        return $this->SubetiquetaWeb3;
+    }
+
     public function setEtiquetaWeb4($EtiquetaWeb4) {
         $this->EtiquetaWeb4 = trim($EtiquetaWeb4);
     }
@@ -351,12 +400,28 @@ class GconSeccionesEntity extends EntityComunes {
         return $this->EtiquetaWeb4;
     }
 
+    public function setSubetiquetaWeb4($SubetiquetaWeb4) {
+        $this->SubetiquetaWeb4 = trim($SubetiquetaWeb4);
+    }
+
+    public function getSubetiquetaWeb4() {
+        return $this->SubetiquetaWeb4;
+    }
+
     public function setEtiquetaWeb5($EtiquetaWeb5) {
         $this->EtiquetaWeb5 = trim($EtiquetaWeb5);
     }
 
     public function getEtiquetaWeb5() {
         return $this->EtiquetaWeb5;
+    }
+
+    public function setSubetiquetaWeb5($SubetiquetaWeb5) {
+        $this->SubetiquetaWeb5 = trim($SubetiquetaWeb5);
+    }
+
+    public function getSubetiquetaWeb5() {
+        return $this->SubetiquetaWeb5;
     }
 
     public function setOrdenMenu1($OrdenMenu1) {

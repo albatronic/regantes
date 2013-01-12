@@ -8,19 +8,17 @@
         <script type="text/javascript">var appPath = "{{appPath}}";</script>  
         
         {% include values.archivoJs %}
+        <script type="text/javascript" src="{{app.path}}/js/AEscripts.js"></script>         
     </head>
 
     <body>
                     
-                {% block contenido %}
-                    
-                {% endblock %}                    
+        {% block contenido %}
+        {% endblock %}                    
 
-
+        {# PARA HACER DEBUGER EN ENTORNO DE DESARROLLO #}        
         {% if values._debugMode %}
-        <div style="clear: both;">
-            <pre>{{values._debugValues}}</pre>
-        </div>
+            {% include '_global/debuger.html.twig' %}
         {% endif %}
     </body>
 </html>

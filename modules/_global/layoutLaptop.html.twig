@@ -7,9 +7,9 @@
         {% include values.archivoCss %}
           
         <!-- Para que esté disponible el path de la app en todos los java scripts -->
-        <script type="text/javascript">var appPath = "{{appPath}}";</script>     
-        
+        <script type="text/javascript">var appPath = "{{appPath}}";</script>            
         {% include values.archivoJs %}
+        <script type="text/javascript" src="{{app.path}}/js/AEscripts.js"></script> 
         
         <!-- Obtener la resolución del dispositivo de navegación del cliente web -->
         {% if not chequeadaResolucionVisitante %}
@@ -37,10 +37,9 @@
             </div>
          </div>
 
+        {# PARA HACER DEBUGER EN ENTORNO DE DESARROLLO #}            
         {% if values._debugMode %}
-        <div style="clear: both;">
-            <pre>{{values._debugValues}}</pre>
-        </div>
+            {% include '_global/debuger.html.twig' %}
         {% endif %}
     </body>
 </html>

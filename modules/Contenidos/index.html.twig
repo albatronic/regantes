@@ -1,0 +1,41 @@
+{#
+## Aquí tendremos que decirle que si hay más de un contenido desarrollado
+## tenemos que pintar el div class="separacionVariosContenidos" debajo de cada contenido que haya excepto en el último.
+#}
+
+{% extends layout %}
+
+{% block title parent() ~ " - Inicio" %}
+
+{% block contenido %}
+    <div class="col_drcha">
+        {% include '_global/ruta.html.twig' %}
+            
+	{% include 'contenidos/contenido.html.twig' %}
+            
+        {# FICHEROS ADJUNTOS #}            
+	{% if values.contenido.ShowDocuments.IDTipo == '1' %}
+            {% include 'contenidos/ficherosAdjuntos.html.twig' %}
+        {% endif %}
+            
+        {# ENLACES RELACIONADOS #}            
+        {% if values.contenido.ShowRelatedLinks.IDTipo == '1' %}
+            {% include 'contenidos/enlacesRelacionados.html.twig' %} 
+        {% endif %}
+            
+        {# GALERIA DE IMAGENES #}    
+        {% if values.contenido.ShowGalery.IDTipo == '1' %}
+            {% include 'contenidos/galeria.html.twig' %} 
+        {% endif %}
+
+	{#<div class="separacionVariosContenidos"></div>';
+	
+	{#{% include 'contenidos/noticia.html.twig' %} {# NOTICIA: Título, Subtítulo, Intro, Párrafo, Foto, Vídeo Youtube #}
+	{#{% include 'contenidos/ficherosAdjuntos.html.twig' %} {# FICHEROS ADJUNTOS #}
+	{#{% include 'contenidos/enlacesRelacionados.html.twig' %} {# ENLACES RELACIONADOS #}
+	{#{% include 'contenidos/galeria.html.twig' %} {# GALERIA DE IMAGENES #}
+	
+	<a href="javascript:history.back()" title="volver atr&aacute;s" class="boton right">volver atr&aacute;s</a> {# boton volver atras #}
+	{#{% include 'contenidos/botonera.html.twig' %}#}
+    </div>
+{% endblock %}

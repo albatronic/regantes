@@ -24,6 +24,7 @@ DEPENDENCIAS:
 
 #calendarioTablaDias {
     min-height: 216px;
+    float:left;
 }
 
 /*#contenedor_calendario #cabecera_calendario {

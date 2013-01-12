@@ -2,37 +2,8 @@
 
     <div class="proyectosFila">
         {% for key, galeria in values.galeriaImagenes %}
-            {#<div class="proyecto{{key}}">
-                    <a href="{{galeria.enlaceImagen}}" rel="gallery" class="pirobox_gall2" title="{{galeria.nombre}}"><img src="{{galeria.imagen}}" alt="{{galeria.nombre}}" title="{{galeria.nombre}}" /></a>
-                    <div class="textoAlbum"><h4>{{galeria.tituloGaleria}}</h4></div>
-
-                            <a href="{{galeria.enlaceImagen}}" rel="gallery" class="pirobox_gall2" title="{{galeria.nombre}}"></a>
-            </div>#}
             {{ macro.galeria (galeria, key) }}
         {% endfor %}
-
-
-
-      {#  <div class="proyecto2">
-                <a href="'.$imagen1.'" rel="gallery" class="pirobox_gall3" title="'.$piedefoto.'"><img src="'.$imagen5.'" alt="'.$piedefoto.'" title="'.$piedefoto.'" /></a>
-                <div class="textoAlbum"><h4>'.$titulo1.'</h4></div>
-
-                        <a href="'.$imagen5.'" rel="gallery" class="pirobox_gall3" title="'.$piedefoto.'"></a>
-                        <a href="'.$imagen6.'y" rel="gallery" class="pirobox_gall3" title="'.$piedefoto.'"></a>
-                        <a href="'.$imagen7.'" rel="gallery" class="pirobox_gall3" title="'.$piedefoto.'"></a>
-        </div>
-
-
-
-        <div class="proyecto3">
-                <a href="'.$imagen1.'" rel="gallery" class="pirobox_gall4" title="'.$piedefoto.'"><img src="'.$imagen12.'" alt="'.$piedefoto.'" title="'.$piedefoto.'" /></a>
-                <div class="textoAlbum"><h4>'.$titulo1.'</h4></div>
-
-                        <a href="'.$imagen8.'" rel="gallery" class="pirobox_gall4" title="'.$piedefoto.'"></a>
-                        <a href="'.$imagen9.'" rel="gallery" class="pirobox_gall4" title="'.$piedefoto.'"></a>
-                        <a href="'.$imagen10.'" rel="gallery" class="pirobox_gall4" title="'.$piedefoto.'"></a>
-        </div>#}
-
     </div>
 
 </div>

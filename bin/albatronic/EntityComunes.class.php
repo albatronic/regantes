@@ -308,6 +308,7 @@ class EntityComunes extends Entity {
     protected $CodigoAppAsociada = NULL;
     protected $IdAlbumExterno = NULL;
     protected $IdSliderAsociado = NULL;
+    protected $IdSeccionEnlaces = NULL;
 
     /**
      * Fecha y hora última visita en formato UNIX
@@ -823,7 +824,6 @@ class EntityComunes extends Entity {
             $this->UrlIsHttps = new ValoresSN($this->UrlIsHttps);
         return $this->UrlIsHttps;
     }
-
     public function setCodigoAppAsociada($CodigoAppAsociada) {
         $this->CodigoAppAsociada = $CodigoAppAsociada;
     }
@@ -831,7 +831,7 @@ class EntityComunes extends Entity {
     public function getCodigoAppAsociada() {
         if (!($this->CodigoAppAsociada instanceof CpanAplicaciones)) {
             $app = new CpanAplicaciones();
-            $this->CodigoAppAsociada = $app->find('CodigoApp', $this->CodigoAppAsociada);
+            $this->CodigoAppAsociada = $app->find('Id', $this->CodigoAppAsociada);
         }
         return $this->CodigoAppAsociada;
     }
@@ -841,6 +841,10 @@ class EntityComunes extends Entity {
     }
 
     public function getIdAlbumExterno() {
+        if (!($this->IdAlbumExterno instanceof AlbmAlbumes)) {
+            $this->IdAlbumExterno = new AlbmAlbumes($this->IdAlbumExterno);
+        }
+
         return $this->IdAlbumExterno;
     }
 
@@ -849,9 +853,25 @@ class EntityComunes extends Entity {
     }
 
     public function getIdSliderAsociado() {
+        if (!($this->IdSliderAsociado instanceof SldSliders)) {
+            $this->IdSliderAsociado = new SldSliders($this->IdSliderAsociado);
+        }
+
         return $this->IdSliderAsociado;
     }
 
+    public function setIDSeccionEnlaces($IDSeccionEnlaces) {
+        $this->IDSeccionEnlaces = $IDSeccionEnlaces;
+    }
+
+    public function getIDSeccionEnlaces() {
+        if (!($this->IDSeccionEnlaces instanceof EnlSecciones)) {
+            $this->IDSeccionEnlaces = new EnlSecciones($this->IDSeccionEnlaces);
+        }
+
+        return $this->IDSeccionEnlaces;
+    }
+    
     public function setDateTimeLastVisit($TimeUnix = 0) {
 
         if ($TimeUnix == 0)

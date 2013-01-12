@@ -1,7 +1,9 @@
 <div class="media_drcha">
-	<span class="raya verde"></span>
-	<h1>Álbumes fotográficos</h1>
-	<h4><a href="galeria.php" title="más álbumes">{{values.galeriaFotos[0].Titulo}}</a></h4>
-	{% include '/Index/galeria.html.twig' %}  
-	{% include '/Index/video.html.twig' %}  
+    {% if values.galeriaFotos|length%}
+        <span class="raya verde"></span>
+        <h1>Álbumes fotográficos</h1>
+        <h4><a href="{{app.path}}/galeria" title="más álbumes">{{values.galeriaFotos[0].titulo}}</a></h4>
+        {% include '/Index/galeria.html.twig' %} 
+    {% endif %}
+    {% include '/Index/video.html.twig' %}  
 </div>		

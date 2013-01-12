@@ -1,7 +1,12 @@
 <div id="ruta">
-    {% for ruta in values.ruta %}{{ruta.nombre}}
-        {{ macro.link(ruta.nombre,none,ruta.url.url,ruta.url.targetBlank) }}
-        &nbsp;&nbsp;>&nbsp;&nbsp;
+    {% set nItems = values.ruta|length -1%}
+    {% for key,ruta in values.ruta %}
+        {% if key != nItems %}        
+            {{ macro.link(ruta.nombre,none,ruta.url.url,ruta.url.targetBlank) }}
+            &nbsp;&nbsp;>&nbsp;&nbsp;
+        {% else %}
+            {{ruta.nombre}}
+        {% endif %}
     {% endfor %}
 </div>
 

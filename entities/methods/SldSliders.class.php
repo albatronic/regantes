@@ -104,7 +104,7 @@ class SldSliders extends SldSlidersEntity {
      * Tiene dos elmentos:
      * 
      * - url => Es la url en si con el prefijo, que puede ser: nada, http, o https)
-     * - targetBlank => Es un flag booleano para saber si el enlace se habrirá en popup o no
+     * - targetBlank => Es un flag booleano para saber si el enlace se abrirá en popup o no
      * 
      * @return array Array
      */
