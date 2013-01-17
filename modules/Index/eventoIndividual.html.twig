@@ -1,11 +1,13 @@
-<div class="evento_indiv">
+<div class="evento_indiv {% if not evento.imagen %}sin_imagen{% endif %}">
     {% if evento.imagen %}
     <div class="imagen_evento">
         <img src="{{evento.imagen}}" alt="{{evento.titulo}}" title="{{evento.titulo}}" />
         <a href="{{evento.url.url}}" title="{{evento.titulo}}"><span class="fecha_evento arriba">{{evento.fecha|date('d/m/Y')}}</span></a>
     </div>
+    {% else %}
+       <span class="fecha">{{evento.fecha | date('d/m/Y')}}</span> 
     {% endif %}
     <h2>{{ macro.link(evento.titulo,none,evento.url.url,evento.url.targetBlank)}}</h2>
     <h3>{{evento.subtitulo}}</h3>
-    <p>{% autoescape false %}{{evento.desarrollo}}{% endautoescape %}</p>
+    <p>{{evento.resumen}}</p>
 </div>

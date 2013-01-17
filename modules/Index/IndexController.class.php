@@ -26,7 +26,7 @@ class IndexController extends ControllerProject {
         $this->values['carruselNoticias'] = $this->getNoticias(true, 2, 1);
 
         /* EVENTOS ÚNICOS. */
-        $this->values['eventos'] = $this->getEventos('','', 3,1,true);
+        $this->values['eventos'] = $this->getEventos('','', 3,2,true);
 
         /* LAS NOTICIAS MÁS LEIDAS */
         $this->values['noticias'] = $this->getNoticiasMasLeidas(0, 2);
@@ -41,10 +41,7 @@ class IndexController extends ControllerProject {
         $this->values['galeriaFotos'] = $this->getAlbumes(1, "", 1, 5);
 
         /* VIDEO YOUTUBE */
-        $this->values['videoYoutube'] = array(
-            'titulo' => 'Título del vídeo tararí que te vi',
-            'embed' => 'u4Qjff2BMsk',
-        );
+        $this->values['videoYoutube'] = $this->getVideos(0,1,1);
 
         return parent::IndexAction();
     }

@@ -1,31 +1,20 @@
 {% extends layout %}
 
-{% set nColumnas = 3 %}
-{% set nuevaFila = 1 %}
-
 {% block contenido %}
     <div class="col_drcha">
         {% include '/_global/ruta.html.twig' %}
 	<h1>Galería de Vídeos</h1>
         
         <div id="mosaicoProyectos"> 
-
-            {% for key, video in values.galeriaVideos %}
-
-                {% if nuevaFila %}
-                    <div class="proyectosFila">
-                {% endif %}
-                            
-                {{ macro.video (video, key) }}
-                            
-                {% if key is divisibleby(nColumnas) %}
-                    </div>
-                    {% set nuevaFila = 1 %}
-                {% else %}
-                    {% set nuevaFila = 0 %}
-                {% endif %}
-                
-            {% endfor %}
+        {% for fila in values.galeriaVideos %}
+            {% set videosPorFila = fila|length %}
+            <div class="proyectosFila">
+                {% for key,video in fila %}
+                    {% set ultimoFila = ((key+1) == videosPorFila)%}
+                    {{ macro.video (video, key+1, none, ultimoFila) }}
+                {% endfor %}
+            </div>
+        {% endfor %}
 
         </div> 
     </div>    

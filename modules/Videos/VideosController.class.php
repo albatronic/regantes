@@ -13,52 +13,37 @@ class VideosController extends ControllerProject {
 
     public function IndexAction() {
 
-
-        /* GALERIA VIDEO */
-        $this->values['galeriaVideos'] = $this->getVideos(0,-1);
-        /**
-        $this->values['galeriaVideos']['thumbnail'][1] = array(
-            'titulo' => 'Lorem ipsum dolor sit amet',
-            'imagen' => 'images/xxx-video.jpg',
-            'enlaceVideo' => 'video',
-        );
-
-        $this->values['galeriaVideos']['thumbnail'][2] = array(
-            'titulo' => 'Vestibulum porttitor justo vel lorem varius eu pretium magna blandit.',
-            'imagen' => 'images/xxx-imagen-contenido1.jpg',
-            'enlaceVideo' => 'video',
-        );
-
-        $this->values['galeriaVideos']['thumbnail'][3] = array(
-            'titulo' => 'Quisque tincidunt augue at velit mattis commodo quis vitae urna.',
-            'imagen' => 'images/xxximagen-eventos2.jpg',
-            'enlaceVideo' => 'video',
-        );
-
-
-        $this->values['galeriaVideos']['thumbnail'][4] = array(
-            'titulo' => 'Quisque tincidunt augue at velit mattis commodo quis vitae urna.',
-            'imagen' => 'images/xxximagen-eventos2.jpg',
-            'enlaceVideo' => 'video',
-        );
-
-        $this->values['galeriaVideos']['thumbnail'][5] = array(
-            'titulo' => 'Quisque tincidunt augue at velit mattis commodo quis vitae urna.',
-            'imagen' => 'images/xxximagen-eventos2.jpg',
-            'enlaceVideo' => 'video',
-        );
-*/
+         // El número de vídeos por fila.
+        $nItemsFila = 3;
+        
+        $array = array();        
+        
+        // Obtener todos los videos de todas las secciones de videos
+        $albumes = $this->getVideos(0,-1);
+        
+        $fila = 0;
+        foreach($albumes as $key=>$album) {
+            if ($key % $nItemsFila == 0) $fila += 1;
+            $array[$fila][] = $album;
+        }
+        
+        $this->values['galeriaVideos'] = $array;       
+        
         return parent::IndexAction();
     }
 
     public function ShowItemAction() {
 
+        $video = new VidVideos($this->request['IdEntity']);
+        
         /* VIDEO YOUTUBE */
         $this->values['video'] = array(
-            'titulo' => 'Título del vídeo tararí que te vi',
-            'embed' => 'u4Qjff2BMsk',
-            'autor' => 'Praesent at felis sem.',
-            'descripcion' => 'Duis eget vestibulum nunc. Etiam eros mi, dignissim eget auctor ultricies, vehicula vitae mauris. Proin sit amet massa mi, eu sodales tellus. Pellentesque eu lectus in enim eleifend aliquet. Proin iaculis egestas est et placerat. Pellentesque id justo purus. Nulla facilisi. Integer leo quam, sollicitudin at blandit in, rhoncus sit amet ante. Proin bibendum, eros at tincidunt feugiat, eros justo dictum libero, eu congue magna neque non quam.',
+            'titulo' => $video->getTitulo(),
+            'subtitulo' => $video->getSubtitulo(),
+            'embed' => $video->getUrlVideo(),
+            'autor' => $video->getAutor(),
+            'resumen' => $video->getResumen(),
+            'tipo' => $video->getIdTipo()->getDescripcion(),
         );
 
 

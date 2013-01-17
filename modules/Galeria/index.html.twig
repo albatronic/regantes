@@ -7,7 +7,13 @@
     <h1>Galería de imágenes</h1>
 
     <div id="mosaicoProyectos"> 
-        {% include 'galeria/galeriaFila.html.twig' %}
+        {% for fila in values.galeriaImagenes %}        
+            <div class="proyectosFila">
+                {% for key,album in fila %}
+                    {{ macro.galeria(album,key+1) }}
+                {% endfor %}
+            </div>
+        {% endfor %}            
     </div> 
 </div>
 

@@ -1,12 +1,7 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of IndexController
+ * Description of GaleriaController
  *
  * @author Administrador
  */
@@ -17,15 +12,21 @@ class GaleriaController extends ControllerProject {
     public function IndexAction() {
 
         /* GALERIA IMAGENES */
-        $this->values['galeriaImagenes'] = $this->getAlbumes(-1,0,999,999);
-/**
-        $this->values['galeriaImagenes'][3] = array(
-            'tituloGaleria' => 'Quisque tincidunt augue at velit mattis commodo quis vitae urna.',
-            'nombre' => 'Lorem ipsum dolor sit amet',
-            'imagen' => 'images/xxx-imagen-galeria1.jpg',
-            'enlaceImagen' => 'http://lorempixel.com/500/300/nature',
-        );
-*/
+        
+        // El número de álbumes por fila.
+        $nItemsFila = 3;
+        
+        $array = array();        
+        
+        $albumes = $this->getAlbumes(-1,0,999,999);
+        
+        $fila = 0;
+        foreach($albumes as $key=>$album) {
+            if ($key % $nItemsFila == 0) $fila += 1;
+            $array[$fila][] = $album;
+        }
+        
+        $this->values['galeriaImagenes'] = $array;
 
         return parent::IndexAction();
     }

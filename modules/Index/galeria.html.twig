@@ -1,6 +1,9 @@
 <ul class="galeria">
+    
+    {% set nItems = values.galeriaFotos[0].bloqueThumbnail|length %}
+        
     {% for key, galeria in values.galeriaFotos[0].bloqueThumbnail %}
-	<li {% if values.galeriaFotos.nThumbnail==key %}class="ultimo"{% endif %}>
+	<li {% if nItems==key+1 %}class="ultimo"{% endif %}>
             <a href="{{app.path}}/{{galeria.PathName}}" rel="gallery" class="pirobox_gall1" title="{{galeria.Title}}">
                 <img src="{{app.path}}/{{galeria.PathNameThumbnail}}" alt="{{galeria.Title}}" title="{{galeria.Title}}" />
             </a>

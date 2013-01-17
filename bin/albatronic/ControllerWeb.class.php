@@ -964,6 +964,9 @@ class ControllerWeb {
      * Cada uno de estos elementos tiene la siguiente estructura:
      * 
      * - titulo => el título del álbum
+     * - subtitulo => el subtitulo del álbum
+     * - resumen => el resumen del álbum
+     * - imagen => path a la imagen de diseño 1
      * - bloqueThumbnail => array(
      *      0 => array( 
      *              PathName => el path de la imagen
@@ -1004,6 +1007,8 @@ class ControllerWeb {
         } else
             $orden = "SortOrder ASC";
 
+        $filtro .= " AND (Publish='1')";
+        
         $album = new AlbmAlbumes();
         $rows = $album->cargaCondicion("Id", $filtro, "{$orden} LIMIT {$nAlbumes}");
         unset($album);
@@ -1075,7 +1080,7 @@ class ControllerWeb {
 
         if ($posicionInicio < 0)
             $posicionInicio = 0;
-        $nImagenes = ($nImagenes <= 0) ? 999999 : $nImagenes - 1;
+        $nImagenes = ($nImagenes <= 0) ? 999999 : $nImagenes;
 
         $limite = "{$posicionInicio},{$nImagenes}";
 
@@ -1222,22 +1227,23 @@ class ControllerWeb {
      * 
      * El array tiene los siguientes elementos:
      * 
-     * - id
      * - titulo
      * - subtitulo
      * - resumen
      * - autor
-     * - mostrarEnPortada
-     * - videos => array con objetos docs del tipo 'video'
+     * - tipoVideo: la descripcion del tipo
+     * - imagen: el path a la imagen (caratula del video)
+     * - urlVideo: el id del video
+     * - url => array(url => url, targetBlank => boolean)
      * 
-     * @param type $idZona El id de la zona de videos. Si es <= 0 se muestran todas las zonas.
+     * @param int $idSeccion El id de la seccion de videos. Si es <= 0 se muestran todas las secciones.
      * @param int $mostrarEnPortada Menor a 0 para todos, 0 para los NO portada, 1 para los SI portada
      * @param int $nItems Número máximo de videos a devolver.
      * @return array Array con los videos
      */
-    protected function getVideos($idZona = 1, $mostrarEnPortada = 0, $nItems = 999999) {
+    protected function getVideos($idSeccion = 1, $mostrarEnPortada = 0, $nItems = 999999) {
 
-        $filtroZona = ($idZona <= 0) ? "(1)" : "(IdZona='{$idZona}')";
+        $filtroSeccion = ($idSeccion <= 0) ? "(1)" : "(IdZona='{$idSeccion}')";
 
         if ($mostrarEnPortada < 0)
             $filtroPortada = "(1)";
@@ -1247,7 +1253,7 @@ class ControllerWeb {
         if ($nItems <= 0)
             $nItems = 999999;
 
-        $filtro = "{$filtroZona} AND {$filtroPortada} AND Publish='1'";
+        $filtro = "{$filtroSeccion} AND {$filtroPortada} AND Publish='1'";
         $orden = ($mostrarEnPortada > 0) ? "OrdenPortada ASC" : "SortOrder ASC";
 
         $video = new VidVideos();
@@ -1258,15 +1264,17 @@ class ControllerWeb {
 
         foreach ($rows as $row) {
             $video = new VidVideos($row['Id']);
+            $imagen = $video->getDocuments('image1'); 
 
             $videos[] = array(
-                'id' => $video->getId(),
                 'titulo' => $video->getTitulo(),
                 'subtitulo' => $video->getSubtitulo(),
                 'resumen' => $video->getResumen(),
                 'autor' => $video->getAutor(),
-                'mostrarEnPortada' => $video->getMostrarEnPortada()->getIDTipo(),
-                'videos' => $video->getDocuments('video'),
+                'tipoVideo' => $video->getIdTipo()->getDescripcion(),
+                'imagen' =>(is_object($imagen[0])) ? $imagen[0]->getPathName() : "",
+                'urlVideo' => $video->getUrlVideo(),
+                'url' => $video->getHref(),
             );
         }
 

@@ -21,12 +21,14 @@
 {# Es el resumen de un evento y puede estar en las siguientes secciones: INDEX, NOTICIAS, EVENTOS #}
 {# El contenido de un resumen de un evento sería: IMAGEN (puede llevar o no), FECHA (puede llevar o no), TÍTULO, SUBTÍTULO (puede llevar o no), PÁRRAFO #}
 {% macro evento (evento) %}
-<div class="evento_indiv">
+<div class="evento_indiv {% if not evento.imagen %}sin_imagen{% endif %}">
     {% if evento.imagen %}
     <div class="imagen_evento">
         <img src="{{appPath}}/{{evento.imagen}}" alt="{{evento.titulo}}" title="{{evento.titulo}}" />
         <a href="{{evento.url.url}}" title="{{evento.url.url}}"><span class="fecha_evento arriba">{{evento.fecha | date('d/m/Y')}}</span></a>
     </div>
+    {% else %}
+       <span class="fecha">{{evento.fecha | date('d/m/Y')}}</span> 
     {% endif %}
     <h2>{{_self.link(evento.titulo,none,evento.url.url,evento.url.targetBlank)}}</h2>
     <h3>{{evento.subtitulo}}</h3>
@@ -40,13 +42,13 @@
  con lo que al recibir más vídeos se genera otro <div class="proyectosFila"> quedando siempre filas de 3 vídeos o menos, pero nunca más. #}
 {# El array de un vídeo contiene: IMAGEN del vídeo, TITULO, ENLACE al vídeo individual #}
 {# Es importante la variable 'key' porque el video 3 y sus múltiplos van a tener estilos diferenes que el 1 y el 2. #}
-{% macro video (video, key, nCaracteres)%}
+{% macro video (video, key, nCaracteres, ultimoFila)%}
 {% set nCar=nCaracteres | default(100) %}
 <div class="mosaic-block bar proyecto{{key}}">
-    <div class="mosaic-backdrop"> 
-        <img src="{{app.path}}/{{video.imagen}}" alt="{{video.titulo}}" title="{{video.titulo}}" />
+    <div class="mosaic-backdrop" style="display: block;"> 
+        <img src="{{appPath}}/{{video.imagen}}" alt="{{video.titulo}}" title="{{video.titulo}}" />
     </div>
-    <a href="{{video.enlaceVideo}}" class="mosaic-overlay">
+    <a href="{{video.url.url}}" class="mosaic-overlay" style="{% if ultimoFila %}display: inline;{% endif %} left: 0px; bottom: -146px;">
         <span class="details">{{video.titulo|slice(0, nCar)}}{% if video.titulo | length > nCar %}...{% endif %}</span>
     </a>
 </div>
@@ -61,10 +63,14 @@
 {# Es importante la variable 'key' porque la imagen 3 y sus múltiplos van a tener estilos diferenes que la imagen 1 y la imagen 2. #}
 {% macro galeria (galeria, key)%}
 <div class="proyecto{{key}}">
-        <a href="{{galeria.enlaceImagen}}" rel="gallery" class="pirobox_gall2" title="{{galeria.nombre}}"><img src="{{galeria.imagen}}" alt="{{galeria.nombre}}" title="{{galeria.nombre}}" /></a>
-        <div class="textoAlbum"><h4>{{galeria.tituloGaleria}}</h4></div>
+    <a href="{{appPath}}/{{galeria.imagen}}" rel="gallery" class="pirobox_gall{{key}}" title="{{galeria.titulo}}">
+        <img src="{{appPath}}/{{galeria.imagen}}" alt="{{galeria.titulo}}" title="{{galeria.titulo}}" />
+    </a>
+    <div class="textoAlbum"><h4>{{galeria.titulo}}</h4></div>
 
-        <a href="{{galeria.enlaceImagen}}" rel="gallery" class="pirobox_gall2" title="{{galeria.nombre}}"></a>
+    {% for thumbnail in galeria.bloqueThumbnail %}
+        <a href="{{appPath}}/{{thumbnail.PathName}}" rel="gallery" class="pirobox_gall{{key}}" title="{{thumbnail.Title}}"></a>
+    {% endfor %}
 </div>
 {% endmacro %}
 
