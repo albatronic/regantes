@@ -59,6 +59,8 @@ class VidSeccionesEntity extends EntityComunes {
      */
     protected $_parentEntities = array(
         array('SourceColumn' => 'Id', 'ParentEntity' => 'VidVideos', 'ParentColumn' => 'IdSeccion'),
+        array('SourceColumn' => 'Id', 'ParentEntity' => 'GconSecciones', 'ParentColumn' => 'IdSeccionVideos'),
+        array('SourceColumn' => 'Id', 'ParentEntity' => 'GconContenidos', 'ParentColumn' => 'IdSeccionVideos'),        
     );
 
     /**

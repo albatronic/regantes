@@ -309,6 +309,7 @@ class EntityComunes extends Entity {
     protected $IdAlbumExterno = NULL;
     protected $IdSliderAsociado = NULL;
     protected $IdSeccionEnlaces = NULL;
+    protected $IdSeccionVideos = NULL;
 
     /**
      * Fecha y hora última visita en formato UNIX
@@ -339,7 +340,7 @@ class EntityComunes extends Entity {
      * Tiene dos elmentos:
      * 
      *  'url'   Es la url en si con el prefijo, que puede ser: nada, http, o https)
-     *  'targetBlank'   Es un flag booleano para saber si el enlace se habrirá en popup o no
+     *  'targetBlank'   Es un flag booleano para saber si el enlace se abrirá en popup o no
      * 
      * @return array Array
      */
@@ -461,7 +462,7 @@ class EntityComunes extends Entity {
     }
 
     public function getCreatedAt() {
-        return $this->CreatedAt;
+        return date_format(date_create($this->CreatedAt), 'd-m-Y H:i:s');
     }
 
     public function setModifiedBy($ModifiedBy) {
@@ -479,7 +480,7 @@ class EntityComunes extends Entity {
     }
 
     public function getModifiedAt() {
-        return $this->ModifiedAt;
+        return date_format(date_create($this->ModifiedAt), 'd-m-Y H:i:s');
     }
 
     public function setDeleted($Deleted) {
@@ -507,7 +508,7 @@ class EntityComunes extends Entity {
     }
 
     public function getDeletedAt() {
-        return $this->DeletedAt;
+        return date_format(date_create($this->DeletedAt), 'd-m-Y H:i:s');
     }
 
     public function setPrivacy($Privacy) {
@@ -542,6 +543,9 @@ class EntityComunes extends Entity {
     }
 
     public function setActiveFrom($ActiveFrom) {
+        if ($ActiveFrom == '0000-00-00 00:00:00')
+            $ActiveFrom = $_SESSION['VARIABLES']['EnvPro']['activeFrom'];
+
         $date = new Fecha($ActiveFrom);
         $this->ActiveFrom = $date->getFechaTime();
         unset($date);
@@ -555,6 +559,9 @@ class EntityComunes extends Entity {
     }
 
     public function setActiveTo($ActiveTo) {
+        if ($ActiveTo == '0000-00-00 00:00:00')
+            $ActiveTo = $_SESSION['VARIABLES']['EnvPro']['activeTo'];
+
         $date = new Fecha($ActiveTo);
         $this->ActiveTo = $date->getFechaTime();
         unset($date);
@@ -824,6 +831,7 @@ class EntityComunes extends Entity {
             $this->UrlIsHttps = new ValoresSN($this->UrlIsHttps);
         return $this->UrlIsHttps;
     }
+
     public function setCodigoAppAsociada($CodigoAppAsociada) {
         $this->CodigoAppAsociada = $CodigoAppAsociada;
     }
@@ -861,17 +869,29 @@ class EntityComunes extends Entity {
     }
 
     public function setIDSeccionEnlaces($IDSeccionEnlaces) {
-        $this->IDSeccionEnlaces = $IDSeccionEnlaces;
+        $this->IdSeccionEnlaces = $IDSeccionEnlaces;
     }
 
     public function getIDSeccionEnlaces() {
-        if (!($this->IDSeccionEnlaces instanceof EnlSecciones)) {
-            $this->IDSeccionEnlaces = new EnlSecciones($this->IDSeccionEnlaces);
+        if (!($this->IdSeccionEnlaces instanceof EnlSecciones)) {
+            $this->IdSeccionEnlaces = new EnlSecciones($this->IdSeccionEnlaces);
         }
 
-        return $this->IDSeccionEnlaces;
+        return $this->IdSeccionEnlaces;
     }
-    
+
+    public function setIDSeccionVideos($IDSeccionVideos) {
+        $this->IdSeccionVideos = $IDSeccionVideos;
+    }
+
+    public function getIDSeccionVideos() {
+        if (!($this->IdSeccionVideos instanceof VidSecciones)) {
+            $this->IdSeccionVideos = new VidSecciones($this->IdSeccionVideos);
+        }
+
+        return $this->IdSeccionVideos;
+    }
+
     public function setDateTimeLastVisit($TimeUnix = 0) {
 
         if ($TimeUnix == 0)

@@ -59,6 +59,17 @@ class VidVideosEntity extends EntityComunes {
     protected $OrdenPortada = '0';
 
     /**
+     * @var string
+     */
+    protected $UrlVideo;
+
+    /**
+     * @var entities\TiposVideos
+     * @assert NotBlank(groups="VidVideos")
+     */
+    protected $IdTipo = '0';
+
+    /**
      * Nombre de la conexion a la BD
      * @var string
      */
@@ -80,7 +91,7 @@ class VidVideosEntity extends EntityComunes {
      * Relacion de entidades que dependen de esta
      * @var string
      */
-    protected $_parentEntities = array(
+    protected $_parentEntities = array(        
     );
 
     /**
@@ -167,6 +178,24 @@ class VidVideosEntity extends EntityComunes {
 
     public function getOrdenPortada() {
         return $this->OrdenPortada;
+    }
+
+    public function setUrlVideo($UrlVideo) {
+        $this->UrlVideo = trim($UrlVideo);
+    }
+
+    public function getUrlVideo() {
+        return $this->UrlVideo;
+    }
+
+    public function setIdTipo($IdTipo) {
+        $this->IdTipo = $IdTipo;
+    }
+
+    public function getIdTipo() {
+        if (!($this->IdTipo instanceof TiposVideos))
+            $this->IdTipo = new TiposVideos($this->IdTipo);
+        return $this->IdTipo;
     }
 
 }

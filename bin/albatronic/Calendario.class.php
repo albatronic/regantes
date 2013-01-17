@@ -76,6 +76,10 @@ class Calendario {
         ($mes == '') ? self::$mes = date('m') : self::$mes = $mes;
         ($ano == '') ? self::$ano = date('Y') : self::$ano = $ano;
 
+        $calendario = array();
+        $calendario['ano'] = self::$ano;
+        $calendario['mes'] = self::$mes;
+        
         $formato = strtoupper($formato);
 
         if (!in_array($formato, array('PHP', 'YML', 'JSON')))
@@ -83,7 +87,6 @@ class Calendario {
 
         $ultimoDiaMes = date('d', mktime(0, 0, 0, self::$mes + 1, 0, self::$ano));
 
-        $calendario = array();
         if ($conEventos) {
             $evento = new EvenEventos();
             $eventos = $evento->getDiasConEventos(self::$mes, self::$ano);
@@ -93,11 +96,10 @@ class Calendario {
         for ($dia = 1; $dia <= $ultimoDiaMes; $dia++) {
             $semana = date('W', mktime(0, 0, 0, self::$mes, $dia, self::$ano));
             $diaSemana = date('N', mktime(0, 0, 0, self::$mes, $dia, self::$ano));
-            $calendario[$semana][$diaSemana] = array(
+            $calendario['semanas'][$semana][$diaSemana] = array(
                 'dia' => $dia,
                 'nEventos' => $eventos[$dia],
             );
-
         }
         unset($evento);
 
@@ -135,15 +137,16 @@ class Calendario {
         $cabecera .= "</tr>";
         unset($diasSemana);
 
-        foreach ($calendario as $keySemana => $semana) {
+        foreach ($calendario['semanas'] as $keySemana => $semana) {
 
             $cuerpo .= "<tr>";
             if ($pintarSemana)
                 $cuerpo .= "<td>{$keySemana}</td>";
-            for ($dia = 1; $dia <= 7; $dia++) {
-                $clase = ($semana[$dia]['nEventos']) ? "dia_con_evento_calendario" : "diasactuales_calendario";
-                $cuerpo .= "<td class='{$clase}'>{$semana[$dia]['dia']}</td>";
-            }
+            for ($dia = 1; $dia <= 7; $dia++)
+                if ($semana[$dia]['nEventos'])
+                    $cuerpo .= "<td class='dia_con_evento_calendario'><a href='{$_SESSION['appPath']}/eventos/{$calendario['ano']}-{$calendario['mes']}-{$semana[$dia]['dia']}'>{$semana[$dia]['dia']}</a></td>";
+                else
+                    $cuerpo .= "<td class='diasactuales_calendario'>{$semana[$dia]['dia']}</td>";
             $cuerpo .= "</tr>";
         }
 

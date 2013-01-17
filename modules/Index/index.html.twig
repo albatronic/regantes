@@ -8,7 +8,8 @@
 	<div class="media">
             {% include 'Index/novedades.html.twig' %}
             {% if values.eventos %}
-                {% include 'Index/eventos.html.twig' %}
+                {% include 'Index/eventos.html.twig' %}           
+                {% include 'Index/contenidos.html.twig' %}
             {% else %}
                 {% include 'Index/contenidosVisitados.html.twig' %}  
             {% endif %}

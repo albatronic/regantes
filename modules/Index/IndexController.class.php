@@ -12,20 +12,24 @@ class IndexController extends ControllerProject {
 
     protected $entity = "Index";
     protected $nivel = "";
-    
+
     public function IndexAction() {
-        
+              
         /* SLIDER DE IMAGENES */
-        $this->values['sliderImagenes'] = $this->getSliders();
+        $slider = new SldSliders();
+        $rows = $slider->cargaCondicion("Id", "IdTipo='2'");
+        $tipo = (count($rows)) ? 2: 0;
+        unset($slider);     
+        $this->values['sliderImagenes'] = $this->getSliders(1, $tipo);
 
         /* SLIDER NOTICIAS */
-        $this->values['carruselNoticias'] = $this->getNoticias(true,2,1);
+        $this->values['carruselNoticias'] = $this->getNoticias(true, 2, 1);
 
-        /* EVENTOS */
-        $this->values['eventos'] = $this->getEventos('',2);
+        /* EVENTOS ÚNICOS. */
+        $this->values['eventos'] = $this->getEventos('','', 3,1,true);
 
         /* LAS NOTICIAS MÁS LEIDAS */
-        $this->values['noticias'] = $this->getNoticiasMasLeidas(0,2);
+        $this->values['noticias'] = $this->getNoticiasMasLeidas(0, 2);
 
         /* LOS CONTENIDOS MAS VISITADOS */
         $this->values['contenidosVisitados'] = $this->getContenidosMasVisitados(6);
@@ -34,7 +38,7 @@ class IndexController extends ControllerProject {
         $this->values['presidente'] = $this->getContenido($this->varWeb['Pro']['staticContents'][0], array('Resumen'));
 
         /* GALERIA FOTOS */
-        $this->values['galeriaFotos'] = $this->getAlbumes(1,"",1,5);      
+        $this->values['galeriaFotos'] = $this->getAlbumes(1, "", 1, 5);
 
         /* VIDEO YOUTUBE */
         $this->values['videoYoutube'] = array(

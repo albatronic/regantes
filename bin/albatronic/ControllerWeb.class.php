@@ -219,6 +219,57 @@ class ControllerWeb {
     }
 
     /**
+     * Devuelve un array con los parametros que definen
+     * las redes sociales
+     * 
+     * El array tendrá tantos elementos como redes sociales definidas
+     * y que Publish = 1
+     * 
+     * Si se indica $titulo, se devolverá solo dicha red social
+     * 
+     * Cada ocurrencia del array tiene los siguientes elementos:
+     * 
+     * - titulo : el titulo de la red social
+     * - idUsuario: el id o login de la red social
+     * - url: la url
+     * - numeroTweets: número de tweets a mostrar
+     * - conAvatar: Booleano, mostrar o no el avatar
+     * - mensaje: El mensaje para el caso que no haya tweets a mostrar
+     * - imagen: path a la imagen de diseño 1
+     * 
+     * @param string $titulo El titulo de la red social por la que filtrar
+     * @return array Array con las redes sociales
+     */
+    protected function getRedesSociales($titulo = '') {
+
+        $filtro = "Publish='1'";
+        if ($titulo != '')
+            $filtro .= " AND Titulo='{$titulo}'";
+
+        $red = new Networking();
+        $rows = $red->cargaCondicion("Id", $filtro);
+        
+        foreach ($rows as $row) {
+            $red = new Networking($row['Id']);
+            $documentos = $red->getDocuments('image1');
+            $imagen = ($documentos[0]) ? $documentos[0]->getPathName() : "";            
+            $array[] = array(
+                'titulo' => $red->getTitulo(),
+                'idUsuario' => $red->getIdUsuario(),
+                'url' => $red->getUrl(),
+                'numeroTweets' => $red->getNumeroTweets(),
+                'conAvatar' => $red->getConAvatar()->getIdTipo(),
+                'mensaje' => $red->getMensaje(),
+                'imagen' => $imagen,
+            );
+        }
+        unset($red);
+        unset($documentos);
+        
+        return $array;
+    }
+
+    /**
      * Genera el array 'calendario' del mes y año en curso
      * incluyendo las marcas en los días que haya eventos
      * 
@@ -359,7 +410,7 @@ class ControllerWeb {
             $subseccion = new GconSecciones($row['Id']);
             $array[] = array(
                 'seccion' => $subseccion->{"getEtiquetaWeb$nMenu"}(),
-                'subetiquetaWeb' => $subseccion->{"getSubetiquetaWeb$nMenu"}(),                        
+                'subetiquetaWeb' => $subseccion->{"getSubetiquetaWeb$nMenu"}(),
                 'url' => $subseccion->getHref(),
                 'subsecciones' => $subseccion->getArraySubsecciones(),
             );
@@ -435,15 +486,15 @@ class ControllerWeb {
 
         if ($nItems <= 0) {
             $nItems = ($enPortada) ?
-                    $this->varWeb['Mod']['GconContenidos']['NumNoticasMostrarHome'] :
-                    $this->varWeb['Mod']['GconContenidos']['NumNoticasPorPagina'];
+                    $this->varWeb['Mod']['GconContenidos']['especificas']['NumNoticiasHome'] :
+                    $this->varWeb['Mod']['GconContenidos']['especificas']['NumNoticasPorPagina'];
         }
 
         $limite = ($nItems <= 0) ? "" : "LIMIT {$nItems}";
         $filtro = "NoticiaPublicar='1' AND Publish='1'";
         if ($enPortada)
             $filtro .= " AND NoticiaMostrarEnPortada='{$enPortada}'";
-        $criterioOrden = $this->varWeb['Mod']['GconContenidos']['CriterioOrdenNoticias'];
+        $criterioOrden = $this->varWeb['Mod']['GconContenidos']['especificas']['CriterioOrdenNoticias'];
 
         $noticia = new GconContenidos();
 
@@ -501,7 +552,7 @@ class ControllerWeb {
 
         if ($nItems <= 0) {
             $this->setVariables('Mod', 'GconContenidos');
-            $nItems = $this->varWeb['Mod']['GconContenidos']['NumNoticasMostrarHome'];
+            $nItems = $this->varWeb['Mod']['GconContenidos']['especificas']['NumNoticiasHome'];
         }
 
         $limite = ($nItems <= 0) ? "" : "LIMIT {$nItems}";
@@ -574,9 +625,9 @@ class ControllerWeb {
      * Los contenidos que se devuelven deben estar marcados con EVENTO,
      * tener asignados fechas de evento y estar marcados como publicados.
      * 
-     * Están ordenados DESCENDENTEMENTE por Fecha y Hora de inicio
+     * Están ordenados ASCENDENTEMENTE por Fecha y Hora de inicio
      * 
-     * El array tiene 8 elementos:
+     * El array tiene los siguientes elementos:
      * 
      * - fecha => la fecha del evento
      * - horaInicio => la hora de inicio del evento
@@ -589,10 +640,13 @@ class ControllerWeb {
      * - imagen => Path de la imagen de diseño 1
      * 
      * @param date $desdeFecha La fecha en formato aaaa-mm-dd a partir desde la que se muestran los eventos. Opcional. Defecto hoy
+     * @param date $hastaFecha La fecha en formato aaaa-mm-dd hasta cuando se muestran los eventos. Opcional. Defecto sin límite
      * @param integer $nItems El numero máximo de elementos a devolver. (0=todos)
+     * @param integer $nImagenDiseno El número de la imagen de diseño. Por defecto la primera
+     * @param boolena $unicos Si TRUE solo se devuelven los eventos únicos
      * @return array Array con los eventos
      */
-    protected function getEventos($desdeFecha = '', $nItems = 0) {
+    protected function getEventos($desdeFecha = '', $hastaFecha = '', $nItems = 0, $nImagenDiseno = 1, $unicos = 1) {
 
         $array = array();
 
@@ -603,14 +657,24 @@ class ControllerWeb {
 
         $evento = new EvenEventos();
         $filtro = "Fecha>='{$desdeFecha}'";
+        if ($hastaFecha != "")
+            $filtro .= " AND Fecha<='{$hastaFecha}'";
 
-        $rows = $evento->cargaCondicion("Entidad,IdEntidad,Fecha,HoraInicio,HoraFin", $filtro, "Fecha DESC, HoraInicio DESC {$limite}");
+        $rows = $evento->cargaCondicion("Entidad,IdEntidad,Fecha,HoraInicio,HoraFin", $filtro, "Fecha ASC, HoraInicio ASC {$limite}");
         unset($evento);
+        $eventos = array();
+        if ($unicos) {
+            foreach ($rows as $row)
+                if (!isset($eventos[$row['Entidad'] . $row['IdEntidad']]))
+                    $eventos[$row['Entidad'] . $row['IdEntidad']] = $row;
+        } else {
+            $eventos = $rows;
+        }
 
-        foreach ($rows as $row) {
+        foreach ($eventos as $row) {
             $evento = new $row['Entidad']($row['IdEntidad']);
             if ($evento->getPublish()->getIdTipo() == '1') {
-                $documentos = $evento->getDocuments('image1');
+                $documentos = $evento->getDocuments('image' . $nImagenDiseno);
                 $imagen = ($documentos[0]) ? $documentos[0]->getPathName() : "";
                 $array[] = array(
                     'fecha' => $row['Fecha'],
@@ -669,6 +733,81 @@ class ControllerWeb {
             );
         }
         unset($novedad);
+
+        return $array;
+    }
+
+    /**
+     * Genera el array con los articulos del blog en base a los CONTENIDOS que:
+     * 
+     *      BlogPublicar = 1
+     *      Publish = 1
+     * 
+     * Si los articulos a devolver son los de portada, además se tiene en cuenta
+     * las variables web del módulo GconContenidos:
+     * 
+     * - NumArticulosBlogHome, y
+     * - NumArticulosBlogPorPagina
+     * 
+     * El array tiene los siguientes elementos
+     * 
+     * - fecha => la fecha de publicación (PublisehAt)
+     * - titulo => titulo de la noticia
+     * - subtitulo => subtitulo de la noticia
+     * - url => array(url => texto, targetBlank => boolean)
+     * - resumen => texto del resumen
+     * - desarrollo => texto del desarrollo
+     * - imagen => Path de la imagen de diseño 1
+     * 
+     * @param boolean $enPortada Si TRUE se devuelven solo los que están marcados como portada, 
+     * en caso contrario se devuelven todas los articulos
+     * @param integer $nItems El numero máximo de elementos a devolver. Opcional.
+     * Si no se indica valor, se mostrará el número de articulos indicado en las variables
+     * web 'NumArticulosBlogHome' o 'NumArticulosBlogPorPagina' dependiendo de $enPortada
+     * @param integer $nImagenDiseno El número de la imagen de diseño. Por defecto la primera
+     * @return array Array con las noticias
+     */
+    protected function getArticulosBlog($enPortada = true, $nItems = 0, $nImagenDiseno = 1) {
+
+        $array = array();
+
+        $this->setVariables('Mod', 'GconContenidos');
+
+        if ($nItems <= 0) {
+            $nItems = ($enPortada) ?
+                    $this->varWeb['Mod']['GconContenidos']['especificas']['NumArticulosBlogHome'] :
+                    $this->varWeb['Mod']['GconContenidos']['especificas']['NumArticulosBlogPorPagina'];
+        }
+
+        $limite = ($nItems <= 0) ? "" : "LIMIT {$nItems}";
+        $filtro = "BlogPublicar='1' AND Publish='1'";
+        if ($enPortada)
+            $filtro .= " AND BlogMostrarEnPortada='{$enPortada}'";
+        //$criterioOrden = $this->varWeb['Mod']['GconContenidos']['CriterioOrdenNoticias'];
+        $criterioOrden = "PublishedAt DESC";
+
+        $articulo = new GconContenidos();
+
+        $rows = $articulo->cargaCondicion("Id", $filtro, "{$criterioOrden} {$limite}");
+
+        foreach ($rows as $row) {
+            $articulo = new GconContenidos($row['Id']);
+            $documentos = $articulo->getDocuments('image' . $nImagenDiseno);
+            $imagen = ($documentos[0]) ? $documentos[0]->getPathName() : "";
+
+            $array[] = array(
+                'seccion' => $articulo->getIdSeccion()->getTitulo(),
+                'fecha' => $articulo->getPublishedAt(),
+                'titulo' => $articulo->getTitulo(),
+                'subtitulo' => $articulo->getSubtitulo(),
+                'url' => $articulo->getObjetoUrlAmigable()->getHref(),
+                'resumen' => $this->limpiaTiny($articulo->getResumen()),
+                'desarrollo' => $this->limpiaTiny($articulo->getDesarrollo()),
+                'imagen' => $imagen,
+            );
+        }
+        unset($articulo);
+        unset($documentos);
 
         return $array;
     }

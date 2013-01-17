@@ -114,9 +114,9 @@ class Request {
         }
 
         // A la url le quito la parte del path a la aplicacion
-        $urlSinPath = str_replace($appPath, "", $url);
+        $urlSinPath = explode("/",str_replace($appPath, "", $url));
 
-        return $urlSinPath;
+        return "/".$urlSinPath[1];
     }
 
     /**
