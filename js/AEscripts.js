@@ -49,6 +49,13 @@ $(document).ready(function(){
             $('#calendarioAnoActual').val(ano);    
         }
         );   
+            
+            
+	$("a[rel='pop-up']").click(function () {
+	var caracteristicas = "height="+(screen.availHeight - 40)+",width="+(screen.availWidth - 13)+",screenX=0,screenY=0,left=0,top=0,status=no,menubar=yes,scrollbars=yes,resizable=yes,toolbar=yes,location=yes";
+	nueva=window.open(this.href, 'Popup', caracteristicas);
+	return false;
+	});            
 
 });
 
@@ -94,3 +101,16 @@ function chequeaResolucionVisitante() {
         }
     })
 }
+
+
+/**
+ * Scripts para Twitter
+ */
+$(document).ready(function(){
+        $(".tweet").tweet({ // Aquí indicamos donde poner los tweets, le pondremos un div vacio con clase .tweets
+            username: "{{values.twitter.idUsuario}}", // el usuario
+            avatar_size: "{{values.twitter.mostrarAvatar}}", // Ponle 0 si no quieres avatares
+            count: "{{values.twitter.numeroItems}}", // Numero de tweets
+            loading_text: "{{values.twitter.mensaje}}" // Mensaje que se muestra mientras se cargan los tweets
+        });
+    });

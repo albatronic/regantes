@@ -14,7 +14,11 @@ class NoticiasController extends ControllerProject {
     public function IndexAction() {
 
         /* NOTICIAS */
-        $this->values['noticias'] = $this->getNoticias(false,0,2);
+        
+        $pagina = $this->request[1];
+        if ($pagina<=0) $pagina = 1;
+
+        $this->values['noticias'] = $this->getNoticias(false,0,$pagina,2);
 
         return parent::IndexAction();
     }

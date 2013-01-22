@@ -1,0 +1,64 @@
+ul#accordion.menu {	
+	width: 250px;
+	float: left;
+	margin-bottom: 25px;
+	font: 15px Arial, Helvetica, sans-serif;
+        border-bottom: 1px solid #ccc;
+}
+
+
+ul#accordion.menu li {
+	width: 240px;
+	padding: 10px 10px 10px 0px;
+	color: #0ca6e1; /* Color de las pesta�as principales */
+	cursor: pointer;
+	position: relative;
+	margin-left: 0;
+	margin-right: 0;
+	float: left;
+        border-top: 1px solid #ccc;
+	/*background: url(../images/icono-menu-tic.png) 0 10px no-repeat;*/
+}
+
+ul#accordion.menu li:hover {
+    color:#555;
+}
+
+ul#accordion.menu li a {
+	color:#0ca6e1; /* Color de las pesta�as principales */
+        
+}
+
+ul#accordion.menu li a:hover {
+	color:#555; /* Color de las pesta�as principales */
+}
+
+
+ul#accordion.menu li ul {
+	display:none;
+	float:left;
+	padding:15px 0 0px 0;
+        margin-bottom: -10px;
+}
+
+ul#accordion.menu li ul li{
+	background:none;
+	padding: 10px 10px 10px 0px;
+        border-top: 1px solid #ccc;
+}
+
+
+ul#accordion.menu li ul li a{
+	display: block;
+	color: #94bc28;
+	padding-left: 20px;
+	text-decoration: none;
+	width: 230px;
+	background: url(../images/icono-submenu-tic.png) 0 0 no-repeat;
+
+}
+
+ul#accordion.menu li ul li a:hover{
+	color: #555; /* Color de los enlaces al pasar el cursor */
+	text-decoration:none;
+}

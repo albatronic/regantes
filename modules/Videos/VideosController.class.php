@@ -18,8 +18,8 @@ class VideosController extends ControllerProject {
         
         $array = array();        
         
-        // Obtener todos los videos de todas las secciones de videos
-        $albumes = $this->getVideos(0,-1);
+        // Obtener todos los videos de la primera seccion.
+        $albumes = $this->getVideos(1,-1);
         
         $fila = 0;
         foreach($albumes as $key=>$album) {

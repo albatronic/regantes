@@ -20,18 +20,19 @@ class GconSecciones extends GconSeccionesEntity {
      * 
      * Cada elemento del array es:
      * 
-     *      * titulo => El titulo de la seccion
-     *      * url => array(url => La url, targetBlank => boolean)
+     * - titulo: El titulo de la seccion
+     * - url: array(url => La url, targetBlank => boolean)
      * 
+     * @param string $orden Criterio de orden. Defecto 'SortOrder'
      * @return array Array de subsecciones
      */
-    public function getArraySubsecciones() {
+    public function getArraySubsecciones($orden = "SortOrder") {
 
         $array = array();
 
         $subseccion = new GconSecciones();
-        $filtro = "BelongsTo='{$this->Id}'";
-        $rows = $subseccion->cargaCondicion("Id", $filtro, "SortOrder ASC");
+        $filtro = "BelongsTo='{$this->Id}' AND Publish='1'";
+        $rows = $subseccion->cargaCondicion("Id", $filtro, "{$orden} ASC");
 
         foreach ($rows as $row) {
             $subseccion = new GconSecciones($row['Id']);
@@ -41,8 +42,37 @@ class GconSecciones extends GconSeccionesEntity {
             );
         }
         unset($subseccion);
-        
+
         return $array;
+    }
+
+    /**
+     * Devuelve el número de subsecciones hijas de la sección actual
+     * No cuenta las eventuales subsecciones nietas, biznietas, etc
+     * 
+     * Solo se tienen en cuenta las subsecciones que Publish=1
+     * 
+     * @return int El número de subsecciones directas
+     */
+    public function getNumberOfSubsecciones() {
+
+        $filtro = "BelongsTo='{$this->Id}' AND Publish='1'";
+
+        return $this->getNumberOfRecords($filtro);
+    }
+
+    /**
+     * Devuelve el número de contenidos directos que tiene la sección
+     * Solo se tienen en cuenta los que Publish=1
+     * @return int El número de contenidos de la seccion
+     */
+    public function getNumberOfContenidos() {
+        
+        $contenido = new GconContenidos();
+        $nContenidos = $contenido->getNumberOfRecords("IdSeccion='{$this->Id}' AND Publish='1'");
+        unset($contenido);
+
+        return $nContenidos;
     }
 
 }

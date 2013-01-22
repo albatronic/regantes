@@ -1,26 +1,20 @@
-<div id="menu_desp">
-    <div class="firstpane menu_list">
-        
-        {% for seccion in values.menuDesplegable %} 
-        
-        <h3 class="menu_head">
-            {# SI LA SECCION TIENE SUBSECCIONES, NO PINTO SU HREF #}
-            {% if seccion.subsecciones %}
-                {{seccion.seccion}}
+<ul id="accordion" class="menu">
+    {% for seccion in values.menuDesplegable %}		
+        <li>
+            {% if seccion.url == "" %} 
+                <a onclick>{{seccion.seccion}}</a>   
             {% else %}
-                {{ macro.link(seccion.seccion, none, seccion.url.url, seccion.url.targetBlank) }}
-            {% endif %}
-        </h3>
-        
-        {% if seccion.subsecciones %}
-            <ul class="menu_body">
-            {% for subseccion in seccion.subsecciones %}   
-                <li>{{ macro.link(subseccion.titulo, none, subseccion.url.url, subseccion.url.targetBlank) }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-        
-        {% endfor %}
-        
-    </div>
-</div>
+                <a href="{{seccion.url.url}}" title="{{seccion.seccion}}">{{seccion.seccion}}</a>
+            {% endif %}                        
+
+
+            {% if seccion.subsecciones is iterable %}
+                <ul>
+                {% for subseccion in seccion.subsecciones %}   
+                    <li><a href="{{subseccion.url.url}}" title="{{subseccion.titulo}}">{{subseccion.titulo}}</a></li>
+                {% endfor %}
+                </ul>   
+            {% endif %}                   
+        </li>		
+    {% endfor %}              		
+</ul>

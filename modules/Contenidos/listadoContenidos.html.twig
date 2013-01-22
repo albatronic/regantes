@@ -1,8 +1,3 @@
-{#
-## Aquí tendremos que decirle que si hay más de un contenido desarrollado
-## tenemos que pintar el div class="separacionVariosContenidos" debajo de cada contenido que haya excepto en el último.
-#}
-
 
 {% extends layout %}
 
@@ -13,21 +8,58 @@
     <div class="col_drcha">
         {% include '_global/ruta.html.twig' %}
 
-            <h1>{{values.listadoContenidos.tituloListado}}</h1>
-            <ul class="listaContenidos">
-                {% for listado in values.listadoContenidosDesarrollo %} 
-                <li> 
-                    {% if listado.titulo!="" %}<h1 class="con_fecha">{% if listado.enlace!="" %}<a href="{{app.path}}/{{listado.enlace}}">{{listado.titulo}}</a>{% else %}{{listado.titulo}}{% endif %}</h1>{% endif %}
-                    {% if listado.fecha!="" %}<span class="fecha">{{listado.fecha}}</span>{% endif %}
-                    {% if listado.subtitulo!="" %}<h2>{{listado.subtitulo}}</h2>{% endif %}
-                    {% if listado.intro!="" %}<p>{{listado.intro}}</p>{% endif %}
-                </li>
-                {% endfor %}
-                    
-            </ul>
+        {% set seccion = values.listadoContenidos.contenidos[0].IdSeccion %}            
+        {% set nH = 0 %}
+            
+        {# CABECERA CON LOS DATOS DE LA SECCION #}
+        <div id="grupoSeccion">            
+        {% if (seccion.MostrarTitulo.IDTipo and seccion.Titulo) %}
+            {% set nH = nH + 1 %}
+            <h{{nH}}>{{seccion.Titulo}}</h{{nH}}>
+        {% endif %}
+
+        {% if (seccion.MostrarSubtitulo.IDTipo and seccion.Subtitulo) %}
+            {% set nH = nH + 1 %}
+            <h{{nH}}>{{seccion.Subtitulo}}</h{{nH}}>
+        {% endif %}
+
+        {% if (seccion.MostrarIntroduccion.IDTipo and seccion.Introduccion) %}
+            {% set nH = nH + 1 %}            
+            <h{{nH}}>{{seccion.Introduccion}}</h{{nH}}>
+        {% endif %}
+        </div>            
+        {# ------------------------------------ #}            
+
+        <ul class="listaContenidos">
+            {% for contenido in values.listadoContenidos.contenidos %} 
+            <li> 
+                {% if contenido.Titulo %}
+                    {% set nHH = nH + 1 %}
+                    <h{{nHH}} class="con_fecha">
+                        {% set link = contenido.Href() %}
+                        {% if link.url %}
+                            {{ macro.link(contenido.Titulo,none,link.url,link.targetBlank)}}
+                        {% else %}
+                            {{contenido.Titulo}}
+                        {% endif %}
+                    </h{{nHH}}>
+                {% endif %}
+                {% if contenido.ShowPublishedAt.IDTipo and contenido.PublishedAt %}
+                    <span class="fecha">{{contenido.PublishedAt}}</span>
+                {% endif %}
+                {% if contenido.Subtitulo %}
+                    {% set nHH = nHH + 1 %}
+                    <h{{nHH}}>{{contenido.Subtitulo}}</h{{nHH}}>
+                {% endif %}
+                {% if contenido.Resumen %}
+                    <p>{{contenido.Resumen}}</p>
+                {% endif %}
+            </li>
+            {% endfor %}
+
+        </ul>
 			
-	{% include 'contenidos/botonera.html.twig' %} {# BOTONES ANTERIOR Y SIGUIENTE #}
-	{#<a href="javascript:history.back()" title="volver atr&aacute;s" class="boton right">volver atr&aacute;s</a>#} {# BOTON VOLVER ATRÁS #}       
+        {{ macro.paginacion(values.listadoContenidos.paginacion) }}         
     </div>
 
 {% endblock %}

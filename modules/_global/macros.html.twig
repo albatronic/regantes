@@ -96,3 +96,43 @@
            >{{titulo}}</a>
     {% endif %}
 {% endmacro %}
+
+{#
+    MACRO PARA PAGINAR
+
+    Muestra los botones 'anterior' y 'siguiente'
+
+    @param string entidad       La urlamigable que se dispara al pulsar el boton
+    @param array paginacion     Array con los elmentos: pagina, totalPaginas, totalItems, itemsPorPagina
+    
+#}
+{% macro paginacion (paginacion) %}
+    <div class="botonera">
+        {% if paginacion.pagina > 1 %}
+            <a href="{{appPath}}{{urlAmigable}}/{{paginacion.pagina-1}}" title="anterior" class="boton left">anterior</a>
+        {% endif %}
+        {% if paginacion.pagina < paginacion.totalPaginas %}
+            <a href="{{appPath}}{{urlAmigable}}/{{paginacion.pagina+1}}" title="siguiente" class="boton right">siguiente</a>
+        {% endif %}
+    </div> 
+{% endmacro%}
+
+{#
+    MACRO PARA RECORTAR TEXTOS
+
+    Pinta los primeros 'nCaracteres' del 'texto' y si la longitud del texto
+    es mayor al número de caracteres recortados, pinta también puntos suspensivos
+
+    USO:    
+        {{ macro.recortaTexto('Hola buenos días',6)}}
+        esto pinta: Hola b ...
+
+    @param string texto El texto a recortar
+    @param int nCaracteres el número de caracteres a mostrar
+#}
+{% macro recortaTexto (texto, nCaracteres) %}
+    {% if texto|length > nCaracteres %}
+        {% set puntos = "..." %}
+    {% endif %}
+    {{ texto|slice(0,nCaracteres) }} {{puntos}}
+{% endmacro %}

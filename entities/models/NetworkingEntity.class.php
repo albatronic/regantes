@@ -3,7 +3,7 @@
 /**
  * @author Sergio Perez <sergio.perez@albatronic.com>
  * @copyright INFORMATICA ALBATRONIC SL
- * @date 16.01.2013 19:04:53
+ * @date 18.01.2013 11:36:41
  */
 
 /**
@@ -41,18 +41,82 @@ class NetworkingEntity extends EntityComunes {
      * @var integer
      * @assert NotBlank(groups="Networking")
      */
-    protected $NumeroTweets = '0';
+    protected $NumeroItems = '0';
 
     /**
      * @var entities\ValoresSN
      * @assert NotBlank(groups="Networking")
      */
-    protected $ConAvatar = '0';
+    protected $MostrarAvatar = '0';
 
     /**
      * @var string
      */
     protected $Mensaje;
+
+    /**
+     * @var entities\ValoresSN
+     * @assert NotBlank(groups="Networking")
+     */
+    protected $BotonEnviar = '0';
+
+    /**
+     * @var entities\RedesSocialesModosMostrar
+     * @assert NotBlank(groups="Networking")
+     */
+    protected $ModoMostrar = '0';
+
+    /**
+     * @var entities\RedesSocialesFonts
+     * @assert NotBlank(groups="Networking")
+     */
+    protected $Font = '0';
+
+    /**
+     * @var string
+     */
+    protected $Class;
+
+    /**
+     * @var entities\RedesSocialesActions
+     * @assert NotBlank(groups="Networking")
+     */
+    protected $Action = '0';
+
+    /**
+     * @var integer
+     * @assert NotBlank(groups="Networking")
+     */
+    protected $Ancho = '0';
+
+    /**
+     * @var integer
+     * @assert NotBlank(groups="Networking")
+     */
+    protected $Alto = '0';
+
+    /**
+     * @var entities\RedesSocialesSizes
+     * @assert NotBlank(groups="Networking")
+     */
+    protected $Size = '0';
+
+    /**
+     * @var entities\RedesSocialesColoresFondo
+     * @assert NotBlank(groups="Networking")
+     */
+    protected $ColorFondo = '0';
+
+    /**
+     * @var string
+     */
+    protected $ColorBorde;
+
+    /**
+     * @var entities\RedesSocialesCounts
+     * @assert NotBlank(groups="Networking")
+     */
+    protected $Count = '0';
 
     /**
      * Nombre de la conexion a la BD
@@ -85,6 +149,12 @@ class NetworkingEntity extends EntityComunes {
      */
     protected $_childEntities = array(
         'ValoresSN',
+        'RedesSocialesModosMostrar',
+        'RedesSocialesFonts',
+        'RedesSocialesActions',
+        'RedesSocialesSizes',
+        'RedesSocialesColoresFondo',
+        'RedesSocialesCounts',
         'ValoresPrivacy',
         'ValoresDchaIzq',
         'ValoresChangeFreq',
@@ -128,22 +198,22 @@ class NetworkingEntity extends EntityComunes {
         return $this->Url;
     }
 
-    public function setNumeroTweets($NumeroTweets) {
-        $this->NumeroTweets = $NumeroTweets;
+    public function setNumeroItems($NumeroItems) {
+        $this->NumeroItems = $NumeroItems;
     }
 
-    public function getNumeroTweets() {
-        return $this->NumeroTweets;
+    public function getNumeroItems() {
+        return $this->NumeroItems;
     }
 
-    public function setConAvatar($ConAvatar) {
-        $this->ConAvatar = $ConAvatar;
+    public function setMostrarAvatar($MostrarAvatar) {
+        $this->MostrarAvatar = $MostrarAvatar;
     }
 
-    public function getConAvatar() {
-        if (!($this->ConAvatar instanceof ValoresSN))
-            $this->ConAvatar = new ValoresSN($this->ConAvatar);
-        return $this->ConAvatar;
+    public function getMostrarAvatar() {
+        if (!($this->MostrarAvatar instanceof ValoresSN))
+            $this->MostrarAvatar = new ValoresSN($this->MostrarAvatar);
+        return $this->MostrarAvatar;
     }
 
     public function setMensaje($Mensaje) {
@@ -152,6 +222,108 @@ class NetworkingEntity extends EntityComunes {
 
     public function getMensaje() {
         return $this->Mensaje;
+    }
+
+    public function setBotonEnviar($BotonEnviar) {
+        $this->BotonEnviar = $BotonEnviar;
+    }
+
+    public function getBotonEnviar() {
+        if (!($this->BotonEnviar instanceof ValoresSN))
+            $this->BotonEnviar = new ValoresSN($this->BotonEnviar);
+        return $this->BotonEnviar;
+    }
+
+    public function setModoMostrar($ModoMostrar) {
+        $this->ModoMostrar = $ModoMostrar;
+    }
+
+    public function getModoMostrar() {
+        if (!($this->ModoMostrar instanceof RedesSocialesModosMostrar))
+            $this->ModoMostrar = new RedesSocialesModosMostrar($this->ModoMostrar);
+        return $this->ModoMostrar;
+    }
+
+    public function setFont($Font) {
+        $this->Font = $Font;
+    }
+
+    public function getFont() {
+        if (!($this->Font instanceof RedesSocialesFonts))
+            $this->Font = new RedesSocialesFonts($this->Font);
+        return $this->Font;
+    }
+
+    public function setClass($Class) {
+        $this->Class = trim($Class);
+    }
+
+    public function getClass() {
+        return $this->Class;
+    }
+
+    public function setAction($Action) {
+        $this->Action = $Action;
+    }
+
+    public function getAction() {
+        if (!($this->Action instanceof RedesSocialesActions))
+            $this->Action = new RedesSocialesActions($this->Action);
+        return $this->Action;
+    }
+
+    public function setAncho($Ancho) {
+        $this->Ancho = $Ancho;
+    }
+
+    public function getAncho() {
+        return $this->Ancho;
+    }
+
+    public function setAlto($Alto) {
+        $this->Alto = $Alto;
+    }
+
+    public function getAlto() {
+        return $this->Alto;
+    }
+
+    public function setSize($Size) {
+        $this->Size = $Size;
+    }
+
+    public function getSize() {
+        if (!($this->Size instanceof RedesSocialesSizes))
+            $this->Size = new RedesSocialesSizes($this->Size);
+        return $this->Size;
+    }
+
+    public function setColorFondo($ColorFondo) {
+        $this->ColorFondo = $ColorFondo;
+    }
+
+    public function getColorFondo() {
+        if (!($this->ColorFondo instanceof RedesSocialesColoresFondo))
+            $this->ColorFondo = new RedesSocialesColoresFondo($this->ColorFondo);
+        return $this->ColorFondo;
+    }
+
+    public function setColorBorde($ColorBorde) {
+        $this->ColorBorde = trim($ColorBorde);
+    }
+
+    public function getColorBorde() {
+        return $this->ColorBorde;
+    }
+
+    public function setCount($Count) {
+        $this->Count = $Count;
+    }
+
+    public function getCount() {
+        if (!($this->Count instanceof RedesSocialesCounts))
+            $this->Count = new RedesSocialesCounts($this->Count);
+        return $this->Count;
     }
 
 }

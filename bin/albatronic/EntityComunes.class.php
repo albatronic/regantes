@@ -535,11 +535,19 @@ class EntityComunes extends Entity {
         unset($date);
     }
 
-    public function getPublishedAt() {
+    public function getPublishedAt($formato='ddmmaaaa') {
         $date = new Fecha($this->PublishedAt);
-        $ddmmaaaahhmmss = $date->getddmmaaaahhmmss();
+        
+        switch ($formato) {
+            case 'ddmmaaaa':
+                $texto = $date->getddmmaaaa();
+                break;
+            case 'ddmmaaaahhmmss':
+                $texto = $date->getddmmaaaahhmmss();
+        }
+
         unset($date);
-        return $ddmmaaaahhmmss;
+        return $texto;
     }
 
     public function setActiveFrom($ActiveFrom) {

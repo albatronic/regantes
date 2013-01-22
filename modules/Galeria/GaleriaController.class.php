@@ -22,7 +22,7 @@ class GaleriaController extends ControllerProject {
         
         $fila = 0;
         foreach($albumes as $key=>$album) {
-            if ($key % $nItemsFila == 0) $fila += 1;
+            if ($key % $nItemsFila == 0) $fila++;
             $array[$fila][] = $album;
         }
         

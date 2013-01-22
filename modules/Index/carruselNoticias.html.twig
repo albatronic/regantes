@@ -4,7 +4,7 @@
     <div class="flechas">
         <ul class="widget_custom_portfolio_entries_slides responsiveContentSlider">
 
-            {% for noticia in values.carruselNoticias %}
+            {% for noticia in values.carruselNoticias.rows %}
                 <li><h2>{{ macro.link(noticia.titulo,none,noticia.url.url,noticia.url.targetBlank) }}</h2>
                     {% if noticia.subtitulo %}
                     <h3>{{ macro.link(noticia.subtitulo,none,noticia.url.url,noticia.url.targetBlank) }}</h3>

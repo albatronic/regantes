@@ -6,20 +6,17 @@
     <h1>Noticias</h1>
 
     <div id="col_izqda">
-        {% for key,noticia in values.noticias %}    
+        {% for key,noticia in values.noticias.rows %}    
             {% if key is even %} {{ macro.noticia (noticia) }} {% endif %}
         {% endfor %}
     </div>
 
     <div id="col_drcha">
-        {% for key,noticia in values.noticias %}    
+        {% for key,noticia in values.noticias.rows %}    
             {% if key is odd %} {{ macro.noticia (noticia) }} {% endif %}
         {% endfor %}
     </div>
 
-    <div class="botonera">
-        <a href="" title="anterior" class="boton left">anterior</a>
-        <a href="" title="siguiente" class="boton right">siguiente</a>
-    </div>        
+    {{ macro.paginacion(values.noticias.paginacion) }}   
 </div>	
 {% endblock %}

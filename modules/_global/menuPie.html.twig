@@ -1,17 +1,18 @@
-<div class="col_izqda">
+{% set urlActual = appPath ~ urlAmigable %}
+<div class="menuPiePagina">
     <ul class="menu_pie ancho">
-        {% for key,seccion in values.menuPie %}
+        {% for key,seccion in values.menuPie %}{{seccion.urlAmigable}}
             {% if key is even %}
-                {% if values.controller==seccion.controller %} {% set claseCss="activo" %} {% else %} {% set claseCss=none %} {% endif %}
+                {% if urlActual==seccion.url.url %} {% set claseCss="activo" %} {% else %} {% set claseCss=none %} {% endif %}
                 <li>{{macro.link(seccion.etiquetaWeb, none, seccion.url.url,seccion.url.targetBlank,none,claseCss)}}</li>
             {% endif %}
         {% endfor %}
     </ul>
 
-    <ul class="menu_pie estrecho ultimo">
-        {% for key,seccion in values.menuPie %}
+    <ul class="menu_pie ancho ultimo">
+        {% for key,seccion in values.menuPie %}{{seccion.urlAmigable}}
             {% if key is odd %}
-                {% if values.controller==seccion.controller %} {% set claseCss="activo" %} {% else %} {% set claseCss=none %} {% endif %}
+                {% if urlActual==seccion.url.url %} {% set claseCss="activo" %} {% else %} {% set claseCss=none %} {% endif %}
                 <li>{{macro.link(seccion.etiquetaWeb, none, seccion.url.url,seccion.url.targetBlank,none,claseCss)}}</li>
             {% endif %}
         {% endfor %}

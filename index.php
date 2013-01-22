@@ -154,14 +154,14 @@ setlocale(LC_MONETARY, $rq->getLanguage());
 // Si el navegador es antiguo muestro template especial
 $url = new CpanUrlAmigables();
 if ($rq->isOldBrowser()) {
-    $rows = $url->cargaCondicion("Id,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='/oldbrowser'");
+    $rows = $url->cargaCondicion("Id,UrlFriendly,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='/oldbrowser'");
 } else {
     // Localizar la url amigable
-    $rows = $url->cargaCondicion("Id,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='{$rq->getUrlFriendly($app['path'])}'");
+    $rows = $url->cargaCondicion("Id,UrlFriendly,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='{$rq->getUrlFriendly($app['path'])}'");
 
     if (count($url->getErrores()) == 0) {
         if (!$rows)
-            $rows = $url->cargaCondicion("Id,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='/error404'");
+            $rows = $url->cargaCondicion("Id,UrlFriendly,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='/error404'");
     } else {
         print_r($url->getErrores());
         die("Error de conexión a la BD");
@@ -233,7 +233,6 @@ if (!method_exists($con, $metodo))
 $result = $con->{$metodo}();
 
 $result['values']['controller'] = $controller;
-
 $result['values']['archivoCss'] = getArchivoCss($result['template']);
 $result['values']['archivoJs'] = getArchivoJs($result['template']);
 
@@ -260,6 +259,7 @@ if ($_SESSION['isMobile']) {
 
 // Renderizo el template y los valores devueltos por el método
 $twig->addGlobal('appPath', $app['path']);
+$twig->addGlobal('urlAmigable', $row['UrlFriendly']);
 $twig->loadTemplate($result['template'])
         ->display(array(
             'layout' => $layout,

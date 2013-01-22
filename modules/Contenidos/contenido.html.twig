@@ -6,23 +6,35 @@
 #}
 
 
-<div class="contenedorNoticia">
-    {% set contenido = values.contenido %}    
+<div class="contenedorNoticia">  
     
-    {% if contenido.ShowPublishedAt.IDTipo == '1' %}<div class="fecha">{{contenido.PublishedAt | date("d/m/Y")}}</div>{% endif %}
-
-    {% if (contenido.MostrarTituloContenido.IDTipo and contenido.Titulo) %}<h1>{{contenido.Titulo}}</h1>{% endif %}
-
-    {% if (contenido.MostrarSubtituloContenido.IDTipo and contenido.Subtitulo) %}<h2>{{contenido.Subtitulo}}</h2>{% endif %}
-
-    {% if (contenido.MostrarResumenContenido.IDTipo and contenido.Resumen) %}<h3>{{contenido.Resumen}}</h3>{% endif %}
-
-    {% if contenido.Desarrollo!="" %}<p>{% autoescape false%}{{contenido.Desarrollo}}{% endautoescape%}</p>{% endif %}
-
-    {% if contenido.videoYoutube.video!="" %}
-    <div class="videos_youtube">
-            <iframe width="{{contenido.videoYoutube.ancho}}" height="{{contenido.videoYoutube.alto}}" src="http://www.youtube.com/embed/{{contenido.videoYoutube.video}}" frameborder="{{contenido.videoYoutube.anchoBorde}}"></iframe>
-    </div>
+    {% if (contenido.ShowPublishedAt.IDTipo == '1') %}
+        <div class="fecha">{{contenido.PublishedAt}}</div>
     {% endif %}
-      
+
+    {% if (contenido.MostrarTituloContenido.IDTipo and contenido.Titulo) %}
+        {% set nH = nH + 1 %}        
+        <h{{nH}}>{{contenido.Titulo}}</h{{nH}}>
+    {% endif %}
+
+    {% if (contenido.MostrarSubtituloContenido.IDTipo and contenido.Subtitulo) %}
+        {% set nH = nH + 1 %}            
+        <h{{nH}}>{{contenido.Subtitulo}}</h{{nH}}>
+    {% endif %}
+
+    {% if (contenido.MostrarResumenContenido.IDTipo and contenido.Resumen) %}
+        {% set nH = nH + 1 %}        
+        <h{{nH}}>{{contenido.Resumen}}</h{{nH}}>
+    {% endif %}
+
+    {% if (contenido.Desarrollo) %}
+        {% autoescape false%}{{contenido.Desarrollo}}{% endautoescape%}
+    {% endif %}
+
+    {% if (contenido.videoYoutube.video != "") %}
+        <div class="videos_youtube">
+            <iframe width="{{contenido.videoYoutube.ancho}}" height="{{contenido.videoYoutube.alto}}" src="http://www.youtube.com/embed/{{contenido.videoYoutube.video}}" frameborder="{{contenido.videoYoutube.anchoBorde}}"></iframe>
+        </div>
+    {% endif %}
+     
 </div>

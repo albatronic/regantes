@@ -3,20 +3,24 @@
 ## tenemos que pintar el div class="separacionVariosContenidos" debajo de cada contenido que haya excepto en el último.
 #}
 
-
 {% extends layout %}
 
 {% block title parent() ~ " - Inicio" %}
 
-
 {% block contenido %}
     <div class="col_drcha">
         {% include '_global/ruta.html.twig' %}
-        <h1>{{values.listadoSubsecciones.tituloListado}}</h1>
+        <h1>{{values.listadoSubsecciones.titulo}}</h1>
         <ul class="listaContenidos">
-            {% for subseccion in values.subseccion %}
+            {% for subseccion in values.listadoSubsecciones.subsecciones %}
                 <li>
-                    <h1 class="con_fecha">{% if subseccion.enlace!="" %}<a href="{{subseccion.enlace}}">{{subseccion.titulo}}</a>{% else %}{{subseccion.titulo}}{% endif %}</h1>
+                    <h1 class="con_fecha">
+                        {% if subseccion.url.url %}
+                            {{ macro.link(subseccion.titulo,none,subseccion.url.url,subseccion.url.targetBlank)}}
+                        {% else %}
+                            {{subseccion.titulo}}
+                        {% endif %}
+                    </h1>
                     {% if subseccion.fecha!="" %}<span class="fecha">{{subseccion.fecha}}</span>{% endif %}
                 </li>
             {% endfor %}
@@ -25,8 +29,7 @@
 			
 	{#{% include 'contenidos/botonera.html.twig' %}#} {# BOTONES ANTERIOR Y SIGUIENTE #}
 	{#<a href="javascript:history.back()" title="volver atr&aacute;s" class="boton right">volver atr&aacute;s</a>#} {# BOTON VOLVER ATRÁS #}
-        
-        
+               
     </div>
 
 {% endblock %}

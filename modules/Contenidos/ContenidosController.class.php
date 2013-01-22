@@ -10,120 +10,129 @@
 class ContenidosController extends ControllerProject {
 
     protected $entity = "Contenidos";
+    protected $template;
 
     public function IndexAction() {
 
-        /* CONTENIDO */
-        $this->values['contenido'] = $this->getContenido($this->request['IdEntity']);
-        
-        /* GALERIA DE IMÁGENES */
-        $this->values['galeriaFotos'] = $this->getAlbumExterno($this->request['IdEntity'],8);
-        
-        /* ENLACES RELACIONADOS */        
-        $this->values['enlacesRelacionados'] = $this->getEnlacesRelacionados($this->request['IdEntity']);
+        switch ($this->request['Entity']) {
 
-        return parent::IndexAction();
-    }
+            case 'GconContenidos':
+                $this->ContenidoAislado($this->request['IdEntity']);
+                break;
 
-    public function ListadoContenidosAction() {
+            case 'GconSecciones':
+                // Comprobar si tiene subsecciones
+                $seccion = new GconSecciones($this->request['IdEntity']);
+                $tieneSubsecciones = $seccion->getNumberOfSubsecciones();
 
-        /* USTED ESTA EN */
-        $this->values['ustedEstaEn'] = array(
-            'titulo' => 'Contacto',
-            'subsecciones' => array(
-                'Sub pepito' => 'http://asdfasdf',
-                'Sub manolito' => 'http://asdfasdfasdfasdf',
-                'Sub sdfg' => 'http://asdfasdfasdfasdf',
-                'Aenean consequat iaculis arcu sit amet faucibus. Fusce posuere posuere scelerisque.' => 'http://asdfasdfasdfasdf',
-            ),
-        );
-
-
-
-        /* LISTADO DE CONTENIDOS */
-        $this->values['listadoContenidos'] = array(
-            'tituloListado' => 'class duis diam ultricies',
-        );
-
-// HAY PAGINACION: ANTERIOR Y SIGUIENTE
-
-        $this->values['listadoContenidosDesarrollo'][] = array(
-            'fecha' => '01/10/2012',
-            'titulo' => 'Maecenas fringilla lobortis neque sit amet tincidunt',
-            'enlace' => 'contenidos',
-            'subtitulo' => '',
-            'intro' => 'In porttitor mollis lobortis. Integer tempor malesuada nisl, vitae ultricies tellus sollicitudin hendrerit. Fusce tempor tellus sit amet odio scelerisque ut rutrum lectus hendrerit. Vestibulum semper commodo sagittis.',
-        );
-
-        $this->values['listadoContenidosDesarrollo'][] = array(
-            'fecha' => '01/10/2012',
-            'titulo' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin mi quam, luctus a fermentum vitae, auctor vel sem.',
-            'enlace' => '',
-            'subtitulo' => 'Ut scelerisque nibh ac leo cursus iaculis. Curabitur non ipsum nunc.',
-            'intro' => '',
-        );
-
-        $this->values['listadoContenidosDesarrollo'][] = array(
-            'fecha' => '',
-            'titulo' => 'Ut scelerisque nibh ac leo cursus iaculis. Curabitur non ipsum nunc.',
-            'enlace' => 'contenidos',
-            'subtitulo' => 'Ut scelerisque nibh ac leo cursus iaculis. Curabitur non ipsum nunc.',
-            'intro' => 'Donec neque nisi, porta eget gravida vel, vehicula id tortor. Nunc viverra laoreet euismod. Aliquam est velit, laoreet sed accumsan at, blandit nec risus. Duis hendrerit enim eu ipsum dignissim varius. Sed ut lacinia libero. Cras turpis justo, placerat pulvinar convallis nec, elementum condimentum nunc. Praesent sapien lacus, malesuada ac semper at, ultrices vitae eros. Vestibulum et arcu justo, fermentum laoreet mauris. Aenean ut leo tortor.',
-        );
-
-
+                if (($tieneSubsecciones > 0) and ($seccion->getMostrarSubsecciones()->getIDTipo() == '1')) {
+                    // La seccion tiene subsecciones y son mostrables:
+                    // Saco un listado de subsecciones
+                    $this->ListadoSubsecciones($this->request['IdEntity']);
+                } else {
+                    // La seccion no tiene subsecciones. Compruebo si tiene contenidos.
+                    // Si tiene solo uno, lo muestro desarrollado. Si tiene varios
+                    // saco un listado de contenidos.
+                    $nContenidos = $seccion->getNumberOfContenidos();
+                    if ($nContenidos == 0) {
+                        $this->Seccion($seccion);
+                    } elseif ($nContenidos == 1) {
+                        $contenido = new GconContenidos();
+                        $rows = $contenido->cargaCondicion("Id", "IdSeccion='{$this->request['IdEntity']}'");
+                        unset($contenido);
+                        $this->ContenidoAislado($rows[0]['Id']);
+                    } else {
+                        $this->ListadoContenidos($this->request['IdEntity']);
+                    }
+                }
+                unset($seccion);
+                break;
+        }
 
         return array(
-            'template' => $this->entity . '/listadoContenidos.html.twig',
-            'values' => $this->values
+            'values' => $this->values,
+            'template' => $this->template,
         );
     }
 
-    public function ListadoSubseccionesAction() {
+    public function Seccion($seccion) {
 
-        /* USTED ESTA EN */
-        $this->values['ustedEstaEn'] = array(
-            'titulo' => 'Contacto',
-            'subsecciones' => array(
-                'Sub pepito' => 'http://asdfasdf',
-                'Sub manolito' => 'http://asdfasdfasdfasdf',
-                'Sub sdfg' => 'http://asdfasdfasdfasdf',
-                'Aenean consequat iaculis arcu sit amet faucibus. Fusce posuere posuere scelerisque.' => 'http://asdfasdfasdfasdf',
-            ),
-        );
+        $this->values['seccion'] = $seccion; 
+        $this->template = $this->entity . "/seccion.html.twig";        
+    }
+    
+    /**
+     * Muestra un contenido aislado
+     */
+    public function ContenidoAislado($idContenido) {
 
-// NO HAY PAGINACION
+        $this->values['listadoContenidos']['contenidos'][0] = $this->getContenidoDesarrollado($idContenido, 8);
 
-        /* LISTADO DE SUBSECCIONES */
-        $this->values['listadoSubsecciones'] = array(
-            'tituloListado' => 'class duis diam ultricies',
-        );
+        $this->template = $this->entity . "/index.html.twig";
+    }
 
+    /**
+     * Devuelve los contenidos de la sección $idSeccion en modo
+     * listado o desarrollado según el valor de 'ModoMostrarContenidos' de la sección
+     * y en el orden indicado en 'CriterioOrdenContenidosHijos'
+     * 
+     * @param int $idSeccion El id de la seccion 
+     */
+    public function ListadoContenidos($idSeccion) {
 
-        $this->values['subseccion'][] = array(
-            'fecha' => '01/10/2012',
-            'titulo' => 'Maecenas fringilla lobortis neque sit amet tincidunt',
-            'enlace' => 'contenidos',
-        );
+        $seccion = new GconSecciones($idSeccion);
 
-        $this->values['subseccion'][] = array(
-            'fecha' => '01/10/2012',
-            'titulo' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin mi quam, luctus a fermentum vitae, auctor vel sem.',
-            'enlace' => '',
-        );
+        $nPagina = ($this->request['1']) ? $this->request['1'] : 1;
 
-        $this->values['subseccion'][] = array(
-            'fecha' => '',
-            'titulo' => 'Ut scelerisque nibh ac leo cursus iaculis. Curabitur non ipsum nunc.',
-            'enlace' => 'contenidos',
-        );
+        $this->setVariables('Mod', 'GconContenidos');
 
+        switch ($seccion->getModoMostrarContenidos()->getIDTipo()) {
+            case '0': // Modo Listado
+                $itemsPorPagina = $this->varWeb['Mod']['GconContenidos']['especificas']['NumContenidosPorPaginaListado'];
+                Paginacion::paginar(
+                        "GconContenidos", "IdSeccion='{$idSeccion}'", $seccion->getCriterioOrdenContenidosHijos()->getIDTipo(), $nPagina, $itemsPorPagina);
 
+                foreach (Paginacion::getRows() as $row) {
+                    $this->values['listadoContenidos']['contenidos'][] = $this->getContenido($row['Id']);
+                }
+                
+                $this->values['listadoContenidos']['paginacion'] = array(
+                    'pagina' => Paginacion::getPagina(),
+                    'totalItems' => Paginacion::getTotalItems(),
+                    'itemsPorPagina' => Paginacion::getItemsPorPagina(),
+                    'totalPaginas' => Paginacion::getTotalPaginas(),
+                );
 
-        return array(
-            'template' => $this->entity . '/listadoSubsecciones.html.twig',
-            'values' => $this->values
-        );
+                $this->template = $this->entity . '/listadoContenidos.html.twig';
+                break;
+
+            case '1': // Modo desarrollado
+                $itemsPorPagina = $this->varWeb['Mod']['GconContenidos']['especificas']['NumContenidosPorPaginaDesarrollado'];
+                Paginacion::paginar(
+                        "GconContenidos", "IdSeccion='{$idSeccion}'", $seccion->getCriterioOrdenContenidosHijos()->getIDTipo(), $nPagina, $itemsPorPagina);
+
+                foreach (Paginacion::getRows() as $row) {
+                    $this->values['listadoContenidos']['contenidos'][] = $this->getContenidoDesarrollado($row['Id'], 8);
+                }
+                
+                $this->values['listadoContenidos']['paginacion'] = array(
+                    'pagina' => Paginacion::getPagina(),
+                    'totalItems' => Paginacion::getTotalItems(),
+                    'itemsPorPagina' => Paginacion::getItemsPorPagina(),
+                    'totalPaginas' => Paginacion::getTotalPaginas(),
+                );
+                
+                $this->template = $this->entity . '/index.html.twig';
+                break;
+        }
+        unset($seccion);
+    }
+
+    public function ListadoSubsecciones($idSeccion) {
+
+        $this->values['listadoSubsecciones'] = $this->getSubsecciones($idSeccion);
+
+        $this->template = $this->entity . '/listadoSubsecciones.html.twig';
     }
 
 }

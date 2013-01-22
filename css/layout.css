@@ -360,6 +360,15 @@ p.descripcion {
 	margin-bottom:40px;
 }
 
+.menuPiePagina {
+    width: 400px;
+    float: left;
+}
+
+.pieDerecho {
+    width: 680px;
+    float: right;
+}
 .menu_pie {
 	float:left;
 	margin-right:19px;
@@ -368,7 +377,7 @@ p.descripcion {
 }
 
 .ancho {
-	width:130px;
+	width:190px;
 }
 
 .estrecho {
@@ -397,7 +406,6 @@ p.descripcion {
 #corporativo {
 	float:right;
 	margin-bottom:25px;
-	margin-left:124px;
 }
 
 #corporativo img{
