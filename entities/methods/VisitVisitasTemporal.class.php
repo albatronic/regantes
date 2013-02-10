@@ -32,13 +32,12 @@ class VisitVisitasTemporal extends VisitVisitasTemporalEntity {
         $nRegistrosBorrados = 0;
 
         if ($horas == '')
-            $aPartirDe = time() - $_SESSION['frecuenciaHorasBorrado'] * 3600;
-        else
-            $aPartirDe = time() - $horas * 3600;
+            $horas = $_SESSION['varEnv']['Pro']['visitas']['frecuenciaHorasBorrado'];
+        $aPartirDe = time() - $horas * 3600;
 
         $em = new EntityManager($this->getConectionName());
         if ($em->getDbLink()) {
-            $query = "delete from {$this->getDataBaseName()}.CpanVisitasTemporal where TiempoUnix<={$aPartirDe}";
+            $query = "delete from {$this->getDataBaseName()}.{$this->getTableName()} where TiempoUnix<={$aPartirDe}";
             $em->query($query);
             $nRegistrosBorrados = $em->getAffectedRows();
             $_SESSION['borradoTemporalVisitas'] = ( count($em->getError()) == 0 );

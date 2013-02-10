@@ -1,8 +1,6 @@
 
 {% extends layout %}
 
-{% block title parent() ~ " - Inicio" %}
-
 
 {% block contenido %}
     <div class="col_drcha">
@@ -31,11 +29,16 @@
         {# ------------------------------------ #}            
 
         <ul class="listaContenidos">
-            {% for contenido in values.listadoContenidos.contenidos %} 
+            {% for contenido in values.listadoContenidos.contenidos %}
+                {% if contenido.ShowPublishedAt.IDTipo and contenido.PublishedAt %}
+                    {% set claseCss = "con_fecha" %}
+                {% else %}
+                    {% set claseCss = "sin_fecha" %}
+                {% endif %}
             <li> 
                 {% if contenido.Titulo %}
                     {% set nHH = nH + 1 %}
-                    <h{{nHH}} class="con_fecha">
+                    <h{{nHH}} class="{{claseCss}}">
                         {% set link = contenido.Href() %}
                         {% if link.url %}
                             {{ macro.link(contenido.Titulo,none,link.url,link.targetBlank)}}
@@ -49,7 +52,7 @@
                 {% endif %}
                 {% if contenido.Subtitulo %}
                     {% set nHH = nHH + 1 %}
-                    <h{{nHH}}>{{contenido.Subtitulo}}</h{{nHH}}>
+                    <h{{nHH}} class="subtituloListado">{{contenido.Subtitulo}}</h{{nHH}}>
                 {% endif %}
                 {% if contenido.Resumen %}
                     <p>{{contenido.Resumen}}</p>

@@ -310,6 +310,8 @@ class EntityComunes extends Entity {
     protected $IdSliderAsociado = NULL;
     protected $IdSeccionEnlaces = NULL;
     protected $IdSeccionVideos = NULL;
+    protected $RevisitAfter = '';
+    protected $NivelJerarquico = 1;
 
     /**
      * Fecha y hora última visita en formato UNIX
@@ -535,19 +537,11 @@ class EntityComunes extends Entity {
         unset($date);
     }
 
-    public function getPublishedAt($formato='ddmmaaaa') {
+    public function getPublishedAt() {
         $date = new Fecha($this->PublishedAt);
-        
-        switch ($formato) {
-            case 'ddmmaaaa':
-                $texto = $date->getddmmaaaa();
-                break;
-            case 'ddmmaaaahhmmss':
-                $texto = $date->getddmmaaaahhmmss();
-        }
-
+        $ddmmaaaahhmmss = $date->getddmmaaaahhmmss();
         unset($date);
-        return $texto;
+        return $ddmmaaaahhmmss;
     }
 
     public function setActiveFrom($ActiveFrom) {
@@ -912,6 +906,22 @@ class EntityComunes extends Entity {
         return date('d-m-Y H:i:s', $this->DateTimeLastVisit);
     }
 
+    public function setRevisitAfter($RevisitAfter) {
+        $this->RevisitAfter = trim($RevisitAfter);
+    }
+
+    public function getRevisitAfter() {
+        return $this->RevisitAfter;
+    }
+
+
+    public function setNivelJerarquico($NivelJerarquico) {
+        $this->NivelJerarquico = $NivelJerarquico;
+    }
+
+    public function getNivelJerarquico() {
+        return $this->NivelJerarquico;
+    }    
 }
 
 ?>

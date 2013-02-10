@@ -1,7 +1,5 @@
 {% extends layout %}
 
-{% block title parent() ~ " - Inicio" %}
-
 {% block contenido %}
     <div class="col_drcha">
         {% include 'Index/sliderImagenes.html.twig' %}
@@ -19,7 +17,7 @@
             <div class="media_izqda border_top">
                 <span class="raya azul"></span>
                 <h1>Bienvenida del Presidente</h1>
-                <img src="{{app.path}}/docs/GconContenidos/saluda-presidente.jpg" alt="#" title="#" />
+                <img src="{{app.path}}/docs/GconContenidos/saluda-presidente.jpg" alt="Bienvenida del Presidente" title="Bienvenida del Presidente" />
                 <p>{{values.presidente.Resumen}}</p>
                 {{ macro.link('ampliar',none,values.presidente.url.url,values.presidente.url.targetBlank,none,'boton right') }}
             </div>

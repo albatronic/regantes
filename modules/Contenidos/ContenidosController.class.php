@@ -84,7 +84,7 @@ class ContenidosController extends ControllerProject {
 
         $nPagina = ($this->request['1']) ? $this->request['1'] : 1;
 
-        $this->setVariables('Mod', 'GconContenidos');
+        $this->setVariables('Web', 'Mod', 'GconContenidos');
 
         switch ($seccion->getModoMostrarContenidos()->getIDTipo()) {
             case '0': // Modo Listado
@@ -96,12 +96,7 @@ class ContenidosController extends ControllerProject {
                     $this->values['listadoContenidos']['contenidos'][] = $this->getContenido($row['Id']);
                 }
                 
-                $this->values['listadoContenidos']['paginacion'] = array(
-                    'pagina' => Paginacion::getPagina(),
-                    'totalItems' => Paginacion::getTotalItems(),
-                    'itemsPorPagina' => Paginacion::getItemsPorPagina(),
-                    'totalPaginas' => Paginacion::getTotalPaginas(),
-                );
+                $this->values['listadoContenidos']['paginacion'] = Paginacion::getPaginacion();
 
                 $this->template = $this->entity . '/listadoContenidos.html.twig';
                 break;
@@ -115,12 +110,7 @@ class ContenidosController extends ControllerProject {
                     $this->values['listadoContenidos']['contenidos'][] = $this->getContenidoDesarrollado($row['Id'], 8);
                 }
                 
-                $this->values['listadoContenidos']['paginacion'] = array(
-                    'pagina' => Paginacion::getPagina(),
-                    'totalItems' => Paginacion::getTotalItems(),
-                    'itemsPorPagina' => Paginacion::getItemsPorPagina(),
-                    'totalPaginas' => Paginacion::getTotalPaginas(),
-                );
+                $this->values['listadoContenidos']['paginacion'] =  Paginacion::getPaginacion();
                 
                 $this->template = $this->entity . '/index.html.twig';
                 break;

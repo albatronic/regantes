@@ -1,6 +1,7 @@
 {# NOVEDADES. MUESTRA EL SLIDER DE NOTICIAS #}
 
 <div class="media_izqda">
+    {% if values.carruselNoticias.rows|length > 0%}
     <div id="noticias_top"></div>
     <div id="noticias_inter">
         <h1>Novedades</h1>
@@ -9,4 +10,5 @@
     <div id="noticias_bottom"></div>
 
     <a href="{{app.path}}/noticias" title="ver m&aacute;s noticias" class="boton right">m&aacute;s noticias</a>
+    {% endif %}
 </div>

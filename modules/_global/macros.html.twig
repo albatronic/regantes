@@ -102,17 +102,19 @@
 
     Muestra los botones 'anterior' y 'siguiente'
 
-    @param string entidad       La urlamigable que se dispara al pulsar el boton
-    @param array paginacion     Array con los elmentos: pagina, totalPaginas, totalItems, itemsPorPagina
+    @param string entidad             La urlamigable que se dispara al pulsar el boton
+    @param array paginacion           Array con los elmentos: pagina, totalPaginas, totalItems, itemsPorPagina
+    @param string claseCssAnterior    El nombre de la clase css para el boton "anterior"
+    @param string claseCssSiguiente   El nombre de la clase css para el boton "siguiente"
     
 #}
-{% macro paginacion (paginacion) %}
+{% macro paginacion (paginacion,claseCssAnterior,claseCssSiguiente) %}
     <div class="botonera">
         {% if paginacion.pagina > 1 %}
-            <a href="{{appPath}}{{urlAmigable}}/{{paginacion.pagina-1}}" title="anterior" class="boton left">anterior</a>
+            <a href="{{appPath}}{{urlAmigable}}/{{paginacion.pagina-1}}" title="anterior" class="{{claseCssAnterior|default("boton left")}}">anterior</a>
         {% endif %}
         {% if paginacion.pagina < paginacion.totalPaginas %}
-            <a href="{{appPath}}{{urlAmigable}}/{{paginacion.pagina+1}}" title="siguiente" class="boton right">siguiente</a>
+            <a href="{{appPath}}{{urlAmigable}}/{{paginacion.pagina+1}}" title="siguiente" class="{{claseCssSiguiente|default("boton right")}}">siguiente</a>
         {% endif %}
     </div> 
 {% endmacro%}

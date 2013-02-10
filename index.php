@@ -241,7 +241,7 @@ if ($config['debug_mode']) {
     $result['values']['_debugMode'] = true;
     $result['values']['_auditMode'] = (string) $config['audit_mode'];
     $result['values']['_user'] = sfYaml::dump($_SESSION['USER'], 5);
-    $result['values']['_debugValues'] = sfYaml::Dump($result['values'],100);
+    $result['values']['_debugValues'] = sfYaml::Dump($result['values'], 100);
 }
 
 // Si el método no devuelve template o no exite, muestro un template de error.
@@ -290,7 +290,9 @@ function getArchivoCss($template) {
     $archivoTemplate = str_replace('html', 'css', $template);
 
     if (!file_exists('modules/' . $archivoTemplate)) {
-        $archivoTemplate = "_global/css.twig";
+        $archivoTemplate = (!file_exists('modules/index.css.twig')) ? 
+            "_global/css.twig" : 
+            "modules/index.css.twig";
     }
 
     return $archivoTemplate;
@@ -306,7 +308,9 @@ function getArchivoJs($template) {
     $archivoTemplate = str_replace('html', 'js', $template);
 
     if (!file_exists('modules/' . $archivoTemplate)) {
-        $archivoTemplate = "_global/js.twig";
+        $archivoTemplate = (!file_exists('modules/index.css.twig')) ? 
+            "_global/js.twig" : 
+            "modules/index.js.twig";
     }
 
     return $archivoTemplate;

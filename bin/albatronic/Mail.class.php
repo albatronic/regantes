@@ -29,20 +29,25 @@ class Mail {
         elseif (is_array($mailer)) {
             // Busco el motor para enviar correos, que debe estar
             // indicado en el nodo 'mailer' del fichero de configuracion
-            $config = sfYaml::load('config/config.yml');
-            $config = $config['config']['mailer'];
+            //$config = sfYaml::load('config/config.yml');
+            //$config = $config['config']['mailer'];
 
             // Cargo la clase
-            if (file_exists($config['plugin_dir'] . $config['plugin_file'])) {
-                include_once $config['plugin_dir'] . $config['plugin_file'];
+            if (file_exists($mailer['plugin_dir'] . $mailer['plugin_file'])) {
+                include_once $mailer['plugin_dir'] . $mailer['plugin_file'];
+                //include_once $mailer['plugin_dir'] . "class.pop3.php";
 
+                //$pop = new POP3();
+                //$pop->Authorise($mailer['host'], $mailer['port'], (double) $mailer['timeout'], $mailer['user_name'], $mailer['password'], 1);
                 // Instancio un objeto de la clase mailer. La clase que se utilizará
                 // debe estar indicada en el subnodo 'motor' del nodo 'mailer'
-                $this->mailer = new $config['motor']();
+                $this->mailer = new $mailer['motor']();
 
                 // Cargo los parametros que necesita el objeto mailer
-                $this->mailer->IsSendmail();
-                $this->mailer->PluginDir = $config['plugin_dir'];
+                //$this->mailer->IsSMTP();
+                $this->mailer->IsMail();
+                $this->mailer->SMTPDebug = 1;
+                $this->mailer->PluginDir = $mailer['plugin_dir'];
                 $this->mailer->Mailer = $mailer['socket'];
                 $this->mailer->Host = $mailer['host'];
                 $this->mailer->SMTPAuth = $mailer['smtp_auth'];
@@ -56,7 +61,8 @@ class Mail {
                 $this->mailer->setLanguage(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), $config['plugin_dir'] . "language/");
             } else
                 $this->mensaje = "Error: no se ha podido crear el objeto mailer.";
-        } else $this->mensaje = "Error: no se ha definido el soporte para enviar correos.";
+        } else
+            $this->mensaje = "Error: no se ha definido el soporte para enviar correos.";
     }
 
     /**

@@ -18,6 +18,7 @@
     </head>
 
     <body {% block bodyContacto %}{%endblock%}>
+        {% block body %}
         <div id="contenedor_global">
             <div class="contenedor_central">
                 {% block cabecera %}
@@ -36,6 +37,7 @@
                 {% endblock %}
             </div>
          </div>
+        {% endblock%}
 
         {# PARA HACER DEBUGER EN ENTORNO DE DESARROLLO #}            
         {% if values._debugMode %}

@@ -16,9 +16,11 @@
 <script type="text/javascript"
     src="http://maps.google.com/maps/api/js?sensor=true">
 </script>
-<script type="text/javascript">
+{# MAPA GOOGLE. SE APOYA EN LAS VARIABLES WEB LATITUD, LONGITUD WEBNAME Y TITLE #}
+<script src="http://maps.google.com/maps/api/js?sensor=true"></script> {# GOOGLE MAPS #}
+<script>
   function initialize() {
-    var latlng = new google.maps.LatLng(36.79976, -3.641113);
+    var latlng = new google.maps.LatLng({{values.meta.geoPositionLatitude}}, {{values.meta.geoPositionLongitude}});
 	
     var myOptions = {
       zoom: 17,
@@ -31,10 +33,9 @@
 	 var marker = new google.maps.Marker({
 		  position: latlng,
 		  map: map,
-		  title:"Comunidad de Regantes | Virgen de la Salud"
+		  title:"{{ values.meta.webName }} | {{ values.meta.title }}"
 	  });
   }
-
 </script> {# GOOGLE MAPS #}
 <script type="text/javascript">
 		jQuery(document).ready(function($){

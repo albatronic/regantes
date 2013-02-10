@@ -23,7 +23,7 @@ class ControllerProject extends ControllerWeb {
         $this->values['menuCabecera'] = $this->getMenuN(2,7);
         $this->values['menuDesplegable'] = $this->getMenuDesplegable(1);
         $this->values['menuPie'] = $this->getMenuN(3,8);
-        $this->values['datosContacto'] = $this->varWeb['Pro']['global'];
+        $this->values['datosContacto'] = $this->varWeb['Pro']['globales'];
 
     }
 

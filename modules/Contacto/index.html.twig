@@ -1,8 +1,6 @@
 {% extends layout %}
 
-{% block bodyContacto %}
-onload="initialize ()"
-{%endblock%}
+{% block bodyContacto %}onload="initialize ()"{%endblock%}
 
 {% block contenido %}
     <div class="col_drcha">
@@ -10,7 +8,6 @@ onload="initialize ()"
 	<div class="media">
             <h1>Contacta con nosotros</h1>
             {% include 'Contacto/formulario.html.twig' %}
-            {#{% include 'contacto/mensajes.html.twig' %}#} {# ------------------- ESTOS SON LOS MENSAJES DE RESPUESTA DEL FORMULARIO ------------------- #}
             {% include 'Contacto/situacion.html.twig' %}
 	</div>
     </div>	

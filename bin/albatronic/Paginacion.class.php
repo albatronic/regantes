@@ -29,8 +29,15 @@ class Paginacion {
     
     static function paginar($entidad, $filtro, $criterioOrden, $nPagina, $itemsPorPagina) {
 
-        self::$pagina = $nPagina;
-        self::$itemsPorPagina = $itemsPorPagina;
+        if ($criterioOrden == '') {
+            $criterioOrden = "SortOrder ASC";
+            echo "Paginacion::paginar: NO SE HA DEFINIDO EL CRITERIO DE ORDEN.";
+        }
+        
+        $filtro .= " AND (Deleted='0')";
+        
+        self::$pagina = ($nPagina <= 0) ? 1 : $nPagina;
+        self::$itemsPorPagina = ($itemsPorPagina <= 0) ? 1 : $itemsPorPagina;
         
         $objeto = new $entidad();
 
@@ -58,6 +65,27 @@ class Paginacion {
      */
     static function getRows() {
         return self::$rows;
+    }
+    
+    /**
+     * Devuelve un array con la información de paginacion.
+     * 
+     * Los elementos del array son:
+     * 
+     * - pagina: El número de página devuelta
+     * - totalItems: El número total de items que cumplen el criterio de filtro
+     * - itemsPorPagina: El número de items que van en cada página
+     * - totalPaginas: El número total de páginas que se devolverían
+     * 
+     * @return array Array con los datos de paginacion
+     */
+    static function getPaginacion() {
+        return array(
+            'pagina' => self::getPagina(),
+            'totalItems' => self::getTotalItems(),
+            'itemsPorPagina' => self::getItemsPorPagina(),
+            'totalPaginas' => self::getTotalPaginas(),            
+        );
     }
     
     /**

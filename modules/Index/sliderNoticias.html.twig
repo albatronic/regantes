@@ -1,3 +1,4 @@
+{% if values.sliderNoticias|length > 0%}
 <div class="slider_noticias">
     <div class="flechas">
         <ul class="widget_custom_portfolio_entries_slides responsiveContentSlider">
@@ -12,10 +13,11 @@
                         <a href="{{noticia.url}}" title="#"><img src="{{noticia.imagen}}" alt="{{noticia.titulo}}" title="{{noticia.titulo}}" class="img_noticias" /></a>
                     {% endif %}
                     <p>{{noticia.descripcion}}</p>		
-                    <a href="contenido-aislado.php" title="Seguir leyendo" class="saber_mas">+</a>	
+                    <a href="{{noticia.url}}" title="Seguir leyendo" class="saber_mas">+</a>	
                 </li>
             {% endfor %}
 
         </ul>
     </div>
 </div>
+{% endif %}

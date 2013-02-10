@@ -3,18 +3,18 @@
 /**
  * @author Sergio Perez <sergio.perez@albatronic.com>
  * @copyright INFORMATICA ALBATRONIC SL
- * @date 06.11.2012 20:33:07
+ * @date 02.01.2013 17:48:05
  */
 
 /**
- * @orm:Entity(GconContenidos)
+ * @orm:Entity(EtiqRelaciones)
  */
-class GconContenidos extends GconContenidosEntity {
+class EtiqRelaciones extends EtiqRelacionesEntity {
 
     public function __toString() {
         return $this->getId();
     }
-   
+
 }
 
 ?>

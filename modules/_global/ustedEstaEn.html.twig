@@ -11,8 +11,10 @@
         </ul>
         {% endfor %}        
     </div>
-    <div id="usted_bottom"></div>
-    <a href="#" title="Subir un nivel"><img src="{{app.path}}/images/subir-nivel.png" alt="Subir un nivel" title="Subir un nivel" /></a>
+    <div id="usted_bottom"></div>    
+    {% if values.ustedEstaEn.subirNivel %}
+    <a href="{{values.ustedEstaEn.subirNivel}}" title="Subir un nivel"><img src="{{app.path}}/images/subir-nivel.png" alt="Subir un nivel" title="Subir un nivel" /></a>
+    {% endif%}
 </div>
 
 

@@ -40,10 +40,16 @@ class ControllerWeb {
     protected $permisos;
 
     /**
-     * Array con las variables Web del modulo
+     * Array con las variables Web
      * @var array
      */
     protected $varWeb;
+
+    /**
+     * Array con las variables Env
+     * @var array
+     */
+    protected $varEnv;
 
     /**
      * Carga las variables web del proyecto
@@ -58,34 +64,44 @@ class ControllerWeb {
         // Cargar lo que viene en el request
         $this->request = $request;
 
-        // Cargar las variables web del proyecto en la variable de sesion y en $this->varWeb['Pro']
+        // Cargar las variables de entorno y web del proyecto en la variable 
+        // de sesion y en $this->varEnv['Pro'] y $this->varWeb['Pro'] respectivamente
         // de esta forma solo se cargaran la primera vez
-        $this->setVariables('Pro');
+        $this->setVariables('Web', 'Pro');
+        $this->setVariables('Env', 'Pro');
 
-        // Borrar la tabla temporal de visitas
-        if (!$_SESSION['borradoTemporalVisitas']) {
+        // CONTROL DE VISITAS, SI ESTÁ ACTIVO POR LA VARIABLE DE ENTORNO
+        if ($_SESSION['varEnv']['Pro']['visitas']['activo']) {
+            
+            // Borrar la tabla temporal de visitas, si procede según la
+            // frecuencia de horas de borrado
+            if (!$_SESSION['borradoTemporalVisitas']) {
+                $temp = new VisitVisitasTemporal();
+                $temp->borraTemporal();
+                unset($temp);
+            }
+
+            // Control de visitas UNICAS a la url amigable
             $temp = new VisitVisitasTemporal();
-            $temp->borraTemporal();
+            $temp->anotaVisitaUrlUnica($this->request['IdUrlAmigable']);
             unset($temp);
+
+            // Anotar en el registro de visitas
+            $visita = new VisitVisitas();
+            $visita->anotaVisita($this->request);
+            unset($visita);
         }
-
-        // Control de visitas UNICAS a la url amigable
-        $temp = new VisitVisitasTemporal();
-        $temp->anotaVisitaUrlUnica($this->request['IdUrlAmigable']);
-        unset($temp);
-
-        // Anotar en el registro de visitas
-        $visita = new VisitVisitas();
-        $visita->anotaVisita($this->request);
-        unset($visita);
-
+        
+        // LECTURA DE METATAGS
+        $this->values['meta'] = $this->varWeb['Pro']['meta'];
+        
         /**
          *
          * PROCESOS PARA AUTOMATIZAR VIA CRON: BORRAR VISITAS NO HUMANAS, WS LOCALIZACION IPS, ETC
          * VOLCADOS DE LOGS
          * 
          */
-        // LECTURA DE METATAGS 
+        
     }
 
     /**
@@ -107,36 +123,58 @@ class ControllerWeb {
     /**
      * Llena el array con las variables web del proyecto o del módulo
      * 
-     * @param string $ambito EL ámbito de las variables: Pro ó Mod
+     * @param string $tipo El tipo de las variables: Env, Web
+     * @param string $ambito El ámbito de las variables: Pro ó Mod
      * @param string $modulo El nombre del modulo. Opcional. Por defecto el indicado en $this->request['Entity']
      */
-    protected function setVariables($ambito, $modulo = '') {
+    protected function setVariables($tipo, $ambito, $modulo = '') {
 
         if ($modulo == '')
             $modulo = $this->request['Entity'];
 
-        switch ($ambito) {
-            case 'Pro':
-                if (($_SESSION['EntornoDesarrollo']) or (!is_array($_SESSION['varWeb']['Pro']))) {
-                    $filtro = "IdProyectosApps='{$_SESSION['projectId']}' and Variable='varPro_Web'";
-                    $variables = new CpanVariables();
-                    $rows = $variables->cargaCondicion('Yml', $filtro);
-                    unset($variables);
+        switch ($tipo) {
+            case 'Env':
+                switch ($ambito) {
+                    case 'Pro':
+                        if (($_SESSION['EntornoDesarrollo']) or (!is_array($_SESSION['varEnv']['Pro']))) {
+                            $filtro = "IdProyectosApps='{$_SESSION['projectId']}' and Variable='varPro_Env'";
+                            $variables = new CpanVariables();
+                            $rows = $variables->cargaCondicion('Yml', $filtro);
+                            unset($variables);
 
-                    $_SESSION['varWeb']['Pro'] = sfYaml::load($rows[0]['Yml']);
+                            $_SESSION['varEnv']['Pro'] = sfYaml::load($rows[0]['Yml']);
+                        }
+                        $this->varEnv['Pro'] = $_SESSION['varEnv']['Pro'];
+                        break;
                 }
-                $this->varWeb['Pro'] = $_SESSION['varWeb']['Pro'];
                 break;
-            case 'Mod':
-                if (($_SESSION['EntornoDesarrollo']) or (!is_array($_SESSION['varWeb']['Mod'][$modulo]))) {
-                    $filtro = "IdProyectosApps='{$_SESSION['projectId']}' and Variable='varMod_{$modulo}_Web'";
-                    $variables = new CpanVariables();
-                    $rows = $variables->cargaCondicion('Yml', $filtro);
-                    unset($variables);
+                
+            case 'Web':
+                switch ($ambito) {
+                    case 'Pro':
+                        if (($_SESSION['EntornoDesarrollo']) or (!is_array($_SESSION['varWeb']['Pro']))) {
+                            $filtro = "IdProyectosApps='{$_SESSION['projectId']}' and Variable='varPro_Web'";
+                            $variables = new CpanVariables();
+                            $rows = $variables->cargaCondicion('Yml', $filtro);
+                            unset($variables);
 
-                    $_SESSION['varWeb']['Mod'][$modulo] = sfYaml::load($rows[0]['Yml']);
+                            $_SESSION['varWeb']['Pro'] = sfYaml::load($rows[0]['Yml']);
+                        }
+                        $this->varWeb['Pro'] = $_SESSION['varWeb']['Pro'];
+                        break;
+                        
+                    case 'Mod':
+                        if (($_SESSION['EntornoDesarrollo']) or (!is_array($_SESSION['varWeb']['Mod'][$modulo]))) {
+                            $filtro = "IdProyectosApps='{$_SESSION['projectId']}' and Variable='varMod_{$modulo}_Web'";
+                            $variables = new CpanVariables();
+                            $rows = $variables->cargaCondicion('Yml', $filtro);
+                            unset($variables);
+
+                            $_SESSION['varWeb']['Mod'][$modulo] = sfYaml::load($rows[0]['Yml']);
+                        }
+                        $this->varWeb['Mod'][$modulo] = $_SESSION['varWeb']['Mod'][$modulo];
+                        break;
                 }
-                $this->varWeb['Mod'][$modulo] = $_SESSION['varWeb']['Mod'][$modulo];
                 break;
         }
     }
@@ -192,40 +230,45 @@ class ControllerWeb {
     protected function getRuta() {
 
         $array = array();
-        $array[] = array(
-            'nombre' => 'Inicio',
-            'url' => array('url' => $_SESSION['appPath'], 'targetBlank' => 0),
-        );
 
-        $seccion = new GconSecciones($this->request['IdEntity']);
+        if ($this->request['Entity'] == 'GconContenidos') {
+            $contenido = new GconContenidos($this->request['IdEntity']);
+            $idSeccion = $contenido->getIdSeccion()->getId();
+            unset($contenido);
+        } else {
+            $idSeccion = $this->request['IdEntity'];
+        }
+
+        $seccion = new GconSecciones($idSeccion);
         if ($seccion->getBelongsTo()->getId() > 0) {
             $ruta = $seccion->getPadres();
             foreach ($ruta as $IdPadre) {
-                $seccion = new GconSecciones($IdPadre);
+                $subSeccion = new GconSecciones($IdPadre);
                 $array[] = array(
-                    'nombre' => $seccion->getTitulo(),
-                    'url' => $seccion->getHref(),
+                    'nombre' => $subSeccion->getTitulo(),
+                    'url' => $subSeccion->getHref(),
                 );
             }
         } else {
             $array[] = array(
-                'nombre' => $seccion->getTitulo(),
-                'url' => $seccion->getHref(),
+                'nombre' => 'Inicio',
+                'url' => array('url' => $_SESSION['appPath'], 'targetBlank' => 0),
             );
         }
+
+        $array[] = array(
+            'nombre' => $seccion->getTitulo(),
+            'url' => $seccion->getHref(),
+        );
+
         unset($seccion);
 
         return $array;
     }
 
     /**
-     * Devuelve un array con los parametros que definen
+     * Devuelve un array con los parametros que definen una red social
      * las redes sociales
-     * 
-     * El array tendrá tantos elementos como redes sociales definidas
-     * y que Publish = 1
-     * 
-     * Si se indica $titulo, se devolverá solo dicha red social
      * 
      * Cada ocurrencia del array tiene los siguientes elementos:
      * 
@@ -249,43 +292,42 @@ class ControllerWeb {
      * - imagen: path a la imagen de diseño 1
      * 
      * @param string $titulo El titulo de la red social por la que filtrar
-     * @return array Array con las redes sociales
+     * @return array Array con la informacion de la red
      */
-    protected function getRedesSociales($titulo = '') {
+    protected function getRedSocial($titulo) {
 
-        $filtro = "Publish='1'";
-        if ($titulo != '')
-            $filtro .= " AND Titulo='{$titulo}'";
+        $filtro = "Publish='1' AND Titulo='{$titulo}'";
 
-        $red = new Networking();
-        $rows = $red->cargaCondicion("Id", $filtro);
+        $redes = new Networking();
+        $rows = $redes->cargaCondicion("Id", $filtro);
 
-        foreach ($rows as $row) {
-            $red = new Networking($row['Id']);
-            $documentos = $red->getDocuments('image1');
-            $imagen = ($documentos[0]) ? $documentos[0]->getPathName() : "";
-            $array[] = array(
-                'titulo' => $red->getTitulo(),
-                'idUsuario' => $red->getIdUsuario(),
-                'url' => $red->getUrl(),
-                'numeroItems' => $red->getNumeroItems(),
-                'mostrarAvatar' => $red->getMostrarAvatar()->getIdTipo(),
-                'mensaje' => $red->getMensaje(),
-                'botonEnviar' => $red->getBotonEnviar()->getIdTipo(),
-                'modoMostar' => $red->getModoMostrar(),
-                'font' => $red->getFont(),
-                'class' => $red->getClass(),
-                'action' => $red->getAction(),
-                'ancho' => $red->getAncho(),
-                'alto' => $red->getAlto(),
-                'size' => $red->getSize(),
-                'colorFondo' => $red->getColorFondo(),
-                'colorBorde' => $red->getColorBorde(),
-                'count' => $red->getCount(),
-                'imagen' => $imagen,
-            );
-        }
+        $red = new Networking($rows[0]['Id']);
+
+        $documentos = $red->getDocuments('image1');
+        $imagen = ($documentos[0]) ? $documentos[0]->getPathName() : "";
+        $array = array(
+            'titulo' => $red->getTitulo(),
+            'idUsuario' => $red->getIdUsuario(),
+            'url' => $red->getUrl(),
+            'numeroItems' => $red->getNumeroItems(),
+            'mostrarAvatar' => $red->getMostrarAvatar()->getIdTipo(),
+            'mensaje' => $red->getMensaje(),
+            'botonEnviar' => $red->getBotonEnviar()->getIdTipo(),
+            'modoMostar' => $red->getModoMostrar(),
+            'font' => $red->getFont(),
+            'class' => $red->getClass(),
+            'action' => $red->getAction(),
+            'ancho' => $red->getAncho(),
+            'alto' => $red->getAlto(),
+            'size' => $red->getSize(),
+            'colorFondo' => $red->getColorFondo(),
+            'colorBorde' => $red->getColorBorde(),
+            'count' => $red->getCount(),
+            'imagen' => $imagen,
+        );
+
         unset($red);
+        unset($redes);
         unset($documentos);
 
         return $array;
@@ -330,19 +372,37 @@ class ControllerWeb {
      */
     protected function getUstedEstaEn() {
 
-        switch ($this->request['Entity']) {
-            case 'GconSecciones':
-                break;
-            case 'GconContenidos':
-                break;
+        $array = array();
+
+        if ($this->request['Entity'] == 'GconContenidos') {
+            $contenido = new GconContenidos($this->request['IdEntity']);
+            $idSeccion = $contenido->getIdSeccion()->getId();
+            unset($contenido);
+        } else {
+            $idSeccion = $this->request['IdEntity'];
         }
 
-        $objeto = new $this->request['Entity']($this->request['IdEntity']);
-        $array = array(
-            'titulo' => $objeto->getTitulo(),
-                //'subsecciones' => $objeto->getArraySubsecciones(),
-        );
-        unset($objeto);
+        $seccion = new GconSecciones($idSeccion);
+        $array['titulo'] = $seccion->getEtiquetaWeb1();
+
+        $rows = $seccion->cargaCondicion("Id", "BelongsTo='{$seccion->getId()}' AND Publish='1'", "OrdenMenu1 ASC");
+        foreach ($rows as $row) {
+            $subSeccion = new GconSecciones($row['Id']);
+            $array['subsecciones'][] = array(
+                'titulo' => $subSeccion->getTitulo(),
+                'subtitulo' => $subSeccion->getSubtitulo(),
+                'EtiquetaWeb1' => $subSeccion->getEtiquetaWeb1(),
+                'url' => $subSeccion->getHref(),
+            );
+        }
+        $padre = $seccion->getBelongsTo();
+        if ($padre->getId() > 0) {
+            $url = $padre->getHref();
+            $array['subirNivel'] = $url['url'];
+        }
+
+        unset($seccion);
+        unset($padre);
 
         return $array;
     }
@@ -535,7 +595,7 @@ class ControllerWeb {
      */
     protected function getNoticias($enPortada = true, $nItems = 0, $nPagina = 1, $nImagenDiseno = 1) {
 
-        $this->setVariables('Mod', 'GconContenidos');
+        $this->setVariables('Web', 'Mod', 'GconContenidos');
 
         if ($nItems <= 0) {
             $nItems = ($enPortada) ?
@@ -570,12 +630,7 @@ class ControllerWeb {
         unset($noticia);
         unset($documentos);
 
-        $paginacion['paginacion'] = array(
-            'pagina' => Paginacion::getPagina(),
-            'totalItems' => Paginacion::getTotalItems(),
-            'itemsPorPagina' => Paginacion::getItemsPorPagina(),
-            'totalPaginas' => Paginacion::getTotalPaginas(),
-        );
+        $paginacion['paginacion'] = Paginacion::getPaginacion();
 
         return $paginacion;
     }
@@ -611,7 +666,7 @@ class ControllerWeb {
         $array = array();
 
         if ($nItems <= 0) {
-            $this->setVariables('Mod', 'GconContenidos');
+            $this->setVariables('Web', 'Mod', 'GconContenidos');
             $nItems = $this->varWeb['Mod']['GconContenidos']['especificas']['NumNoticiasHome'];
         }
 
@@ -831,7 +886,7 @@ class ControllerWeb {
 
         $array = array();
 
-        $this->setVariables('Mod', 'GconContenidos');
+        $this->setVariables('Web', 'Mod', 'GconContenidos');
 
         if ($nItems <= 0) {
             $nItems = ($enPortada) ?
@@ -888,12 +943,12 @@ class ControllerWeb {
      * - url => array(url => texto, targetBlank => boolean)
      * - imagen => Path de la imagen de diseño 1
      * 
-     * @param int $idZona La zona de slider a filtrar. Opcional. Defecto = 1
-     * @param int $tipo El tipo de sliders. Valores posibles en entities/abstract/TiposSliders.class.php
+     * @param int $idZona El id de la zona de slider a filtrar. Opcional. Defecto la primera que encuentre
+     * @param int $tipo El tipo de sliders. Opcional. Por defecto el tipo 0. Valores posibles en entities/abstract/TiposSliders.class.php
      * @param int $nItems Número máximo de sliders a devolver. Opcional. Defecto todos
      * @return array Array de sliders
      */
-    protected function getSliders($idZona = 1, $tipo = 0, $nItems = 0) {
+    protected function getSliders($idZona = '*', $tipo = 0, $nItems = 0) {
 
         $array = array();
 
@@ -904,8 +959,10 @@ class ControllerWeb {
         if ($tipoSlider->getIDTipo() == null)
             $tipo = 0;
 
+        $filtro = ($idZona == '*') ? "(1)" : "IdZona='{$idZona}'";
+        $filtro .= " AND IdTipo='{$tipo}' AND Publish='1'";
+        
         $slider = new SldSliders();
-        $filtro = "IdZona='{$idZona}' AND IdTipo='{$tipo}' AND Publish='1'";
 
         $rows = $slider->cargaCondicion("Id", $filtro, "Id ASC {$limite}");
         unset($slider);
@@ -960,13 +1017,13 @@ class ControllerWeb {
      * - url => array(url => texto, targetBlank => boolean)
      * - imagen => Path de la imagen de diseño 1
      * 
-     * @param int $idZona La zona de banner a filtrar. Opcional. Defecto = 1
+     * @param int $idZona El id de la zona de banner a filtrar. Opcional. Defecto la primera que encuentre.
      * @param int $tipo El tipo de banner. Un valor negativo significa todos los tipos. Por defecto 0 (fijo). Valores posibles en entities/abstract/TiposBanners.class.php
      * @param boolean $mostrarEnListado Un valor negativo para todos, 0 para los NO y 1 para los SI mostrar en listado
      * @param int $nItems Número máximo de banners a devolver. Opcional. Defecto todos
      * @return array Array de banners
      */
-    protected function getBanners($idZona = 1, $tipo = 0, $mostrarEnListado = 0, $nItems = 0) {
+    protected function getBanners($idZona = '*', $tipo = 0, $mostrarEnListado = 0, $nItems = 0) {
 
         $array = array();
 
@@ -982,13 +1039,17 @@ class ControllerWeb {
             $filtroTipo = "(IdTipo='{$tipo}')";
         }
 
+        // Filtro Zona
+        $filtroZona = ($idZona == '*') ? "(1)" : "IdZona='{$idZona}'";
+
         // Filtro de 'mostrarEnListado'
         $filtroMostrarEnListado = ($mostrarEnListado < 0) ? "(1)" : "MostrarEnListado='{$mostrarEnListado}'";
 
         // Criterio de orden
         $orden = ($mostrarEnListado) ? "OrdenMostrarEnListado ASC" : "Id ASC";
 
-        $filtro = "IdZona='{$idZona}' AND {$filtroTipo} AND {$filtroMostrarEnListado} AND Publish='1'";
+        $filtro = "{$filtroZona} AND {$filtroTipo} AND {$filtroMostrarEnListado} AND Publish='1'";
+        
         $banner = new BannBanners();
 
         $rows = $banner->cargaCondicion("Id", $filtro, "{$orden} {$limite}");

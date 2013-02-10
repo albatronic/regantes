@@ -28,5 +28,7 @@ jQuery(document).ready(function($){
 <script type="text/javascript" src="{{app.path}}/js/jquery.orbit-1.2.3.js"></script> {# SLIDER IMAGENES #}
 <script type="text/javascript" src="{{app.path}}/js/jquery.orbit.function.js"></script> {# SLIDER IMAGENES #}
 
+{% if values.carruselNoticias.rows|length > 0 %}
 <script type="text/javascript" src="{{app.path}}/js/slider-noticias.js"></script> {# SLIDER NOTICIAS #}
 <script type="text/javascript" src="{{app.path}}/js/jquery.script-slider.js"></script> {# SLIDER NOTICIAS #}
+{% endif %}
