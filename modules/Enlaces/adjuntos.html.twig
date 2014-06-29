@@ -1,0 +1,10 @@
+{# documentos adjuntos al enlace #}
+<div class="ficherosAdjuntosEnlaces">
+
+    <ul>
+        {% for key,archivo in archivos %}
+            <li><a href="{{app.path}}/{{archivo.PathName}}" title="{{archivo.Title}}" rel="pop-up">{{archivo.Title}}</a></li>
+        {% endfor %}
+    </ul>
+
+</div>

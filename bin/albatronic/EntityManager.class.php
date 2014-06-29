@@ -8,7 +8,7 @@
  * SE ADMITEN DIFERENTES MOTORES DE BASE DE DATOS. ACTUALMENTE ESTAN
  * IMPLEMENTADOS PARA MYSQL, MSSQL E INTERBASE.
  *
- * SI LA CONEXION ES EXITOSA $dbLink TENDRA VALOR,
+ * SI LA CONEXION ES EXITOSA self::$dbLinkInstance TENDRA VALOR,
  * EN CASO CONTRARIO ALMACENA EL MENSAJE DE ERROR PRODUCIDO QUE SE
  * PUEDE CONOCER CON EL METODO getError()
  */
@@ -21,17 +21,14 @@ class EntityManager {
      * @var string
      */
     private $file = "config/config.yml";
-
-    /**
-     * Link a la conexión establecida
-     * @var Link conexion DB
-     */
-    private $dbLink = null;
-    private $dbEngine;
-    private $host;
-    private $user;
-    private $password;
-    private $dataBase;
+    public static $dbLinkInstance = null;
+    public static $currentDbLink = null;
+    public static $dbEngine = null;
+    public static $host = null;
+    public static $user = null;
+    public static $password = null;
+    public static $dataBase = null;
+    public static $conection = array();
     private $result = null;
     private $affectedRows = null;
 
@@ -64,72 +61,75 @@ class EntityManager {
      * @param string $conection Nombre de la conexion, opcional
      * @param string $fileConfig Nombre del fichero de configuracion, opcional
      */
-    public function __construct($conection = '', $fileConfig = '') {
+    public function __construct($conection, $fileConfig = '') {
 
-        if ($fileConfig == '')
-            $fileConfig = $_SERVER['DOCUMENT_ROOT'] . $_SESSION['appPath'] . "/" . $this->file;
-
-        if (file_exists($fileConfig)) {
-            $yaml = sfYaml::load($fileConfig);
-
-            // Si no se ha indicado el nombre de la conexión, se tomara la primera
-            if ($conection == '')
-                list($conection, $nada) = each($yaml['config']['conections']);
-
-            $params = $yaml['config']['conections'][$conection];
-
-            $this->dbEngine = $params['dbEngine'];
-            $this->host = $params['host'];
-
-            if ($_SESSION['EntornoDesarrollo']) {
-                // En entorno de desarrollo se fuerzan los valores
-                // al nombre de la conexión
-                $this->user = $conection;
-                $this->password = $conection;
-                $this->dataBase = $conection;
-            } else {
-                // En entorno de producción se respetan los valores
-                // indicados en el config/config.yml
-                $this->user = $params['user'];
-                $this->password = $params['password'];
-                $this->dataBase = $params['database'];
+        //if (is_null(self::$dbLinkInstance)) {
+        if (is_array($conection)) {
+            self::$dbEngine = $conection['dbEngine'];
+            self::$host = $conection['host'];
+            self::$user = $conection['user'];
+            self::$password = $conection['password'];
+            self::$dataBase = $conection['database'];
+            if (is_null(self::$dbLinkInstance)) {
+                $this->conecta();
             }
-            $this->conecta();
         } else {
-            $this->error[] = "EntityManager []: ERROR AL LEER EL ARCHIVO DE CONFIGURACION. " . $fileConfig . " NO EXISTE\n";
+            if (count(self::$conection) == 0) {
+                if ($fileConfig == '') {
+                    $fileConfig = $_SERVER['DOCUMENT_ROOT'] . $_SESSION['appPath'] . "/" . $this->file;
+                }
+                if (file_exists($fileConfig)) {
+                    $yaml = sfYaml::load($fileConfig);
+                    // Si no se ha indicado el nombre de la conexión, se tomara la primera
+                    if ($conection == '')
+                        list($conection, $nada) = each($yaml['config']['conections']);
+                    self::$conection = $yaml['config']['conections'][$conection];
+                } else {
+                    die("EntityManager []: ERROR AL LEER EL ARCHIVO DE CONFIGURACION. " . $fileConfig . " NO EXISTE\n");
+                }
+            }
+            self::$dbEngine = self::$conection['dbEngine'];
+            self::$host = self::$conection['host'];
+            self::$user = self::$conection['user'];
+            self::$password = self::$conection['password'];
+            self::$dataBase = self::$conection['database'];
+            if (is_null(self::$dbLinkInstance))
+                $this->conecta();
         }
     }
 
     /**
      * Conecta a la base de datos con los parametros de conexión indicados
      * en config/config.yml.
-     * Si la conexion es exitosa, $this->dblink tendrá valor en caso contrario,
+     * Si la conexion es exitosa self::$dbLinkInstance tendrá valor en caso contrario,
      * $this->error tendra el mensaje de error.
      */
     private function conecta() {
 
-        switch ($this->dbEngine) {
+        switch (self::$dbEngine) {
             case 'mysql':
-                $this->dbLink = mysql_connect($this->getHost(), $this->getUser(), $this->getPassword());
-                if (is_resource($this->dbLink))
-                    mysql_select_db($this->getDataBase(), $this->dbLink);
+                self::$dbLinkInstance = mysql_connect(self::$host, self::$user, self::$password);
+                if (is_resource(self::$dbLinkInstance)) {
+                    mysql_select_db(self::$dataBase, self::$dbLinkInstance);
+                }
                 break;
 
             case 'mssql':
-                $this->dbLink = mssql_connect($this->getHost(), $this->getUser(), $this->getPassword());
-                if (is_resource($this->dbLink))
-                    mssql_select_db($this->getDataBase(), $this->dbLink);
+                self::$dbLinkInstance = mssql_connect(self::$host, self::$user, self::$password);
+                if (is_resource(self::$dbLinkInstance)) {
+                    mssql_select_db(self::$dataBase, self::$dbLinkInstance);
+                }
                 break;
 
             case 'interbase':
-                $this->dbLink = ibase_connect($this->getHost(), $this->getUser(), $this->getPassword());
+                self::$dbLinkInstance = ibase_connect(self::$host, self::$user, self::$password);
                 break;
             default:
                 $this->error[] = "EntityManager [conecta]: Conexión no realizada. No se ha indicado el tipo de base de datos. " . mysql_errno() . " " . mysql_error();
         }
-        
-        if (!$this->dbLink) {
-            $this->error[] = "EntityManager [conecta]: No se pudo conectar " . $this->getHost() . ":" . $this->getDataBase() . "Error: " . $ex->message;
+
+        if (is_null(self::$dbLinkInstance)) {
+            $this->error[] = "EntityManager [conecta]: No se pudo conectar " . self::$host . ":" . self::$dataBase . "Error: " . mysql_error();
         }
     }
 
@@ -137,22 +137,24 @@ class EntityManager {
      * Cierra la conexión con la base de datos
      */
     public function desConecta() {
-        if (is_resource($this->dbLink)) {
-            switch ($this->dbEngine) {
-                case 'mysql':
-                    mysql_close($this->dbLink);
-                    break;
-                case 'mssql':
-                    mssql_close($this->dbLink);
-                    break;
-                case 'interbase':
-                    ibase_free_result($this->result);
-                    ibase_close($this->dbLink);
-                    break;
-                default:
-                    $this->error[] = "EntityManager [desConecta]: Desconexión no realizada. No se ha indicado el tipo de base de datos";
-            }
-        }
+        /**
+          if (is_resource(self::$dbLinkInstance)) {
+          switch (self::$dbEngine) {
+          case 'mysql':
+          mysql_close(self::$dbLinkInstance);
+          break;
+          case 'mssql':
+          mssql_close(self::$dbLinkInstance);
+          break;
+          case 'interbase':
+          ibase_free_result($this->result);
+          ibase_close(self::$dbLinkInstance);
+          break;
+          default:
+          $this->error[] = "EntityManager [desConecta]: Desconexión no realizada. No se ha indicado el tipo de base de datos";
+          }
+          }
+         */
     }
 
     /**
@@ -164,32 +166,35 @@ class EntityManager {
     public function query($query) {
         $this->result = null;
 
-        switch ($this->dbEngine) {
+        switch (self::$dbEngine) {
             case 'mysql':
                 //mysql_select_db($this->getdataBase());
-                $this->result = mysql_query($query, $this->dbLink);
+                $this->result = mysql_query($query, self::$dbLinkInstance);
+                //$fp = fopen("log/queries.sql", "a");
+                //fwrite($fp, date("Y-m-d H:i:s") . "\t" . $query . "\n");
+                //fclose($fp);
                 if (!$this->result)
                     $this->setError("query");
                 else
-                    $this->affectedRows = mysql_affected_rows($this->dbLink);
+                    $this->affectedRows = mysql_affected_rows(self::$dbLinkInstance);
                 break;
 
             case 'mssql':
                 //mssql_select_db($this->dataBase);
-                $this->result = mssql_query($query, $this->dbLink);
+                $this->result = mssql_query($query, self::$dbLinkInstance);
                 if (!$this->result)
                     $this->setError("query");
                 else
-                    $this->affectedRows = mysql_affected_rows($this->dbLink);
+                    $this->affectedRows = mysql_affected_rows(self::$dbLinkInstance);
                 break;
 
             case 'interbase':
                 $query = str_replace("`", "", $query);
-                $this->result = ibase_query($this->dbLink, $query);
+                $this->result = ibase_query(self::$dbLinkInstance, $query);
                 if (!$this->result)
                     $this->setError("query");
                 else
-                    $this->affectedRows = ibase_affected_rows($this->dbLink);
+                    $this->affectedRows = ibase_affected_rows(self::$dbLinkInstance);
                 break;
 
             default:
@@ -209,7 +214,7 @@ class EntityManager {
     public function fetchResult() {
         $rows = array();
 
-        switch ($this->dbEngine) {
+        switch (self::$dbEngine) {
             case 'mysql':
                 while ($row = mysql_fetch_array($this->result, MYSQL_ASSOC))
                     $rows[] = $row;
@@ -233,6 +238,47 @@ class EntityManager {
     }
 
     /**
+     * Devuelve un array de registros
+     * 
+     * @param string $tp Nombre o alias de la tabla principal 
+     * @param string $select La sentencia select sin el where
+     * @param string $where La parte WHERE
+     * @param string $orderBy La parte ORDER By
+     * @param string $limit La parte LIMIT
+     * @return array Array de registros obtenidos
+     */
+    public function getResult($tp, $select, $where = '', $orderBy = '', $limit = '') {
+
+        // Criterio de ordenación
+        $orderBy = ($orderBy != '') ? $orderBy : "{$tp}.SortOrder";
+
+        // Limit
+        $limit = ($limit != '') ? "LIMIT {$limit}" : "";
+
+        // Condición de vigencia
+        $ahora = date("Y-m-d H:i:s");
+        $filtro = "({$tp}.Deleted='0') AND ({$tp}.Publish='1') AND ({$tp}.ActiveFrom<='{$ahora}') AND ( ({$tp}.ActiveTo>='{$ahora}') or ({$tp}.ActiveTo='0000-00-00 00:00:00') )";
+
+        // Condición de privacidad
+        if (!$_SESSION['usuarioWeb']['Id']) {
+            $filtro .= " AND ( ({$tp}.Privacy='0') OR ({$tp}.Privacy='2') )";
+        } else {
+            $idPerfil = $_SESSION['usuarioWeb']['IdPerfil'];
+            $filtro .= " AND ( ({$tp}.Privacy='2') OR ({$tp}.Privacy='1') OR LOCATE('{$idPerfil}',{$tp}.AccessProfileListWeb) )";
+        }
+
+        if ($where != '') {
+            $filtro .= " AND {$where}";
+        }
+
+        $query = "{$select} WHERE {$filtro} ORDER BY {$orderBy} {$limit}";
+        //echo $query;
+        $this->query($query);
+
+        return $this->fetchResult();
+    }
+
+    /**
      * Devuelve $limit filas encontradas a partir de la fila $offset
      * Este metodo es similar a fetchResult.
      * @param integer $limit
@@ -245,7 +291,7 @@ class EntityManager {
         if ($rowNumber < 0)
             $rowNumber = 1;
 
-        switch ($this->dbEngine) {
+        switch (self::$dbEngine) {
             case 'mysql':
                 @mysql_data_seek($this->result, $rowNumber);
                 while (($row = mysql_fetch_array($this->result, MYSQL_ASSOC)) and ($nfilas < $limit)) {
@@ -277,7 +323,7 @@ class EntityManager {
      * @return integer El numero de columnas de la consulta
      */
     public function numFields() {
-        switch ($this->dbEngine) {
+        switch (self::$dbEngine) {
             case 'mysql':
                 return mysql_num_fields($this->result);
                 break;
@@ -300,7 +346,7 @@ class EntityManager {
      * @return integer El numero de filas de la consulta
      */
     public function numRows() {
-        switch ($this->dbEngine) {
+        switch (self::$dbEngine) {
             case 'mysql':
                 return mysql_num_rows($this->result);
                 break;
@@ -325,7 +371,7 @@ class EntityManager {
      * @return boolean
      */
     public function dataSeek($rowNumber) {
-        switch ($this->dbEngine) {
+        switch (self::$dbEngine) {
             case 'mysql':
                 return mysql_data_seek($this->result, $rowNumber);
                 break;
@@ -352,9 +398,12 @@ class EntityManager {
      * @return inter
      */
     public function getInsertId() {
-        switch ($this->dbEngine) {
+        switch (self::$dbEngine) {
             case 'mysql':
-                return mysql_insert_id($this->dbLink);
+                //return mysql_insert_id(self::$dbLinkInstance);
+                $result = mysql_query("SELECT LAST_INSERT_ID()",self::$dbLinkInstance);
+                $row = mysql_fetch_row($result);
+                return $row[0];
                 break;
 
             case 'mssql':
@@ -395,7 +444,7 @@ class EntityManager {
      * @return string Usuario
      */
     public function getUser() {
-        return $this->user;
+        return self::$user;
     }
 
     /**
@@ -403,7 +452,7 @@ class EntityManager {
      * @return string Password
      */
     public function getPassword() {
-        return $this->password;
+        return self::$password;
     }
 
     /**
@@ -411,11 +460,11 @@ class EntityManager {
      * @return string Nombre de la base de datos
      */
     public function getDataBase() {
-        return $this->dataBase;
+        return self::$dataBase;
     }
 
     public function getDbLink() {
-        return $this->dbLink;
+        return self::$dbLinkInstance;
     }
 
     /**
@@ -432,7 +481,7 @@ class EntityManager {
         if ($error != '')
             $mensaje .= $error;
         else {
-            switch ($this->dbEngine) {
+            switch (self::$dbEngine) {
                 case 'mysql':
                     switch (mysql_errno()) {
                         case '1062':

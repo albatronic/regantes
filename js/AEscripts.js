@@ -1,6 +1,6 @@
 /* 
  * @author Sergio Pérez <sergio.perez@albatronic.com>
- * @copyright Ártico Estudio, sl
+ * @copyright Informática ALBATRONIC, sl
  * @version 1.0 27-nov-2012
  */
 
@@ -10,7 +10,12 @@
  *
  */
 
-var meses = new Array('Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre');
+var meses = new Array();
+meses["es"] = new Array('Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre');
+meses["en"] = new Array('January','February','March','April','May','June','July','August','September','October','November','December');
+meses["fr"] = new Array('Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','September','October','November','December');
+meses["it"] = new Array('Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre');
+meses["de"] = new Array('Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember');
 
 $(document).ready(function(){
     
@@ -72,7 +77,7 @@ function calendario(idDiv,mes,ano) {
     $('#'+idDiv).html("<img src='"+appPath+"/images/loading.gif'>");
 
     // Pintar el literal del mes y año
-    jQuery('#calendarioTextoMes').html(meses[mes-1] + " " + ano);
+    jQuery('#calendarioTextoMes').html(meses[language][mes-1] + " " + ano);
     // Pintar el calendario
     jQuery('#'+idDiv).load(url, parametros);
     

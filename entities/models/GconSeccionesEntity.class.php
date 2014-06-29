@@ -197,7 +197,7 @@ class GconSeccionesEntity extends EntityComunes {
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'GconSecciones';
+    protected $_tableName = 'GconSecciones*';
 
     /**
      * Nombre de la PrimaryKey

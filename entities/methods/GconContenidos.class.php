@@ -14,7 +14,7 @@ class GconContenidos extends GconContenidosEntity {
     public function __toString() {
         return $this->getId();
     }
-   
+    
 }
 
 ?>

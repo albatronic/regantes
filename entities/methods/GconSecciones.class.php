@@ -16,17 +16,19 @@ class GconSecciones extends GconSeccionesEntity {
     }
 
     /**
-     * Devuelve un array con las subsecciones de la sección en curso
+     * Devuelve un array recursivo con las subsecciones de la sección en curso
      * 
      * Cada elemento del array es:
      * 
-     * - titulo: El titulo de la seccion
+     * - seccion: El texto de la etiquetaweb $nMenu
+     * - subetiquetaWeb: El texto de la subetiquetaweb $nMenu
      * - url: array(url => La url, targetBlank => boolean)
+     * - subsecciones: array recursivo
      * 
      * @param string $orden Criterio de orden. Defecto 'SortOrder'
      * @return array Array de subsecciones
      */
-    public function getArraySubsecciones($orden = "SortOrder") {
+    public function getArraySubsecciones($orden = "SortOrder", $nMenu = '1') {
 
         $array = array();
 
@@ -37,8 +39,10 @@ class GconSecciones extends GconSeccionesEntity {
         foreach ($rows as $row) {
             $subseccion = new GconSecciones($row['Id']);
             $array[] = array(
-                'titulo' => $subseccion->getTitulo(),
-                'url' => $subseccion->getHref(),
+                'seccion' => $subseccion->{"getEtiquetaWeb$nMenu"}(),
+                'subetiquetaWeb' => $subseccion->{"getSubetiquetaWeb$nMenu"}(),
+                'url' => $subseccion->getHref(),                
+                'subsecciones' => $subseccion->getArraySubsecciones("OrdenMenu{$nMenu}",$nMenu),
             );
         }
         unset($subseccion);

@@ -68,6 +68,11 @@ class Entity {
      * CONSTRUCTOR
      */
     public function __construct($primaryKeyValue = '', $showDeleted = FALSE) {
+
+        $this->_tableName = ($_SESSION['IDLANGUAGE'] > 0) ?
+                str_replace("*", $_SESSION['IDLANGUAGE'], $this->_tableName) :
+                str_replace("*", "", $this->_tableName);
+
         $this->setPrimaryKeyValue($primaryKeyValue);
         $this->load($showDeleted);
     }
@@ -135,7 +140,7 @@ class Entity {
         if (is_resource($this->_dbLink)) {
             // Auditoria
             $this->setModifiedAt(date('Y-m-d H:i:s'));
-            $this->setModifiedBy($_SESSION['USER']['user']['Id']);
+            $this->setModifiedBy($_SESSION['usuarioWeb']['Id']);
 
             // Compongo los valores iterando el objeto
             $values = '';
@@ -174,7 +179,7 @@ class Entity {
         if (is_resource($this->_dbLink)) {
             // Auditoria
             $this->setCreatedAt(date('Y-m-d H:i:s'));
-            $this->setCreatedBy($_SESSION['USER']['user']['Id']);
+            $this->setCreatedBy($_SESSION['usuarioWeb']['Id']);
 
             // Compongo las columnas y los valores iterando el objeto
             $columns = '';
@@ -226,7 +231,7 @@ class Entity {
             if (is_resource($this->_dbLink)) {
                 // Auditoria
                 $fecha = date('Y-m-d H:i:s');
-                $query = "UPDATE `{$this->_dataBaseName}`.`{$this->_tableName}` SET `Deleted` = '1', `DeletedAt` = '{$fecha}', `DeletedBy` = '{$_SESSION['USER']['user']['Id']}' WHERE `{$this->_primaryKeyName}` = '{$this->getPrimaryKeyValue()}'";
+                $query = "UPDATE `{$this->_dataBaseName}`.`{$this->_tableName}` SET `Deleted` = '1', `DeletedAt` = '{$fecha}', `DeletedBy` = '{$_SESSION['usuarioWeb']['Id']}' WHERE `{$this->_primaryKeyName}` = '{$this->getPrimaryKeyValue()}'";
                 if (!$this->_em->query($query))
                     $this->_errores = $this->_em->getError();
                 else {
@@ -425,7 +430,7 @@ class Entity {
      * Este método lo debe implementar la entidad que lo necesite
      */
     protected function validaLogico() {
-        
+
         if ($this->BelongsTo == $this->getPrimaryKeyValue()) {
             $this->BelongsTo = 0;
             $this->_alertas[] = "El objeto no puede pertenecer a el mismo";
@@ -433,7 +438,7 @@ class Entity {
 
         if ($this->getPrimaryKeyValue() != '') {
             // Estoy validando antes de actualizar
-            if (($this->IsSuper) and ($_SESSION['USER']['user']['IdPerfil'] != '1'))
+            if (($this->IsSuper) and ($_SESSION['usuarioWeb']['IdPerfil'] != '1'))
                 $this->_errores[] = "No se puede modificar, es un valor reservado";
         }
 
@@ -477,12 +482,12 @@ class Entity {
 
         // No se puede borrar si el objeto es un valor predeterminado y el usuario
         // no es el super
-        if (($this->IsDefault) AND ($_SESSION['USER']['user']['IdPerfil'] != 1))
+        if (($this->IsDefault) AND ($_SESSION['usuarioWeb']['IdPerfil'] != 1))
             $this->_errores[] = "No se puede eliminar. Es un valor predeterminado";
 
         // No se puede borrar si el objeto es un valor SUPER y el usuario
         // no es el super
-        if (($this->IsSuper) AND ($_SESSION['USER']['user']['IdPerfil'] != 1))
+        if (($this->IsSuper) AND ($_SESSION['usuarioWeb']['IdPerfil'] != 1))
             $this->_errores[] = "No se puede eliminar. Es un valor reservado";
 
         // Validacion de integridad referencial respecto a entidades hijas
@@ -516,22 +521,34 @@ class Entity {
      * @param string $columnas Relacion de las columnas seperadas por coma
      * @param string $condicion Condicion de filtrado que se utiliza en la clausula where (sin la cláusula WHERE)
      * @param string $orderBy Ordenacion, debe incluir la/s columna/s y el tipo ASC/DESC (sin la cláusula ORDER BY)
-     * @param boolean $showDeleted Devolver o no los registros marcados como borrados, por defecto no se devuelven
      * @return array $rows Array con las columnas devueltas
      */
-    public function cargaCondicion($columnas = '*', $condicion = '(1=1)', $orderBy = '', $showDeleted = FALSE) {
+    public function cargaCondicion($columnas = '*', $condicion = '1', $orderBy = '') {
+
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
 
-            if ($orderBy != '')
-                $orderBy = 'ORDER BY ' . $orderBy;
+            // Criterio de ordenación
+            $orderBy = ($orderBy != '') ? "ORDER BY {$orderBy}" : "ORDER BY SortOrder";
 
-            if ($showDeleted == FALSE)
-                $condicion .= " AND (Deleted = '0')";
+            // Condición de vigencia
+            $ahora = date("Y-m-d H:i:s");
+            $filtro = "(Deleted='0') AND (Publish='1') AND (ActiveFrom<='{$ahora}') AND ( (ActiveTo>='{$ahora}') or (ActiveTo='0000-00-00 00:00:00') )";
 
-            $query = "SELECT {$columnas} FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE ({$condicion}) {$orderBy}";
-            $this->_em->query($query);
+            // Condición de privacidad
+            if (!$_SESSION['usuarioWeb']['Id']) {
+                $filtro .= " AND ( (Privacy='0') OR (Privacy='2') )";
+            } else {
+                $idPerfil = $_SESSION['usuarioWeb']['IdPerfil'];
+                $filtro .= " AND ( (Privacy='2') OR (Privacy='1') OR LOCATE('{$idPerfil}',AccessProfileListWeb) )";
+            }
+
+            if ($condicion != '')
+                $filtro .= " AND {$condicion}";
+
+            $query = "SELECT {$columnas} FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE {$filtro} {$orderBy}";
+            $this->_em->query($query); //echo $query,"<br/>";
             $this->setStatus($this->_em->numRows());
 
             $rows = $this->_em->fetchResult();
@@ -539,6 +556,90 @@ class Entity {
         }
 
         unset($this->_em);
+
+        return $rows;
+    }
+
+    /**
+     * Ejecuta una sentencia update sobre la entidad
+     * 
+     * @param array $array Array de parejas columna, valor
+     * @param string $condicion Condicion del where (sin el where)
+     * @return int El número de filas afectadas
+     */
+    public function queryUpdate($array, $condicion = '1') {
+
+        $filasAfectadas = 0;
+
+        $this->conecta();
+        if (is_resource($this->_dbLink)) {
+
+            foreach ($array as $key => $value)
+                $valores .= "{$key}='{$value}',";
+
+            // Quito la coma final
+            $valores = substr($valores, 0, -1);
+
+            $query = "UPDATE `{$this->_dataBaseName}`.`{$this->_tableName}` SET {$valores} WHERE ({$condicion})";
+            $this->_em->query($query); //echo $query;
+            $filasAfectadas = $this->_em->getAffectedRows();
+            $this->_em->desConecta();
+        }
+        unset($this->_em);
+
+        return $filasAfectadas;
+    }
+
+    /**
+     * Ejecuta una sentencia update sobre la entidad
+     * 
+     * @param string $condicion Condicion del where (sin el where)
+     * @return int El número de filas afectadas
+     */
+    public function queryDelete($condicion) {
+
+        $filasAfectadas = 0;
+
+        $this->conecta();
+        if (is_resource($this->_dbLink)) {
+
+            $query = "DELETE FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE ({$condicion})";
+            $this->_em->query($query);
+            $filasAfectadas = $this->_em->getAffectedRows();
+            $this->_em->desConecta();
+        }
+        unset($this->_em);
+
+        return $filasAfectadas;
+    }
+
+    public function querySelect($columnas, $restoTablas='', $condicion='1', $orden='SortOrder ASC', $nItems='') {
+        $this->conecta();
+        if (is_resource($this->_dbLink)) {
+
+            $limite = ($nItems=='') ? "": "LIMIT {$nItems}";
+            $tablaPrincipal = $this->_tableName;
+            
+            // Condición de vigencia
+            $ahora = date("Y-m-d H:i:s");
+            $condicion .= " AND ({$tablaPrincipal}.Deleted='0') AND ({$tablaPrincipal}.ActiveFrom<='{$ahora}') AND ( ({$tablaPrincipal}.ActiveTo>='{$ahora}') or ({$tablaPrincipal}.ActiveTo='0000-00-00 00:00:00') )";
+
+            // Condición de privacidad
+            if (!$_SESSION['usuarioWeb']['Id']) {
+                $filtro .= " AND ( ({$tablaPrincipal}.Privacy='0') OR ({$tablaPrincipal}.Privacy='2') )";
+            } else {
+                $idPerfil = $_SESSION['usuarioWeb']['IdPerfil'];
+                $filtro .= " AND ( ({$tablaPrincipal}.Privacy='2') OR ({$tablaPrincipal}.Privacy='1') OR LOCATE('{$idPerfil}',{$tablaPrincipal}.AccessProfileListWeb) )";
+            }
+
+            $query = "SELECT {$columnas} FROM {$tablaPrincipal} tp {$restoTablas} WHERE ({$condicion}) ORDER BY {$orden} {$limite}";
+            echo $query;
+            $this->_em->query($query);
+            $rows = $this->_em->fetchResult();
+            $this->_em->desConecta();
+        }
+        unset($this->_em);
+
         return $rows;
     }
 
@@ -547,20 +648,27 @@ class Entity {
      *
      * @param string $columna El nombre de la columna
      * @param variant $valor El valor a buscar
-     * @param boolean $showDeleted Devolver o no los registros marcados como borrados, por defecto no se devuelven
      * @return this El objeto encontrado
      */
-    public function find($columna, $valor, $showDeleted = FALSE) {
-
-        $condicion = "({$columna} = '{$valor}')";
-
-        if ($showDeleted == FALSE)
-            $condicion .= " AND (Deleted = '0')";
+    public function find($columna, $valor) {
 
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
 
+            $condicion = "({$columna}='{$valor}')";
+
+            // Condición de vigencia
+            $ahora = date("Y-m-d H:i:s");
+            $condicion .= " AND (Deleted='0') AND (ActiveFrom<='{$ahora}') AND ( (ActiveTo>='{$ahora}') or (ActiveTo='0000-00-00 00:00:00') )";
+
+            // Condición de privacidad
+            if (!$_SESSION['usuarioWeb']['Id']) {
+                $filtro .= " AND ( (Privacy='0') OR (Privacy='2') )";
+            } else {
+                $idPerfil = $_SESSION['usuarioWeb']['IdPerfil'];
+                $filtro .= " AND ( (Privacy='2') OR (Privacy='1') OR LOCATE('{$idPerfil}',AccessProfileListWeb) )";
+            }
             $query = "SELECT {$this->_primaryKeyName} FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE ({$condicion})";
             $this->_em->query($query);
             $this->setStatus($this->_em->numRows());
@@ -569,7 +677,8 @@ class Entity {
         }
 
         unset($this->_em);
-        return new $this($rows[0][$this->_primaryKeyName], $showDeleted);
+
+        return new $this($rows[0][$this->_primaryKeyName]);
     }
 
     /**
@@ -679,7 +788,7 @@ class Entity {
 
     /**
      * Devuelve el número de registros activos (deleted=0)
-     * que tiene la entidad
+     * que tiene la entidad que cumplen $criterio
      *
      * @param string $criterio Clausa para el WHERE para poder contar un subconjunto de registros
      * @return integer
@@ -732,6 +841,60 @@ class Entity {
         unset($docs);
 
         return $nDocs;
+    }
+
+    /**
+     * Devuelve el objeto CpanDocs correspondiente a la imagén de diseño $nImagen
+     * 
+     * @param integer $nImagen El número de imagén de diseño. Opcional, defecto la 1
+     * @return /CpanDocs El objeto imagen
+     */
+    public function getImagenN($nImagen = 1) {
+
+        $imagenes = $this->getDocuments('image' . $nImagen, "IsThumbnail='0'");
+        $imagen = (count($imagenes)) ? $imagenes[0] : new CpanDocs();
+
+        return $imagen;
+    }
+
+    /**
+     * Devuelve el objeto CpanDocs correspondiente al thumbnail de la imagen de diseño $nImagen
+     * 
+     * @param integer $nImagen El número de imagén de diseño. Opcional, defecto la 1
+     * @return /CpanDocs El objeto imagen
+     */
+    public function getThumbnailN($nImagen = 1) {
+
+        $imagenes = $this->getDocuments('image' . $nImagen, "IsThumbnail='1'");
+        $imagen = (count($imagenes)) ? $imagenes[0] : new CpanDocs();
+
+        return $imagen;
+    }
+
+    /**
+     * Devuelve el pathname de la imagen de diseño (no el thumbnail) $nImagen
+     * 
+     * @param integer $nImagen El número de imagén de diseño. Opcional, defecto la 1
+     * @return string el path de la imagen
+     */
+    public function getPathNameImagenN($nImagen = 1) {
+
+        $imagen = $this->getImagenN($nImagen);
+
+        return $imagen->getPathName();
+    }
+
+    /**
+     * Devuelve el pathname del thumbnail de la imagen de diseño $nImagen
+     * 
+     * @param integer $nImagen El número de imagén de diseño. Opcional, defecto la 1
+     * @return string el path de la imagen
+     */
+    public function getPathNameThumbnailN($nImagen = 1) {
+
+        $imagen = $this->getThumbnailN($nImagen);
+
+        return $imagen->getPathName();
     }
 
     public function getArbolHijos() {

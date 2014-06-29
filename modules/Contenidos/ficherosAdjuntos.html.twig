@@ -12,7 +12,7 @@
                 <ul>
                     {% for key,archivo in archivos %}
                         {% if key is even %}
-                        <li><a href="{{app.path}}/{{archivo.PathName}}" title="{{archivo.Title}}" rel="pop-up">{{archivo.Name}}</a></li>
+                        <li><a href="{{app.path}}/{{archivo.PathName}}" title="{{archivo.Title}}" rel="pop-up">{{archivo.Title}}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ul>
@@ -20,7 +20,7 @@
                 <ul class="right">
                     {% for key, archivo in archivos %}
                         {% if key is odd %}
-                        <li><a href="{{app.path}}/{{archivo.PathName}}" title="{{archivo.Title}}" rel="pop-up">{{archivo.Name}}</a></li>
+                        <li><a href="{{app.path}}/{{archivo.PathName}}" title="{{archivo.Title}}" rel="pop-up">{{archivo.Title}}</a></li>
                         {% endif%}
                     {% endfor %}
                 </ul>

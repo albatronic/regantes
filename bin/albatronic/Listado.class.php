@@ -848,7 +848,7 @@ class Listado {
         $objPHPExcel->getActiveSheet()->setTitle($parametros['title']);
         $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A1', $parametros['title'])
-                ->setCellValue('A3', 'Generado por ' . $_SESSION['USER']['user']['Nombre'])
+                ->setCellValue('A3', 'Generado por ' . $_SESSION['usuarioWeb']['Nombre'])
                 ->setCellValue('A4', 'Fecha ' . date('d/m/Y H:i:s'));
         // Fila de titulos
         $columna = 'A';

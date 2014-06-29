@@ -18,7 +18,7 @@
  * $origen = WebService::getOrigenVisitante('http://origenvisante.com');
  * 
  * @author Sergio Perez <sergio.perez@albatronic.com>
- * @copyright (c) 2012, Ártico Estudio, sl
+ * @copyright (c) 2012, Informática ALBATRONIC, sl
  */
 class WebService {
 

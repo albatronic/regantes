@@ -433,9 +433,9 @@ class Form {
         $formatos = array();
 
         if ($this->yaml['listados']) {
-            $perfilUsuario = $_SESSION['USER']['user']['IDPerfil'];
+            $perfilUsuario = $_SESSION['usuarioWeb']['IdPerfil'];
             foreach ($this->yaml['listados'] as $value) {
-                $perfiles = (string) $value['idPerfil'];
+                $perfiles = (string) $value['IdPerfil'];
                 $arrayPerfiles = explode(',', $perfiles);
                 if (($perfiles == '') or (in_array($perfilUsuario, $arrayPerfiles)))
                     $formatos[] = (string) $value['title'];

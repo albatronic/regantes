@@ -5,7 +5,10 @@
         {% include values.archivoCss %}
             
         <!-- Para que esté disponible el path de la app en todos los java scripts -->
-        <script type="text/javascript">var appPath = "{{appPath}}";</script>  
+        <script type="text/javascript">
+            var appPath = "{{appPath}}";
+            var language = "{{language}}";
+        </script>  
         
         {% include values.archivoJs %}
         <script type="text/javascript" src="{{app.path}}/js/AEscripts.js"></script>         

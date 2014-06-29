@@ -45,7 +45,7 @@ class EnlSeccionesEntity extends EntityComunes {
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'EnlSecciones';
+    protected $_tableName = 'EnlSecciones*';
 
     /**
      * Nombre de la PrimaryKey

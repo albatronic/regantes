@@ -30,7 +30,7 @@
 
         <ul class="listaContenidos">
             {% for contenido in values.listadoContenidos.contenidos %}
-                {% if contenido.ShowPublishedAt.IDTipo and contenido.PublishedAt %}
+                {% if contenido.ShowPublishedAt.IDTipo and contenido.PublishedAt | date('d/m/Y')%}
                     {% set claseCss = "con_fecha" %}
                 {% else %}
                     {% set claseCss = "sin_fecha" %}
@@ -48,7 +48,7 @@
                     </h{{nHH}}>
                 {% endif %}
                 {% if contenido.ShowPublishedAt.IDTipo and contenido.PublishedAt %}
-                    <span class="fecha">{{contenido.PublishedAt}}</span>
+                    <span class="fecha">{{contenido.PublishedAt | date('d/m/Y')}}</span>
                 {% endif %}
                 {% if contenido.Subtitulo %}
                     {% set nHH = nHH + 1 %}

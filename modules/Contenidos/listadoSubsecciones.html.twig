@@ -21,7 +21,7 @@
                             {{subseccion.titulo}}
                         {% endif %}
                     </h1>
-                    {% if subseccion.fecha!="" %}<span class="fecha">{{subseccion.fecha}}</span>{% endif %}
+                    {% if subseccion.fecha!="" %}<span class="fecha">{{subseccion.fecha | date('d/m/Y')}}</span>{% endif %}
                 </li>
             {% endfor %}
         </ul>

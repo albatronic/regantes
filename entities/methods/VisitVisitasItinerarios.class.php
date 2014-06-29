@@ -45,7 +45,7 @@ class VisitVisitasItinerarios extends VisitVisitasItinerariosEntity {
 
         // Crear el registro de itinerario actual
         $this->setIdVisita($idVisita);
-        $this->setIdUsuario($_SESSION['USER']['user']['Id']);
+        $this->setIdUsuario($_SESSION['usuarioWeb']['Id']);
         $this->setEntidad($request['Entity']);
         $this->setIdEntidad($request['IdEntity']);
         $this->setTiempoUnix(time());

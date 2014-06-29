@@ -4,7 +4,7 @@
  * Description of Calendario
  *
  * @author Sergio Pérez <sergio.perez@albatronic.com>
- * @copyright (c) Ártico Estudio, sl
+ * @copyright (c) Informática ALBATRONIC, sl
  * @version 1.0 27-nov-2012
  */
 class Calendario {

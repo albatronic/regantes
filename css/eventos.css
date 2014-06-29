@@ -75,3 +75,20 @@ p {
 	width:100%;
 }
 
+
+/* ----------------------------------------------
+    MENSAJE EVENTOS SI NO HAY EVENTOS
+---------------------------------------------- */
+.mensajeEventos {
+    background: url('../images/no-hay-eventos.png') 50% 0 no-repeat;
+    padding-top: 210px;
+    overflow: hidden;
+    text-align: center;
+    float: left;
+    width: 783px;
+}
+
+.mensajeEventos p {
+    float: left;
+    width: 100%;
+}

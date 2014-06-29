@@ -64,10 +64,10 @@ class DocumentoPdf extends FPDF {
         if (file_exists($file)) {
             $yml = sfYaml::load($file);
 
-            $perfilUsuario = $_SESSION['USER']['user']['IDPerfil'];
+            $perfilUsuario = $_SESSION['usuarioWeb']['IdPerfil'];
             $i = 0;
             foreach ($yml[$tipoDocumento] as $formato) {
-                $perfiles = $formato['idPerfil'];
+                $perfiles = $formato['IdPerfil'];
                 $arrayPerfiles = explode(',', $perfiles);
                 if (($perfiles == '') or (in_array($perfilUsuario, $arrayPerfiles)))
                     $formatos[] = array(

@@ -9,14 +9,14 @@
  * 
  * 
  * @param string $entidad La entidad de datos a paginar
- * @param string $filtro Clausula where para filtrar los datos (sin el WHERE)
+ * @param string $condicion Clausula where para filtrar los datos (sin el WHERE)
  * @param string $criterioOrden Criterio de ordenación de los datos (sin el ORDER BY)
- * @param int $nPagina Número de pagina a devolver
+ * @param int $nPagina Número de página a devolver
  * @param int $itemsPorPagina Número de items por página
  * @return array Array con la información obtenida
  * 
  * @author Sergio Pérez <sergio.perez@albatronic.com>
- * @copyright (c) Ártico Estudio, sl
+ * @copyright (c) Informática ALBATRONIC, sl
  * @version 1.0 22-ENE-2013
  */
 class Paginacion {
@@ -26,23 +26,37 @@ class Paginacion {
     static $totalPaginas;
     static $itemsPorPagina;
     static $totalItems;
-    
-    static function paginar($entidad, $filtro, $criterioOrden, $nPagina, $itemsPorPagina) {
+
+    static function paginar($entidad, $condicion, $criterioOrden, $nPagina, $itemsPorPagina) {
 
         if ($criterioOrden == '') {
             $criterioOrden = "SortOrder ASC";
-            echo "Paginacion::paginar: NO SE HA DEFINIDO EL CRITERIO DE ORDEN.";
+            echo "Paginacion::paginar: NO SE HA DEFINIDO EL CRITERIO DE ORDEN. " . $entidad;
         }
-        
-        $filtro .= " AND (Deleted='0')";
-        
+
+        // Condición de vigencia
+        $ahora = date("Y-m-d H:i:s");
+        $filtro = "(Deleted='0') AND (Publish='1') AND (ActiveFrom<='{$ahora}') AND ( (ActiveTo>='{$ahora}') or (ActiveTo='0000-00-00 00:00:00') )";
+
+        // Condición de privacidad
+        if (!$_SESSION['usuarioWeb']['Id']) {
+            $filtro .= " AND ( (Privacy='0') OR (Privacy='2') )";
+        } else {
+            $idPerfil = $_SESSION['usuarioWeb']['IdPerfil'];
+            $filtro .= " AND ( (Privacy='1') OR (Privacy='2') OR LOCATE('{$idPerfil}',AccessProfileListWeb) )";
+        }
+
+        // Condición específica
+        if ($condicion != '')
+            $filtro .= " AND {$condicion}";
+
         self::$pagina = ($nPagina <= 0) ? 1 : $nPagina;
         self::$itemsPorPagina = ($itemsPorPagina <= 0) ? 1 : $itemsPorPagina;
-        
+
         $objeto = new $entidad();
 
-        $query = "SELECT Id from {$objeto->getDataBaseName()}.{$objeto->getTableName()} WHERE {$filtro} ORDER BY {$criterioOrden}";
-
+        $query = "SELECT Id FROM {$objeto->getDataBaseName()}.{$objeto->getTableName()} WHERE {$filtro} ORDER BY {$criterioOrden}";
+        //echo $query;
         $em = new EntityManager($objeto->getConectionName());
         if ($em->getDbLink()) {
             $em->query($query);
@@ -56,9 +70,8 @@ class Paginacion {
         }
         unset($objeto);
         unset($em);
-
     }
-    
+
     /**
      * Array con N ocurrencias: ('Id' => el id del objeto obtenido)
      * @return array
@@ -66,7 +79,7 @@ class Paginacion {
     static function getRows() {
         return self::$rows;
     }
-    
+
     /**
      * Devuelve un array con la información de paginacion.
      * 
@@ -84,10 +97,10 @@ class Paginacion {
             'pagina' => self::getPagina(),
             'totalItems' => self::getTotalItems(),
             'itemsPorPagina' => self::getItemsPorPagina(),
-            'totalPaginas' => self::getTotalPaginas(),            
+            'totalPaginas' => self::getTotalPaginas(),
         );
     }
-    
+
     /**
      * Devuelve el número de página solicitado
      * @return int El número de página
@@ -103,7 +116,7 @@ class Paginacion {
     static function getTotalPaginas() {
         return self::$totalPaginas;
     }
-    
+
     /**
      * Devuelve el número de registros por página
      * @return int
@@ -111,7 +124,7 @@ class Paginacion {
     static function getItemsPorPagina() {
         return self::$itemsPorPagina;
     }
-    
+
     /**
      * Devuelve el número total de items que cumplen el criterio de filtro
      * @return int
@@ -119,6 +132,7 @@ class Paginacion {
     static function getTotalItems() {
         return self::$totalItems;
     }
+
 }
 
 ?>

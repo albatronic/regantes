@@ -34,7 +34,7 @@
             
         {% for key,contenido in values.listadoContenidos.contenidos%}
             
-            {% include 'Contenidos/contenido.html.twig' with {'contenido': contenido.contenido, 'nH': nH}%}
+            {% include 'Contenidos/contenido.html.twig' with {'contenido': contenido, 'nH': nH}%}
 
             {# FICHEROS ADJUNTOS #}            
             {% if contenido.contenido.ShowDocuments.IDTipo == '1' %}
@@ -48,7 +48,7 @@
 
             {# GALERIA DE IMAGENES #}    
             {% if contenido.contenido.ShowGalery.IDTipo == '1' %}
-                {% include 'Contenidos/galeria.html.twig' with {'galeriaFotos': contenido.galeriaFotos} %} 
+                {% include 'Contenidos/galeria.html.twig' with {'IdGalery': 'contenido' ~ contenido.contenido.Id, 'galeriaFotos': contenido.galeriaFotos} %} 
             {% endif %}
             
             {% if key+1 < nContenidos%}

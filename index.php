@@ -17,10 +17,10 @@
  * MAS INFO: http://httpd.apache.org/docs/2.0/es/
  *
  * LAS PETICIONES DEBEN SER EN EL FORMATO:
- * http://www.sitioweb.com/apppath/controller/action/resto de valores...
+ * http://www.sitioweb.com/apppath/urlAmigable/resto de valores...
  *
  * El apppath puede estar compuesto de varios subcarpetas. Ej:
- * http://www.sitioweb.com/apps/gestion/controller/action/ resto de valores...
+ * http://www.sitioweb.com/apps/gestion/urlAmigable/ resto de valores...
  *
  * @author Sergio Pérez <sergio.perez@albatronic.com>
  * @copyright Informatica ALBATRONIC
@@ -28,13 +28,12 @@
  */
 session_start();
 
+//error_reporting(E_ALL);
+
 $_SESSION['IdSesion'] = session_id();
 
-if (!$_SESSION['USER']['user']['Id'])
-    $_SESSION['USER']['user']['Id'] = 0;
-
-if (!file_exists('config/config.yml'))
-    die("NO EXISTE EL FICHERO DE CONFIGURACION");
+if (!$_SESSION['usuarioWeb']['Id'])
+    $_SESSION['usuarioWeb']['Id'] = 0;
 
 if (file_exists("bin/yaml/lib/sfYaml.php"))
     include "bin/yaml/lib/sfYaml.php";
@@ -44,19 +43,24 @@ else
 // ---------------------------------------------------------------
 // CARGO LOS PARAMETROS DE CONFIGURACION.
 // ---------------------------------------------------------------
-$yaml = sfYaml::load('config/config.yml');
-$config = $yaml['config'];
+if (!isset($_SESSION['config'])) {
+    if (!file_exists('config/config.yml'))
+        die("NO EXISTE EL FICHERO DE CONFIGURACION");
+    else {
+        $yaml = sfYaml::load('config/config.yml');
+        $_SESSION['config'] = $yaml['config'];
+    }
+}
 
-if ($config['projectId'] == '')
-    die("NO SE HA DEFINIDO EL ID DE PROYECTO");
-else
-    $_SESSION['projectId'] = $config['projectId'];
+$config = $_SESSION['config'];
+
+$_SESSION['project']['ftp'] = $config['projectFtp'];
 
 $app = $config['app'];
 
 $_SESSION['appPath'] = $app['path'];
 $_SESSION['appUrl'] = $app['url'];
-$_SESSION['frecuenciaHorasBorrado'] = $config['frecuenciaHorasBorrado'];
+
 
 // ---------------------------------------------------------------
 // ACTIVAR EL AUTOLOADER DE CLASES Y FICHEROS A INCLUIR
@@ -71,30 +75,6 @@ Autoloader::setClassPaths(array(
     'lib/',
 ));
 spl_autoload_register(array('Autoloader', 'loadClass'));
-
-// ---------------------------------------------------------------
-// ACTIVAR EL IDIOMA.
-// ---------------------------------------------------------------
-/**
-  include_once "lang/languages.php";
-
-  if ($_SESSION['IDIOMA'] == '') {
-  $idioma = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-  if ((file_exists('lang/' . $idioma . '.php')) and (in_array($idioma, $_SESSION['IDIOMAS']))) {
-  $_SESSION['IDIOMA'] = $idioma;
-  } else
-  $_SESSION['IDIOMA'] = 'es';
-
-  include "lang/" . $_SESSION['IDIOMA'] . ".php";
-  }
- */
-//----------------------------------------------------------------
-// ACTIVAR EL MOTOR DE PDF'S
-// ---------------------------------------------------------------
-if (file_exists($config['pdf']))
-    include_once $config['pdf'];
-else
-    die("NO SE PUEDE ENCONTRAR EL MOTOR PDF");
 
 //----------------------------------------------------------------
 // ACTIVAR EL MOTOR TWIG PARA LOS TEMPLATES.
@@ -123,7 +103,7 @@ if (file_exists($config['twig']['motor'])) {
 // COMPROBAR DISPOSITIVO DE NAVEGACION
 // ------------------------------------------------
 if (!$_SESSION['isMobile']) {
-    $browser = new Browser ();
+    $browser = new Browser();
     $_SESSION['isMobile'] = $browser->isMobile();
     unset($browser);
 }
@@ -143,25 +123,30 @@ $_SESSION['EntornoDesarrollo'] = $rq->isDevelopment();
 // LA GESTION DE VISITAS
 // ----------------------------------------------------------------
 if ((!$_SESSION['EntornoDesarrollo']) and (!$_SESSION['origen'])) {
-    $_SESSION['origen'] = WebService::getOrigenVisitante($config['wsControlVisitas'] . $rq->getRemoteAddr());
+    //$_SESSION['origen'] = WebService::getOrigenVisitante($config['wsControlVisitas'] . $rq->getRemoteAddr());
 }
 
 // ----------------------------------------------------------------
 // ACTIVAR EL FORMATO DE LA MONEDA
 // ----------------------------------------------------------------
 setlocale(LC_MONETARY, $rq->getLanguage());
+if ((!isset($_SESSION['idiomas']['actual'])) or ($_SESSION['EntornoDesarrollo']))
+    setIdioma();
 
 // Si el navegador es antiguo muestro template especial
 $url = new CpanUrlAmigables();
 if ($rq->isOldBrowser()) {
-    $rows = $url->cargaCondicion("Id,UrlFriendly,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='/oldbrowser'");
+    $rows = $url->cargaCondicion("Id,Idioma,UrlFriendly,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='/oldbrowser'");
 } else {
     // Localizar la url amigable
-    $rows = $url->cargaCondicion("Id,UrlFriendly,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='{$rq->getUrlFriendly($app['path'])}'");
+    $rows = $url->cargaCondicion("Id,Idioma,UrlFriendly,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='{$rq->getUrlFriendly($app['path'])}'");
 
+    // Localizar la url amigable
+    //$rows[0] = $url->matchUrl($rq->getUrlFriendly($app['path']));
+    
     if (count($url->getErrores()) == 0) {
         if (!$rows)
-            $rows = $url->cargaCondicion("Id,UrlFriendly,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='/error404'");
+            $rows = $url->cargaCondicion("Id,Idioma,UrlFriendly,Controller,Action,Parameters,Entity,IdEntity", "UrlFriendly='/error404'");
     } else {
         print_r($url->getErrores());
         die("Error de conexión a la BD");
@@ -170,6 +155,9 @@ if ($rq->isOldBrowser()) {
 
 unset($url);
 $row = $rows[0];
+
+$_SESSION['idiomas']['actual'] = $row['Idioma'];
+$_SESSION['urlFriendly'] = $row['UrlFriendly'];
 
 //-----------------------------------------------------------------
 // INSTANCIAR UN OBJETO DE LA CLASE REQUEST PARA TENER DISPONIBLES
@@ -232,6 +220,14 @@ if (!method_exists($con, $metodo))
     $metodo = "IndexAction";
 $result = $con->{$metodo}();
 
+// Si el navegador es mobile y existe la template mobile, lo muestro.
+// En caso contrario muestro el template normal.
+if ($_SESSION['isMobile']) {
+    $aux = str_replace('.html.twig', '.mobile.html.twig', $result['template']);
+    if (file_exists("modules/{$aux}"))
+        $result['template'] = $aux;
+}
+
 $result['values']['controller'] = $controller;
 $result['values']['archivoCss'] = getArchivoCss($result['template']);
 $result['values']['archivoJs'] = getArchivoJs($result['template']);
@@ -247,7 +243,9 @@ if ($config['debug_mode']) {
 // Si el método no devuelve template o no exite, muestro un template de error.
 if (!file_exists($config['twig']['templates_folder'] . '/' . $result['template']) or ($result['template'] == '')) {
     $result['values']['error'] = 'No existe el template: "' . $result['template'] . '" devuelto por el método "' . $clase . ':' . $action . 'Action"';
-    $result['template'] = '_global/error.html.twig';
+    $result['template'] = ($_SESSION['isMobile']) ?
+            '_global/error.mobile.html.twig' :
+            '_global/error.html.twig';
 }
 
 // Establecer el layout segun el dispositivo de navegación
@@ -257,19 +255,18 @@ if ($_SESSION['isMobile']) {
     $layout = "_global/layoutLaptop.html.twig";
 }
 
+
 // Renderizo el template y los valores devueltos por el método
 $twig->addGlobal('appPath', $app['path']);
-$twig->addGlobal('urlAmigable', $row['UrlFriendly']);
+$twig->addGlobal('language', $_SESSION['idiomas']['disponibles'][$_SESSION['idiomas']['actual']]['codigo']);
+$twig->addGlobal('urlAmigable', $_SESSION['urlFriendly']);
 $twig->loadTemplate($result['template'])
         ->display(array(
             'layout' => $layout,
             'values' => $result['values'],
             'app' => $app,
             'chequeadaResolucionVisitante' => isset($_SESSION['resolucionVisitante']),
-            'user' => $_SESSION['USER']['user'],
-            'menu' => $_SESSION['USER']['menu'],
-            'projects' => $_SESSION['projects'],
-            'project' => $_SESSION['project'],
+            'user' => $_SESSION['usuarioWeb'],
         ));
 
 //------------------------------------------------------------
@@ -290,9 +287,11 @@ function getArchivoCss($template) {
     $archivoTemplate = str_replace('html', 'css', $template);
 
     if (!file_exists('modules/' . $archivoTemplate)) {
-        $archivoTemplate = (!file_exists('modules/index.css.twig')) ? 
-            "_global/css.twig" : 
-            "modules/index.css.twig";
+        $aux = explode("/", $archivoTemplate);
+        $modulo = $aux[0];
+        $archivoTemplate = (!file_exists("modules/{$modulo}/index.css.twig")) ?
+                "_global/css.twig" :
+                "{$modulo}/index.css.twig";
     }
 
     return $archivoTemplate;
@@ -308,12 +307,45 @@ function getArchivoJs($template) {
     $archivoTemplate = str_replace('html', 'js', $template);
 
     if (!file_exists('modules/' . $archivoTemplate)) {
-        $archivoTemplate = (!file_exists('modules/index.css.twig')) ? 
-            "_global/js.twig" : 
-            "modules/index.js.twig";
+        $aux = explode("/", $archivoTemplate);
+        $modulo = $aux[0];
+        $archivoTemplate = (!file_exists("modules/{$modulo}/index.js.twig")) ?
+                "_global/js.twig" :
+                "{$modulo}/index.js.twig";
     }
 
     return $archivoTemplate;
+}
+
+/**
+ * Establezco la variable de entorno con el idioma $_SESSION['idiomas']
+ */
+function setIdioma() {
+
+    $variables = CpanVariables::getVariables('Web', 'Pro');
+
+    $idiomaVisitante = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+    $idiomasPermitidos = explode(",", trim($variables['globales']['lang']));
+
+    $idIdioma = array_search($idiomaVisitante, $idiomasPermitidos);
+    if (!$idIdioma) $idIdioma = 0;
+
+    if (!(file_exists("lang/{$idiomasPermitidos[$idIdioma]}.yml")))
+        $idIdioma = 0;
+
+    foreach ($idiomasPermitidos as $key => $value) {
+        $idiomas = new Idiomas($value);
+        $idioma = $idiomas->getTipo();
+        $idiomasPermitidos[$key] = array(
+            'codigo' => $value,
+            'codigoLargo' => $idioma['Value'],
+            'texto' => $idioma['Texto'],
+        );
+    }
+    unset($idiomas);
+    
+    $_SESSION['idiomas']['disponibles'] = $idiomasPermitidos;
+    $_SESSION['idiomas']['actual'] = $idIdioma;
 }
 
 ?>

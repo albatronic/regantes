@@ -6,6 +6,7 @@
 
 .flechas {
 	position:relative;
+	top: -52px;
 }
 
 .cmsms_content_slider_parent {
@@ -18,8 +19,12 @@
 	margin-top:40px;
 }
 
+.widget_custom_portfolio_entries_slides {
+    margin-top: 20px !important;
+}
+
 .responsiveContentSlider {
-	background:url(../images/loader.gif) 50% 50% no-repeat;
+	/*background:url(../images/loader.gif) 50% 50% no-repeat;*/
 	text-align:left;
 	display:block;
 	list-style:none;

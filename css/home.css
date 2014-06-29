@@ -84,7 +84,7 @@
 	float:left;
 	overflow:hidden;
 	padding:16px 32px;
-        height: 700px;
+        height: 250px;
 }
 
 #noticias_bottom {
@@ -278,8 +278,30 @@ ul.galeria li img {
 	padding:15px;
 }
 
-#video iframe {
+#video img {
 	border-top:1px solid #2c2c2c;
 	border-bottom:1px solid #7e7e7e;
 	margin-bottom:10px;
+	width: 404px;
+	height: 294px;
+}
+
+#video a {
+    float: left;
+}
+
+#video a span {
+    float: left;
+    height: 294px;
+    position: relative;
+    margin-top: -304px;
+    width: 404px;
+}
+
+#video a span img {
+    border: 0;
+    float: left;
+    margin: 0;
+    height: 294px;
+    width: 404px;
 }

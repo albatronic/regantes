@@ -18,10 +18,12 @@
 class CriteriosOrdenContenidosHijos extends Tipos {
 
     protected $tipos = array(
-        array('Id' => 'SortOrder ASC',    'Value' => 'Orden a-z'),
-        array('Id' => 'SortOrder DESC',   'Value' => 'Orden z-a'),
-        array('Id' => 'PublishedAt ASC',  'Value' => 'Fecha a-z'),
-        array('Id' => 'PublishedAt DESC', 'Value' => 'Fecha z-a'),
+        array('Id' => 'SortOrder ASC',    'Value' => 'Orden 0-9'),
+        array('Id' => 'SortOrder DESC',   'Value' => 'Orden 9-0'),
+        array('Id' => 'PublishedAt ASC',  'Value' => 'Fecha Publicación a-z'),
+        array('Id' => 'PublishedAt DESC', 'Value' => 'Fecha Publicación z-a'),
+        array('Id' => 'Titulo ASC',       'Value' => 'Título a-z'),
+        array('Id' => 'Titulo DESC',      'Value' => 'Título z-a'), 
     );
 
 }

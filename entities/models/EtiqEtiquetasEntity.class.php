@@ -41,7 +41,7 @@ class EtiqEtiquetasEntity extends EntityComunes {
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'EtiqEtiquetas';
+    protected $_tableName = 'EtiqEtiquetas*';
 
     /**
      * Nombre de la PrimaryKey

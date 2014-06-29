@@ -17,7 +17,7 @@
 </div>    
 {% endmacro %}
 
-{#  MACRO EVENTO #}
+{# MACRO EVENTO #}
 {# Es el resumen de un evento y puede estar en las siguientes secciones: INDEX, NOTICIAS, EVENTOS #}
 {# El contenido de un resumen de un evento sería: IMAGEN (puede llevar o no), FECHA (puede llevar o no), TÍTULO, SUBTÍTULO (puede llevar o no), PÁRRAFO #}
 {% macro evento (evento) %}
@@ -30,9 +30,13 @@
     {% else %}
        <span class="fecha">{{evento.fecha | date('d/m/Y')}}</span> 
     {% endif %}
+    {% if evento.titulo |length > 60 %}   
+    <h2>{{_self.link(evento.titulo|slice(start,60),none,evento.url.url,evento.url.targetBlank)}} ...</h2>
+      {% else %}
     <h2>{{_self.link(evento.titulo,none,evento.url.url,evento.url.targetBlank)}}</h2>
-    <h3>{{evento.subtitulo}}</h3>
-    <p>{{evento.resumen}}</p>
+    {% endif %}    
+    <h3>{% if evento.subtitulo | length > 100 %}{{evento.subtitulo | slice(start,100) }} ...{% else %}{{evento.subtitulo}}{% endif %}</h3>
+    <p>{% if evento.resumen | length > 200 %}{{evento.resumen | slice(start,200) }} ...{% else %}{{evento.resumen}}{% endif %}</p>
 </div>    
 {% endmacro %}
 

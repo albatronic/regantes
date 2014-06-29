@@ -20,7 +20,7 @@
             <div id="contenedorEnviar">
                 <div id="politicaPrivacidad" class="{% if values.formContacta.campos.leidoPolitica.error %}celdaError {% else %}checboxesCaja{% endif %}">
                     <input name="campos[leidoPolitica][valor]" type="checkbox" id="leidoPolitica" {%if values.formContacta.campos.leidoPolitica.valor == 'on' %} CHECKED{% endif %} />
-                    He le&iacute;do y acepto la <a href="{{app.path}}/politica-privacidad" rel="iframe-800-360" class="pirobox" title="Pol&iacute;tica de Privacidad">pol&iacute;tica de privacidad.</a>
+                    <label for="leidoPolitica">He leído y acepto la <a href="{{app.path}}/politica-privacidad" rel="iframe-800-360" class="pirobox" title="Pol&iacute;tica de Privacidad">política de privacidad.</a></label>
                 </div>
 
                 <a href="#" 

@@ -81,7 +81,7 @@ class BannBannersEntity extends EntityComunes {
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'BannBanners';
+    protected $_tableName = 'BannBanners*';
 
     /**
      * Nombre de la PrimaryKey

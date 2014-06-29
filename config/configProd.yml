@@ -8,16 +8,13 @@
 #     2.- EN EL NODO 'app', SUSTITUIR 'FOLDER' POR EL NOMBRE DE LA CARPETA DONDE ESTARÁ EL PROYECTO
 #         EN ENTORNO DE PRODUCCION Y SI EL PROYECTO ESTÁ EN EL DIRECTORIO RAIZ DEL DOMINIO, 'FOLDER'
 #         HAY QUE DEJARLO TOTALMENTE VACIO, NI SIQUIERA CON UN '/'
-#     3.- OPTIMIZAR EL NODO 'signatures'
-#     4.- EN EL NODO 'conections' CAMBIAR:
+#     3.- EN EL NODO 'conections' CAMBIAR:
   
-#         4.1. 'CONEXION' por el nombre del proyecto, p.ej: Pcae, regantes, etc
-#         4.2. 'FOLDER' por el nombre de la carpeta del proyecto
-#         4.3. 'USUARIO' por el usuario de base de datos
-#         4.4. 'PASSWORD' por la contraseña de base de datos
-#         4.5. 'BASEDEDATOS' por el nombre de la base de datos
-#
-#     5.- EN EL NODO 'mailer', personalizar los parámetros del servidor de correo saliente
+#         3.1. 'CONEXION' por el nombre del proyecto, p.ej: Pcae, regantes, etc
+#         3.2. 'FOLDER' por el nombre de la carpeta del proyecto
+#         3.3. 'USUARIO' por el usuario de base de datos
+#         3.4. 'PASSWORD' por la contraseña de base de datos
+#         3.5. 'BASEDEDATOS' por el nombre de la base de datos
 #
 # NOTA: 
 #    En entorno de desarrollo el USUARIO, PASSWORD Y BASEDEDATOS se igualará al valor indicado en CONEXION
@@ -28,7 +25,7 @@
 #
 
 config:
-  debug_mode: true
+  debug_mode: false
   
   # PARA MOSTRAR O NO EL BOTON DE LA AUDITORIA DE LOS FORMULARIOS
   audit_mode: true
@@ -39,38 +36,17 @@ config:
   # EL ID DEL PROYECTO-APP CORRESPONDIENTE AL PCAE
   projectId: 3
   
-  # WEB SERVICE PARA CONTROL DE VISITAS
-  wsControlVisitas: http://api.ip-adress.com/?u=1062c309c5c054edc08fe578ef8f0dd94720c0&h=
-  
-  # FRECUENCIA DE HORAS PARA BORRAR LA TABLA TEMPORAL DE VISITAS
-  frecuenciaHorasBorrado: 5
-  
   # ENTORNO DE LA APLICACION
   # SI LA APP ESTÁ EN EL RAIZ, 'path' debe estar vacío
   # NORMALMENTE, EN PRODUCCION 'path' estará vacio
   app:
     name: Virgen de la Salud
-    url: http://192.168.1.101
-    path: /regantes
+    url: http://www.regantesvirgensalud.com
+    path: 
     framework: bin/albatronic/
 
   # SEMILLA PARA CONSTRUIR CLAVES MD5
   semillaMD5: verano
-
-  # FIRMAS DE LA WEB
-  signatures:
-    links: 'www.articoestudio.com'
-    services:
-      'es': 'Diseño web,Venta Online,Posicionamiento web,Imagen corporativa'
-      'en': 'Web design,eCommerce,SEO'
-      'fr': ''
-    locations: 'Granada,Madrid,Malaga,Sevilla,Valencia'
-
-  # MOTOR DE ENVIO DE CORREOS
-  mailer:
-    plugin_dir: bin/PHPMailer_5.2.1/
-    plugin_file: class.phpmailer.php
-    motor: PhpMailer
   
   # MOTOR PARA GENERAR DOCUMENTOS PDF
   pdf: bin/pdf/fpdf.class.php
@@ -79,7 +55,7 @@ config:
   twig:
     motor: bin/Twig-1.11.1/lib/Twig/Autoloader.php
     templates_folder: modules
-    debug_mode: true
+    debug_mode: false
     cache_folder: tmp
     charset: null
     
@@ -101,7 +77,7 @@ config:
   conections:
     regantes:
       dbEngine: mysql
-      host: 192.168.1.101
-      user: qpf279
-      password: Luz2012TY
-      database: qpf279
+      host: qpz135.dbname.net
+      user: qpz135
+      password: Rtve2013
+      database: qpz135       

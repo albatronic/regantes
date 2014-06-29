@@ -4,7 +4,7 @@
  * Description of VideosController
  *
  * @author Sergio Pérez <sergio.perez@albatronic.com>
- * @copyright ÁRTICO ESTUDIO
+ * @copyright Informática ALBATRONIC
  * @date 26-nov-2012
  */
 class VideosController extends ControllerProject {

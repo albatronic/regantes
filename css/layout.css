@@ -472,7 +472,7 @@ p.descripcion {
 	float:right;
 	font:9px Verdana, Arial, Helvetica, sans-serif;
 	color:#777;
-	background:url(../images/filete-vertical.png) left 0 repeat-y;
+	/*background:url(../images/filete-vertical.png) left 0 repeat-y;*/
 }
 
 #diseno_web:hover, #aviso_legal:hover{
@@ -570,7 +570,7 @@ p.descripcion {
 	border-right:1px solid #d2d2d2;
 	border-left:1px solid #d2d2d2;
 	float:left;
-	padding:15px;
+	padding:5px 15px 0  15px;
 }
 
 h6 {
@@ -579,8 +579,6 @@ h6 {
 	width:217px;
 	float:left;
 	padding-bottom:10px;
-	border-bottom:1px solid #d2d2d2;
-	margin-bottom:15px;
 }
 
 h6 a{
@@ -592,6 +590,9 @@ h6 a:hover{
 }
 
 #usted_inter ul{
+	border-top:1px solid #d2d2d2;
+	margin-top:15px;
+	padding-top: 15px;
 	width:217px;
 	float:left;
 	color:#4f4f4f;
@@ -656,3 +657,6 @@ h6 a:hover{
 .contenedorNoticia ul li a:hover, .evento_indiv ul li a:hover {
     color: #222;
 }
+
+.ficherosAdjuntosEnlaces { margin-top: 10px; margin-bottom: 20px; margin-left: 30px;}
+.ficherosAdjuntosEnlaces li { margin-bottom: 10px !important;}

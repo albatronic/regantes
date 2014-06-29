@@ -75,7 +75,7 @@ class SldSlidersEntity extends EntityComunes {
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'SldSliders';
+    protected $_tableName = 'SldSliders*';
 
     /**
      * Nombre de la PrimaryKey

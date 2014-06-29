@@ -51,7 +51,7 @@ class EnlEnlacesEntity extends EntityComunes {
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'EnlEnlaces';
+    protected $_tableName = 'EnlEnlaces*';
 
     /**
      * Nombre de la PrimaryKey

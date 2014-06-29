@@ -66,6 +66,7 @@ class Request {
      * @var array
      */
     private $oldBrowsers = array(
+        'MSIE 8',
         'MSIE 7',
         'MSIE 6',
     );
@@ -106,17 +107,20 @@ class Request {
         // Cojo la url, incluido el path a la aplicacion
         switch ($this->method) {
             case 'GET' :
-                $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+                $url = parse_url(urldecode($_SERVER['REQUEST_URI']), PHP_URL_PATH);
+                // A la url le quito la parte del path a la aplicacion
+                $urlSinPath = explode("/", str_replace($appPath, "", $url));
+                $urlAmigable = "/" . $urlSinPath[1];
                 break;
             case 'POST':
                 $url = $this->request['controller'];
+                // A la url le quito la parte del path a la aplicacion
+                $urlSinPath = explode("/", str_replace($appPath, "", $url));
+                $urlAmigable = "/" . $urlSinPath[0];
                 break;
         }
 
-        // A la url le quito la parte del path a la aplicacion
-        $urlSinPath = explode("/",str_replace($appPath, "", $url));
-
-        return "/".$urlSinPath[1];
+        return $urlAmigable;
     }
 
     /**

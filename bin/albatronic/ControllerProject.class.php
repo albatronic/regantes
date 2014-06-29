@@ -7,7 +7,7 @@
  * construir la ruta de navegación y los menús
  *
  * @author Sergio Pérez
- * @copyright Ártico Estudio, SL
+ * @copyright Informática ALBATRONIC, SL
  * @version 1.0 26-nov-2012
  */
 class ControllerProject extends ControllerWeb {
@@ -25,6 +25,12 @@ class ControllerProject extends ControllerWeb {
         $this->values['menuPie'] = $this->getMenuN(3,8);
         $this->values['datosContacto'] = $this->varWeb['Pro']['globales'];
 
+        // GESTION DE COOKIES. El cartel debe mostrarse cada 7 días
+        if (empty($_COOKIE["SESS_ID_CARTEL_COOKIE"])) {
+            setcookie("SESS_ID_CARTEL_COOKIE", uniqid(time()), time() + (86400 * 7), "/");
+        }
+
+        $this->values["session_id"] = $_COOKIE["SESS_ID_CARTEL_COOKIE"]; 
     }
 
 }

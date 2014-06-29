@@ -20,6 +20,12 @@ class CpanDocsEntity extends EntityComunes {
     protected $Id;
 
     /**
+     * @var integer
+     * @assert NotBlank(groups="CpanDocs")
+     */
+    protected $Idioma = '0';
+
+    /**
      * @var string
      * @assert NotBlank(groups="CpanDocs")
      */
@@ -143,6 +149,14 @@ class CpanDocsEntity extends EntityComunes {
 
     public function getId() {
         return $this->Id;
+    }
+
+    public function setIdioma($Idioma) {
+        $this->Idioma = $Idioma;
+    }
+
+    public function getIdioma() {
+        return $this->Idioma;
     }
 
     public function setEntity($Entity) {

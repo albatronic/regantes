@@ -497,7 +497,7 @@ function clientesSucursalAgente($idSucursal = '', $idAgente = '', $nameSelect = 
     if ($idSucursal == '')
         $idSucursal = $_SESSION['suc'];
     if ($idAgente == '')
-        $idAgente == $_SESSION['USER']['user']['id'];
+        $idAgente == $_SESSION['usuarioWeb']['id'];
 
     if ($nameSelect == '')
         $nameSelect = $_GET['nameselect'];

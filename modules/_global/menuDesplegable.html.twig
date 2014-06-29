@@ -11,7 +11,7 @@
             {% if seccion.subsecciones is iterable %}
                 <ul>
                 {% for subseccion in seccion.subsecciones %}   
-                    <li><a href="{{subseccion.url.url}}" title="{{subseccion.titulo}}">{{subseccion.titulo}}</a></li>
+                    <li><a href="{{subseccion.url.url}}" title="{{subseccion.seccion}}">{{subseccion.seccion}}</a></li>
                 {% endfor %}
                 </ul>   
             {% endif %}                   

@@ -55,10 +55,20 @@ class CpanDocs extends CpanDocsEntity {
 
         $id = parent::create();
 
-        if ($id) {
+        if (($id) and ($this->Idioma == 0)) {
             $this->actualizaNombreAmigable();
-            if ($this->subeDocumento())
+            if ($this->subeDocumento()) {
                 $this->save();
+                foreach ($_SESSION['idiomas']['disponibles'] as $key => $value) {
+                    if ($key > 0) {
+                        $doc = new CpanDocs($this->Id);
+                        $doc->setId('');
+                        $doc->setPrimaryKeyMD5('');
+                        $doc->setIdioma($key);
+                        $doc->create();
+                    }
+                }
+            }
         }
 
         return $id;
@@ -76,12 +86,13 @@ class CpanDocs extends CpanDocsEntity {
         if (is_resource($this->_dbLink)) {
             // Auditoria
             $fecha = date('Y-m-d H:i:s');
-            $query = "UPDATE `{$this->_dataBaseName}`.`{$this->_tableName}` SET `Deleted` = '1', `DeletedAt` = '{$fecha}', `DeletedBy` = '{$_SESSION['USER']['user']['Id']}' WHERE `{$this->_primaryKeyName}` = '{$this->getPrimaryKeyValue()}'";
+            $query = "UPDATE `{$this->_dataBaseName}`.`{$this->_tableName}` SET `Deleted` = '1', `DeletedAt` = '{$fecha}', `DeletedBy` = '{$_SESSION['usuarioWeb']['Id']}' WHERE `{$this->_primaryKeyName}` = '{$this->getPrimaryKeyValue()}'";
             if (!$this->_em->query($query))
                 $this->_errores = $this->_em->getError();
             else {
                 // Borrar el archivo asociado al registro
-                $this->borraArchivo();
+                if ($this->Idioma == 0)
+                    $this->borraArchivo();
             }
             $this->_em->desConecta();
         } else
@@ -109,7 +120,8 @@ class CpanDocs extends CpanDocsEntity {
                 $this->_errores = $this->_em->getError();
             else {
                 // Borrar el archivo asociado al registro
-                $this->borraArchivo();
+                if ($this->Idioma == 0)
+                    $this->borraArchivo();
             }
             $this->_em->desConecta();
         } else
@@ -152,7 +164,6 @@ class CpanDocs extends CpanDocsEntity {
      * Borra las entradas en la tabla de documentos y
      * los archivos físicos del disco duro
      *
-     *
      * @param string $entidad
      * @param integer $idEntidad
      * @param string $tipo El tipo de documento
@@ -177,21 +188,21 @@ class CpanDocs extends CpanDocsEntity {
     }
 
     /**
-     * Devuelve un array de objetos documentos que cumplen
+     * Devuelve un array de objetos documentos del idioma actual que cumplen
      * los criterios indicados en los parámetros recibidos por el método
      *
-     * @param string $entidad
-     * @param integer $idEntidad
+     * @param string $entidad EL nombre de la entidad
+     * @param integer $idEntidad El id de la entidad
      * @param string $tipo El tipo de documento
-     * @param string $criterio Expresión lógica a incluir en el criterio de borrado
-     * $param string $orderCriteria El criterio de ordenación
+     * @param string $criterio Expresión lógica a incluir en el criterio de filtro
+     * @param string $orderCriteria El criterio de ordenación
      * @return array El array con los objetos documentos
      */
     public function getDocs($entidad, $idEntidad, $tipo, $criterio = '1', $orderCriteria = 'SortOrder ASC') {
 
         $arrayDocs = array();
 
-        $filtro = "(Entity='{$entidad}') AND (IdEntity='{$idEntidad}') AND (Type LIKE '{$tipo}') AND ({$criterio}) AND (Publish='1')";
+        $filtro = "(Idioma='{$_SESSION['idiomas']['actual']}') AND (Entity='{$entidad}') AND (IdEntity='{$idEntidad}') AND (Type LIKE '{$tipo}') AND ({$criterio})";
         $rows = $this->cargaCondicion('Id', $filtro, $orderCriteria);
 
         foreach ($rows as $row)
@@ -202,7 +213,7 @@ class CpanDocs extends CpanDocsEntity {
 
     /**
      * Devuelve el número de documentos asociados a la entidad
-     * indicada en los parámetros
+     * indicada en los parámetros y del idioma actual
      *
      * @param string $tipo El tipo de documento, se admite '%'
      * @param string $criterio Expresión lógica a incluir en el criterio de filtro
@@ -210,7 +221,8 @@ class CpanDocs extends CpanDocsEntity {
      */
     public function getNumberOfDocs($entidad, $idEntidad, $tipo, $criterio = '1') {
 
-        $rows = $this->cargaCondicion('Id', "(Entity='{$entidad}') AND (IdEntity='{$idEntidad}') AND (Type LIKE '{$tipo}') AND ({$criterio})");
+        $filtro = "(Idioma='{$_SESSION['idiomas']['actual']}') AND (Entity='{$entidad}') AND (IdEntity='{$idEntidad}') AND (Type LIKE '{$tipo}') AND ({$criterio})";
+        $rows = $this->cargaCondicion('Id', $filtro);
 
         return count($rows);
     }
@@ -219,7 +231,7 @@ class CpanDocs extends CpanDocsEntity {
      * Calcula el nombre amigable y actualiza las
      * propiedades $this->Name, $this->PathName y $this->Extension
      *
-     * En base al tipo de documento (imageN, galery, document, etc) se permiten
+     * En base al tipo de documento (imageN, galery, document, video, audio) se permiten
      * varios documentos para la misma entidad e idEntidad, o sólo uno.
      *
      * Esto viene determinado por el valor 'limit' del array TiposDocs.
@@ -228,6 +240,9 @@ class CpanDocs extends CpanDocsEntity {
 
         $archivo = pathinfo($this->_ArrayDoc['name']);
         $extension = strtolower($archivo['extension']);
+        $aux = pathinfo($this->Name);
+        $this->Name = str_replace($aux['extension'], "", $this->Name);
+
         $this->setName(Textos::limpia($this->Name) . ".{$extension}");
         $this->setPathName("docs/{$this->Entity}/{$this->Name}");
         $this->setExtension($extension);
@@ -338,8 +353,10 @@ class CpanDocs extends CpanDocsEntity {
     /**
      * Valida el objeto
      *
-     * También compruebo que el titulo y el nombre no están vacios, si fuera el caso
-     * los lleno con el valor de la columna indicado en la variable de entorno 'fieldGeneratorUrlFriendly'
+     * También compruebo que el titulo y el nombre no están vacios.
+     * 
+     * Si el título está vacío, pongo el valor de la columna indicado en la variable de entorno 'fieldGeneratorUrlFriendly'
+     * Si el nombre está vacío, pongo el valor del título
      *
      * @param array $rules
      * @return boolean TRUE si el objeto completo pasa la validación
@@ -362,7 +379,7 @@ class CpanDocs extends CpanDocsEntity {
                 if ($this->Title == '')
                     $this->Title = $slug;
                 if ($this->Name == '')
-                    $this->Name = $slug;
+                    $this->Name = $this->Title;
             } $slug = $this->Name;
 
             if ($slug == '')
@@ -411,7 +428,13 @@ class CpanDocs extends CpanDocsEntity {
                 $this->setMimeType($archivo->getMimeType());
                 unset($archivo);
                 $archivoSubir = $imagenRecortada;
-            } else $archivoSubir = $this->_ArrayDoc['tmp_name'];
+            } else {
+                $archivo = new Archivo($this->_ArrayDoc['tmp_name']);
+                $this->setSize($archivo->getSize());
+                $this->setMimeType($archivo->getMimeType());
+                unset($archivo);
+                $archivoSubir = $this->_ArrayDoc['tmp_name'];
+            }
 
             $ftp = new Ftp($_SESSION['project']['ftp']);
             if ($ftp) {
@@ -423,9 +446,9 @@ class CpanDocs extends CpanDocsEntity {
 
             unset($ftp);
             $ok = ( count($this->_errores) == 0);
-            
+
             if (file_exists($imagenRecortada))
-                @unlink ($imagenRecortada);
+                @unlink($imagenRecortada);
         }
 
         return $ok;
@@ -494,6 +517,20 @@ class CpanDocs extends CpanDocsEntity {
         unset($obj);
 
         return new CpanDocs($rows[0]['Id']);
+    }
+
+    /**
+     * Devuelve el valor de la primaryKeyMD5 del objeto
+     * al que está asociado el documento
+     * 
+     * @return string La primaryKeyMD5
+     */
+    public function getPrimaryKeyMD5Document() {
+        $doc = new $this->Entity($this->IdEntity);
+        $key = $doc->getPrimaryKeyMD5();
+        unset($doc);
+
+        return $key;
     }
 
 }

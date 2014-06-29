@@ -1,9 +1,10 @@
-<div class="media_drcha">
+
     {% if values.galeriaFotos|length%}
         <span class="raya verde"></span>
         <h1>Álbumes fotográficos</h1>
+        <div style="clear: both;"></div>
         <h4><a href="{{app.path}}/galeria" title="más álbumes">{{values.galeriaFotos[0].titulo}}</a></h4>
         {% include '/Index/galeria.html.twig' %} 
     {% endif %}
     {% include '/Index/video.html.twig' %}  
-</div>		
+		

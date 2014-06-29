@@ -4,7 +4,7 @@
  * Description of AvisoLegalController
  *
  * @author Sergio Pérez <sergio.perez@albatronic.com>
- * @copyright ÁRTICO ESTUDIO
+ * @copyright Informática ALBATRONIC
  * @date 06-nov-2012
  *
  */

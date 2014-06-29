@@ -68,7 +68,7 @@ class AlbmAlbumesEntity extends EntityComunes {
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'AlbmAlbumes';
+    protected $_tableName = 'AlbmAlbumes*';
 
     /**
      * Nombre de la PrimaryKey

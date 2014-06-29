@@ -79,7 +79,7 @@ class VidVideosEntity extends EntityComunes {
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'VidVideos';
+    protected $_tableName = 'VidVideos*';
 
     /**
      * Nombre de la PrimaryKey

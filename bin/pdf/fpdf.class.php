@@ -358,7 +358,7 @@ if (!class_exists('FPDF')) {
             $this->SetXY(10, -10);
             $this->Cell(5, 4, date('d/m/Y H:i:s'));
             $this->Cell(0, 4, "Pag. " . $this->PageNo() . '/{nb}', 0, 0, "C");
-            $this->Cell(0, 4, $_SESSION['USER']['user']['Nombre'], 0, 0, "R");
+            $this->Cell(0, 4, $_SESSION['usuarioWeb']['Nombre'], 0, 0, "R");
         }
 
         function PageNo() {

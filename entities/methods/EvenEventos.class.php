@@ -37,7 +37,7 @@ class EvenEventos extends EvenEventosEntity {
      *      getNumeroEventos('s','2012-33') Devuelve el nº de eventos de la SEMANA 33 del año 2012
      */
 
-    public function getNumeroEventos($periodo = 'd', $valor) {
+    public function getNumeroEventos($periodo='d', $valor) {
 
         $nEventos = 0;
 
@@ -123,15 +123,9 @@ class EvenEventos extends EvenEventosEntity {
 
         $array = array();
 
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            $query = "SELECT DAY(Fecha) dia, COUNT(Id) nEventos FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE MONTH(Fecha)='{$mes}' AND YEAR(Fecha)='{$ano}' GROUP BY dia";
-            $this->_em->query($query);
-            $this->setStatus($this->_em->numRows());
-            $rows = $this->_em->fetchResult();
-            $this->_em->desConecta();
-        }
-        unset($this->_em);
+        $evento = new EvenEventos();
+        $rows = $evento->cargaCondicion("DAY(Fecha) dia, COUNT(Id) nEventos","MONTH(Fecha)='{$mes}' AND YEAR(Fecha)='{$ano}' GROUP BY dia");
+        unset($evento);
 
         foreach ($rows as $row)
             $array[$row['dia']] = $row['nEventos'];

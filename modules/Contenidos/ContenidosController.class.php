@@ -4,7 +4,7 @@
  * Description of IndexController
  *
  * @author Sergio Pérez <sergio.perez@albatronic.com>
- * @copyright ÁRTICO ESTUDIO
+ * @copyright Informática Albatronic
  * @version 1.0 26-nov-2012
  */
 class ContenidosController extends ControllerProject {
@@ -118,6 +118,10 @@ class ContenidosController extends ControllerProject {
         unset($seccion);
     }
 
+    /**
+     * Pone en $this->values['listadoSubsecciones'] las subsecciones de la sección $idSeccion
+     * @param integer $idSeccion El id de la sección
+     */
     public function ListadoSubsecciones($idSeccion) {
 
         $this->values['listadoSubsecciones'] = $this->getSubsecciones($idSeccion);

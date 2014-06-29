@@ -4,7 +4,7 @@
  * Description of NoticiasController
  *
  * @author Sergio Pérez <sergio.perez@albatronic.com>
- * @copyright ÁRTICO ESTUDIO
+ * @copyright Informática ALBATRONIC
  * @date 26-nov-2012
  */
 class NoticiasController extends ControllerProject {
@@ -14,7 +14,7 @@ class NoticiasController extends ControllerProject {
     public function IndexAction() {
 
         /* NOTICIAS */
-        
+      
         $pagina = $this->request[1];
         if ($pagina<=0) $pagina = 1;
 

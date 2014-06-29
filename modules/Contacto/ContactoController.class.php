@@ -4,7 +4,7 @@
  * Description of ContactoController
  *
  * @author Sergio Pérez <sergio.perez@albatronic.com>
- * @copyright ÁRTICO ESTUDIO
+ * @copyright Informática ALBATRONIC
  * @version 1.0 26-nov-2012
  */
 class ContactoController extends ControllerProject {

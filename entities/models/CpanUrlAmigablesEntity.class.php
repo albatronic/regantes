@@ -20,6 +20,12 @@ class CpanUrlAmigablesEntity extends EntityComunes {
     protected $Id;
 
     /**
+     * @var integer
+     * @assert NotBlank(groups="CpanUrlAmigables")
+     */
+    protected $Idioma;
+
+    /**
      * @var string
      * @assert NotBlank(groups="CpanUrlAmigables")
      */
@@ -101,6 +107,14 @@ class CpanUrlAmigablesEntity extends EntityComunes {
 
     public function getId() {
         return $this->Id;
+    }
+
+    public function setIdioma($Idioma) {
+        $this->Idioma = $Idioma;
+    }
+
+    public function getIdioma() {
+        return $this->Idioma;
     }
 
     public function setController($Controller) {

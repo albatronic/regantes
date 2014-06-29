@@ -45,7 +45,7 @@ class AlbmSeccionesEntity extends EntityComunes {
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'AlbmSecciones';
+    protected $_tableName = 'AlbmSecciones*';
 
     /**
      * Nombre de la PrimaryKey

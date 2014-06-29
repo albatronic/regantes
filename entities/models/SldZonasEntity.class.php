@@ -47,7 +47,7 @@ class SldZonasEntity extends EntityComunes {
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'SldZonas';
+    protected $_tableName = 'SldZonas*';
 
     /**
      * Nombre de la PrimaryKey

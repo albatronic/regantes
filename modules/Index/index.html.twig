@@ -3,14 +3,10 @@
 {% block contenido %}
     <div class="col_drcha">
         {% include 'Index/sliderImagenes.html.twig' %}
+        
 	<div class="media">
             {% include 'Index/novedades.html.twig' %}
-            {% if values.eventos %}
-                {% include 'Index/eventos.html.twig' %}           
-                {% include 'Index/contenidos.html.twig' %}
-            {% else %}
-                {% include 'Index/contenidosVisitados.html.twig' %}  
-            {% endif %}
+            {% include 'Index/eventos.html.twig' %}           
 	</div>
 
 	<div class="media">
@@ -21,10 +17,12 @@
                 <p>{{values.presidente.Resumen}}</p>
                 {{ macro.link('ampliar',none,values.presidente.url.url,values.presidente.url.targetBlank,none,'boton right') }}
             </div>
-                
-            {% include 'Index/albumes.html.twig' %}  
-
+            {% include 'Index/contenidosVisitados.html.twig' %}      
 	</div>
+        
+        <div class="media">
+            {% include 'Index/albumes.html.twig' %}            
+        </div>
     </div>	
 {% endblock %}
 

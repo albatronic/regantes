@@ -131,6 +131,12 @@ class GconContenidosEntity extends EntityComunes {
     protected $EsEvento = '0';
 
     /**
+     * @var entities\ValoresSN
+     * @assert NotBlank(groups="GconContenidos")
+     */
+    protected $EsWiki = '0';
+
+    /**
      * Nombre de la conexion a la BD
      * @var string
      */
@@ -140,7 +146,7 @@ class GconContenidosEntity extends EntityComunes {
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'GconContenidos';
+    protected $_tableName = 'GconContenidos*';
 
     /**
      * Nombre de la PrimaryKey
@@ -357,6 +363,16 @@ class GconContenidosEntity extends EntityComunes {
         if (!($this->EsEvento instanceof ValoresSN))
             $this->EsEvento = new ValoresSN($this->EsEvento);
         return $this->EsEvento;
+    }
+
+    public function setEsWiki($EsWiki) {
+        $this->EsWiki = $EsWiki;
+    }
+
+    public function getEsWiki() {
+        if (!($this->EsWiki instanceof ValoresSN))
+            $this->EsWiki = new ValoresSN($this->EsWiki);
+        return $this->EsWiki;
     }
 
 }

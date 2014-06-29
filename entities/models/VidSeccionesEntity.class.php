@@ -45,7 +45,7 @@ class VidSeccionesEntity extends EntityComunes {
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'VidSecciones';
+    protected $_tableName = 'VidSecciones*';
 
     /**
      * Nombre de la PrimaryKey

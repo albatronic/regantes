@@ -9,7 +9,7 @@
             <ul class="galeria">
                 {% for key, galeria in galeriaFotos.bloqueThumbnail %}
                     <li {% if nThumbnail==key+1 %}class="ultimo"{% endif %}>
-                        <a href="{{app.path}}/{{galeria.PathName}}" rel="gallery" class="pirobox_gall{{key+1}}" title="{{galeria.Title}}">
+                        <a href="{{app.path}}/{{galeria.PathName}}" rel="gallery" class="pirobox_gall{{IdGalery}}" title="{{galeria.Title}}">
                             <img src="{{app.path}}/{{galeria.PathNameThumbnail}}" alt="{{galeria.Title}}" title="{{galeria.Title}}" />
                         </a>
                     </li>
@@ -17,7 +17,7 @@
             </ul>
             
             {% for galeria in galeriaFotos.restoImagenes %}
-                <a href="{{app.path}}/{{galeria.PathName}}" rel="gallery" class="pirobox_gall{{key+1}}" title="{{galeria.Title}}"></a>
+                <a href="{{app.path}}/{{galeria.PathName}}" rel="gallery" class="pirobox_gall{{IdGalery}}" title="{{galeria.Title}}"></a>
             {% endfor %}
         </div>
         <div class="contenidoBottom"></div>
