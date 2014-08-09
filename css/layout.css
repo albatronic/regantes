@@ -266,13 +266,13 @@ p.descripcion {
 
 #acceso li{
 	float:left;
-	margin-left:40px;
+	margin-left:20px;
 }
 
 #acceso li img{
 	padding-top:7px;
 	border-right:1px solid #bfbfbf;
-	padding-right:50px;
+	padding-right:30px;
 	padding-bottom:5px;
 
 }
@@ -286,7 +286,15 @@ p.descripcion {
 	color:#003881;
 	font-size:17px;
 }
-
+.rss {
+	background:url(../images/feed.png) 0px 10px no-repeat !important;  
+	padding-left:30px !important; 
+	min-height:27px !important; 
+	float:left !important; 
+	padding-top:15px;
+	color:#003881;
+	font-size:17px;        
+}
 #acceso li a:hover{
 	color:#00a2df;
 }

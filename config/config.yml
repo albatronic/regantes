@@ -41,8 +41,8 @@ config:
   # NORMALMENTE, EN PRODUCCION 'path' estará vacio
   app:
     name: Virgen de la Salud
-    url: http://localhost/regantes
-    path: /regantes
+    url: http://regantes.local
+    path: 
     framework: bin/albatronic/
 
   # SEMILLA PARA CONSTRUIR CLAVES MD5
