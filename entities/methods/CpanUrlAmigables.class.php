@@ -16,6 +16,28 @@ class CpanUrlAmigables extends CpanUrlAmigablesEntity {
     }
 
     /**
+     * Incrementa en 1 el número de visitas
+     * de la url amigable y de su entidad asociada
+     */
+    public function IncrementaVisitas() {
+
+        $this->setNumberVisits($this->getNumberVisits() + 1);
+        if ($this->save()) {
+            // Incremento el número de visitas de la entidad asociada
+            if (class_exists($this->Entity)) {
+                $entidadAsociada = new $this->Entity($this->IdEntity);
+                //$entidadAsociada->setNumberVisits($entidadAsociada->getNumberVisits() + 1);
+                //$entidadAsociada->save();
+
+                $visitas = $entidadAsociada->getNumberVisits() + 1;
+                $condicion = "{$entidadAsociada->getPrimaryKeyName()}='{$this->IdEntity}'";
+                $entidadAsociada->queryUpdate(array('NumberVisits' => $visitas), $condicion);
+                unset($entidadAsociada);
+            }
+        }
+    }
+    
+    /**
      * LLama al método erase
      *
      * @return bollean
