@@ -79,5 +79,5 @@ config:
       dbEngine: mysql
       host: localhost
       user: root
-      password: root
+      password: 
       database: qpz135

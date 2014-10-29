@@ -822,10 +822,11 @@ class ControllerWeb {
         $filtro = "Fecha>='{$desdeFecha}'";
         if ($hastaFecha != "")
             $filtro .= " AND Fecha<='{$hastaFecha}'";
-        //echo $filtro;
+        //echo $filtro,"<br/>";
             
         $rows = $evento->cargaCondicion("Entidad,IdEntidad,Fecha,HoraInicio,HoraFin", $filtro, "Fecha ASC, HoraInicio ASC {$limite}");
         unset($evento);
+
         $eventos = array();
         if ($unicos) {
             foreach ($rows as $row)
@@ -836,10 +837,10 @@ class ControllerWeb {
         }
 
         $hoy = date('Y/m/d');
-        
+
         foreach ($eventos as $row) {
             $evento = new $row['Entidad']($row['IdEntidad']);
-            if ( ($evento->getPublish()->getIdTipo() == '1') && ($evento->getActiveFrom('aaaammdd')<=$hoy) && ($evento->getActiveTo('aaaammdd')>=$hoy) ) {
+            if ( ($evento->getPublish()->getIdTipo() == '1') && ($evento->getActiveFrom('aaaammdd')<=$hoy) && ( ($evento->getActiveTo('aaaammdd') == '0000/00/00') or ($evento->getActiveTo('aaaammdd')>=$hoy)) ) {
                 $array[] = array(
                     'fecha' => $row['Fecha'],
                     'horaInicio' => $row['HoraInicio'],
