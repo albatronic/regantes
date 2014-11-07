@@ -10,7 +10,7 @@
         {% for fila in values.galeriaImagenes %}        
             <div class="proyectosFila">
                 {% for key,album in fila %}
-                    {{ macro.galeria(album,key+1) }}
+                    {{ macro.galeriaCalameo(album,key+1) }}
                 {% endfor %}
             </div>
         {% endfor %}            

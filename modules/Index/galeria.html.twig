@@ -4,16 +4,12 @@
         
     {% for key, galeria in values.galeriaFotos[0].bloqueThumbnail %}
 	<li {% if nItems==key+1 %}class="ultimo"{% endif %}>
-            <a href="{{app.path}}/{{galeria.PathName}}" rel="gallery" class="pirobox_gall1" title="{{galeria.Title}}">
-                <img src="{{app.path}}/{{galeria.PathNameThumbnail}}" alt="{{galeria.Title}}" title="{{galeria.Title}}" />
-            </a>
+            <a href="http://es.calameo.com/read/{{values.galeriaFotos[0].autor}}" target="_blank" title="{{values.galeriaFotos[0].titulo}}">
+                <img src="{{appPath}}/{{galeria.PathNameThumbnail}}" alt="{{values.galeriaFotos[0].titulo}}" title="{{values.galeriaFotos[0].titulo}}" />
+            </a>            
 	</li>       
     {% endfor %}    
-</ul>
-
-{% for galeria in values.galeriaFotos[0].restoImagenes %}
-    <a href="{{app.path}}/{{galeria.PathName}}" rel="gallery" class="pirobox_gall1" title="{{galeria.Title}}"></a>
-{% endfor %}  
+</ul> 
 
 <div style="clear: both;"></div>
 <a href="{{app.path}}/galeria" title="ver más álbumes" class="albumes">más álbumes</a>			

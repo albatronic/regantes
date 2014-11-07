@@ -142,3 +142,22 @@
     {% endif %}
     {{ texto|slice(0,nCaracteres) }} {{puntos}}
 {% endmacro %}
+
+{% macro galeriaCalameoxxx(idGaleria,titulo) %}
+<div style="margin-bottom:20px;">
+    <div style="margin-bottom:10px;">
+        <h4>{{titulo}}</h4>
+        <!--<a href="http://www.calameo.com/books/{{idGaleria}}" target="_blank">{{titulo}}</a>-->
+    </div>
+    <iframe src="//v.calameo.com/?bkcode={{idGaleria}}" width="790" height="594" frameborder="0" scrolling="no" allowtransparency allowfullscreen style="margin:0 auto;"></iframe>
+</div>    
+{% endmacro %}
+
+{% macro galeriaCalameo(galeria,key) %}
+<div class="proyecto{{key}}">
+    <a href="http://es.calameo.com/read/{{galeria.autor}}" target="_blank" title="{{galeria.titulo}}">
+        <img src="{{appPath}}/{{galeria.imagen}}" alt="{{galeria.titulo}}" title="{{galeria.titulo}}" />
+    </a>
+    <div class="textoAlbum"><h4>{{galeria.titulo}}</h4></div>
+</div>        
+{% endmacro %}
