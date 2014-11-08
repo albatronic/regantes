@@ -77,7 +77,7 @@ config:
   conections:
     regantes:
       dbEngine: mysql
-      host: qpz135.dbname.net
-      user: qpz135
-      password: Rtve2013
-      database: qpz135       
+      host: localhost
+      user: regantes_regante
+      password: R123#456e
+      database: regantes_regantes    
