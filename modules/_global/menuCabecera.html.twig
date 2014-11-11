@@ -1,0 +1,13 @@
+{% set urlActual = appPath ~ urlAmigable %}
+<ul id="nav">
+    {% for seccion in values.menuCabecera %}
+        <li>
+            {% if urlActual == seccion.url.url %}
+                {% set claseCss = "activo" %}
+            {% else %}
+                {% set claseCss = "" %}
+            {% endif %}
+            {{ macro.link(seccion.etiquetaWeb,none,seccion.url.url,seccion.url.targerBlank,none,claseCss) }}
+        </li>
+    {% endfor %}
+</ul>

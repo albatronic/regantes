@@ -1,0 +1,28 @@
+{# SLIDER DE IMAGENES #}
+
+{% if values.sliderImagenes|length > 0%}
+<div id="slider">
+     
+    <div id="featured"> 
+        {% for key,slider in values.sliderImagenes %} 
+            {% if not slider.url.url %}
+                <img src="{{app.path}}/{{slider.imagen}}" alt="{{slider.titulo}}" {% if slider.titulo %} data-caption="#htmlCaption{{key}}" {% endif %} title="{{slider.titulo}}" />              
+            {% else %}
+                <a href="{{slider.url.url}}" title="{{slider.titulo}}" {% if slider.titulo %} data-caption="#htmlCaption{{key}}" {% endif %}>
+                    <img src="{{app.path}}/{{slider.imagen}}" alt="{{slider.titulo}}" title="{{slider.titulo}}" />
+                </a>                
+            {% endif %}
+
+            {% if slider.titulo %}            
+            <span class="orbit-caption" id="htmlCaption{{key}}">
+                <a href="{{slider.url.url}}" title="{{slider.titulo}}">
+                    <span class="titular">{{slider.titulo}}</span>
+                    <span class="descripcion">{{slider.subtitulo}}</span>
+                </a>
+            </span> 
+            {% endif %}              
+        {% endfor %}        
+    </div>
+			
+</div>
+{% endif %}

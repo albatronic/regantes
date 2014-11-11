@@ -1,0 +1,18 @@
+User-agent: *
+# Desarrollo
+#Disallow: /
+
+# Produccion
+Disallow: /bin/
+Disallow: /config/
+Disallow: /cron/
+Disallow: /entities/
+Disallow: /lang/
+Disallow: /lib/
+Disallow: /log/
+Disallow: /tmp/
+Sitemap: http://www.regantesvirgensalud.com/sitemap/index.xml
+Sitemap: http://www.regantesvirgensalud.com/sitemap/secciones.xml
+Sitemap: http://www.regantesvirgensalud.com/sitemap/contenidos.xml
+Sitemap: http://www.regantesvirgensalud.com/sitemap/noticias.xml
+Sitemap: http://www.regantesvirgensalud.com/sitemap/eventos.xml

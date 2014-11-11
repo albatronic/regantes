@@ -1,0 +1,33 @@
+{# SLIDER DE NOTICIAS #}
+
+<div class="slider_noticias">
+    <div class="flechas">
+        <ul class="widget_custom_portfolio_entries_slides responsiveContentSlider">
+
+            {% for noticia in values.carruselNoticias.rows %}
+                <li><h2>
+		    {%if noticia.titulo | length > 50%}
+			{{ macro.link(noticia.titulo|slice(start,50),none,noticia.url.url,noticia.url.targetBlank) }} ...	{%else%}
+			{{ macro.link(noticia.titulo,none,noticia.url.url,noticia.url.targetBlank)}}
+		    {%endif%}
+		    </h2>
+                    {#{% if noticia.subtitulo %}
+                    <h3>{{ macro.link(noticia.subtitulo,none,noticia.url.url,noticia.url.targetBlank) }}</h3>
+                    {% endif %}#}
+                    
+                    {% if noticia.imagen %}
+                    <img src="{{app.path}}/{{noticia.imagen}}" alt="{{noticia.titulo}}" title="{{noticia.titulo}}" class="img_noticias" />
+                    {% endif %}
+                    
+		    {% if noticia.imagen %}
+		    <p>{% if noticia.resumen | length > 200 %}{{noticia.resumen|slice(start,200)}} ...{%else%}{{noticia.resumen}}{%endif%}</p>
+		    {% else %}
+                    <p>{% if noticia.resumen | length > 400 %}{{noticia.resumen | slice(start,400) }} ...{% else %}{{noticia.resumen}}{% endif %}</p>                    
+		    {% endif %}
+		    {{ macro.link('+','Seguir leyendo',noticia.url.url,noticia.url.targetBlank,none,'saber_mas') }}			    
+                </li>
+            {% endfor %}
+
+        </ul>
+    </div>
+</div>

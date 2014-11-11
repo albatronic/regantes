@@ -1,0 +1,15 @@
+<ul class="galeria">
+    
+    {% set nItems = values.galeriaFotos[0].bloqueThumbnail|length %}
+        
+    {% for key, galeria in values.galeriaFotos[0].bloqueThumbnail %}
+	<li {% if nItems==key+1 %}class="ultimo"{% endif %}>
+            <a href="http://es.calameo.com/read/{{values.galeriaFotos[0].autor}}" target="_blank" title="{{values.galeriaFotos[0].titulo}}">
+                <img src="{{appPath}}/{{galeria.PathNameThumbnail}}" alt="{{values.galeriaFotos[0].titulo}}" title="{{values.galeriaFotos[0].titulo}}" />
+            </a>            
+	</li>       
+    {% endfor %}    
+</ul> 
+
+<div style="clear: both;"></div>
+<a href="{{app.path}}/galeria" title="ver más álbumes" class="albumes">más álbumes</a>			

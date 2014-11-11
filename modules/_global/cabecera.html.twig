@@ -1,0 +1,18 @@
+<div class="contenedor_100 margin_top">
+    <div class="col_izqda logotipo_cabecera">
+        <a href="{{app.path}}/" title="Comunidad de Regantes | Virgen de la Salud"><img src="{{app.path}}/images/comunidad-regantes-virgen-de-la-salud.png" alt="Comunidad de Regantes | Virgen de la Salud" title="Comunidad de Regantes | Virgen de la Salud" /></a>
+    </div>
+
+    <div class="col_drcha">
+        <ul id="acceso">
+            <li><img src="{{app.path}}/images/958621127.png" alt="Teléfono: 958 621 127" title="Teléfono: 958 621 127" /></li>
+            <li><a href="{{app.path}}/rss" class="rss" alt="Canal de noticias" title="Canal de noticias" />Noticias</a></li>
+            <li><a href="http://80.28.132.148:9000" title="Zona Privada">Zona Privada</a></li>
+        </ul>
+        {% block menuCabecera %}
+            {% include '_global/menuCabecera.html.twig' %}
+        {% endblock %}
+    </div>
+</div>
+
+<span class="separacion_gran"></span>

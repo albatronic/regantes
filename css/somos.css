@@ -1,0 +1,13 @@
+.col_drcha {
+	margin-bottom: 50px;
+}
+
+/* ---------------------------------------- */
+/*			TEXTOS							*/
+/* ---------------------------------------- */
+p {
+	float: left;
+	font-size: 13px;
+	margin-bottom: 20px;
+	width: 100%;
+}
