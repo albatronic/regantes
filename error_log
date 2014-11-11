@@ -331,3 +331,6 @@
 [11-Nov-2014 23:36:04 Europe/Madrid] PHP Warning:  ini_set() has been disabled for security reasons in /home/regantes/public_html/bin/Twig-1.11.1/lib/Twig/Autoloader.php on line 25
 [11-Nov-2014 23:36:08 Europe/Madrid] PHP Warning:  ini_set() has been disabled for security reasons in /home/regantes/public_html/bin/Twig-1.11.1/lib/Twig/Autoloader.php on line 25
 [11-Nov-2014 23:36:09 Europe/Madrid] PHP Warning:  ini_set() has been disabled for security reasons in /home/regantes/public_html/bin/Twig-1.11.1/lib/Twig/Autoloader.php on line 25
+[11-Nov-2014 23:53:41 Europe/Madrid] PHP Warning:  ini_set() has been disabled for security reasons in /home/regantes/public_html/bin/Twig-1.11.1/lib/Twig/Autoloader.php on line 25
+[11-Nov-2014 23:54:43 Europe/Madrid] PHP Warning:  ini_set() has been disabled for security reasons in /home/regantes/public_html/bin/Twig-1.11.1/lib/Twig/Autoloader.php on line 25
+[11-Nov-2014 23:54:45 Europe/Madrid] PHP Warning:  ini_set() has been disabled for security reasons in /home/regantes/public_html/bin/Twig-1.11.1/lib/Twig/Autoloader.php on line 25
