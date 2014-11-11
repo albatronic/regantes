@@ -1,0 +1,83 @@
+# PARAMETROS DE CONFIGURACION GLOBAL DEL PROYECTO
+#
+# PERSONALIZACION PARA CADA PROYECTO:
+#
+#     0.- EN EL NODO 'projectId' POR EL ID DE PROYECTO-APP CORRESPONDIENTE AL PCAE
+#     1.- EN EL NODO 'app', SUSTITUIR 'DOMINIO' POR EL NOMBRE DEL DOMINIO O IP DONDE ESTARÁ
+#         EL PROYECTO. EN DESARROLO PUEDE SER 'localhost'
+#     2.- EN EL NODO 'app', SUSTITUIR 'FOLDER' POR EL NOMBRE DE LA CARPETA DONDE ESTARÁ EL PROYECTO
+#         EN ENTORNO DE PRODUCCION Y SI EL PROYECTO ESTÁ EN EL DIRECTORIO RAIZ DEL DOMINIO, 'FOLDER'
+#         HAY QUE DEJARLO TOTALMENTE VACIO, NI SIQUIERA CON UN '/'
+#     3.- EN EL NODO 'conections' CAMBIAR:
+  
+#         3.1. 'CONEXION' por el nombre del proyecto, p.ej: Pcae, regantes, etc
+#         3.2. 'FOLDER' por el nombre de la carpeta del proyecto
+#         3.3. 'USUARIO' por el usuario de base de datos
+#         3.4. 'PASSWORD' por la contraseña de base de datos
+#         3.5. 'BASEDEDATOS' por el nombre de la base de datos
+#
+# NOTA: 
+#    En entorno de desarrollo el USUARIO, PASSWORD Y BASEDEDATOS se igualará al valor indicado en CONEXION
+#
+# NOTA IMPORTANTE: 
+#    En producción, poner a 'false' el subnodo 'debug_mode' del nodo 'twig' para que los
+#    templates no sean recompilados
+#
+
+config:
+  debug_mode: false
+  
+  # PARA MOSTRAR O NO EL BOTON DE LA AUDITORIA DE LOS FORMULARIOS
+  audit_mode: true
+  
+  # CONTROL DE ACCESO POR IP
+  ip_control: true
+  
+  # EL ID DEL PROYECTO-APP CORRESPONDIENTE AL PCAE
+  projectId: 3
+  
+  # ENTORNO DE LA APLICACION
+  # SI LA APP ESTÁ EN EL RAIZ, 'path' debe estar vacío
+  # NORMALMENTE, EN PRODUCCION 'path' estará vacio
+  app:
+    name: Virgen de la Salud
+    url: http://www.regantesvirgensalud.com
+    path: 
+    framework: bin/albatronic/
+
+  # SEMILLA PARA CONSTRUIR CLAVES MD5
+  semillaMD5: verano
+  
+  # MOTOR PARA GENERAR DOCUMENTOS PDF
+  pdf: bin/pdf/fpdf.class.php
+
+  # MOTOR DE TEMPLATES
+  twig:
+    motor: bin/Twig-1.11.1/lib/Twig/Autoloader.php
+    templates_folder: modules
+    debug_mode: false
+    cache_folder: tmp
+    charset: null
+    
+  # CONEXIONES A LAS BASES DE DATOS
+  # IMPORTANTE:
+  #    1.-
+  #    EN ENTORNO DE DESARROLLO, LOS VALORES DE 'user', 'password' y 'database'
+  #    NO SE TIENEN EN CUENTA Y SON REEMPLAZADOS POR EL NOMBRE DE LA CONEXION. POR LO TANTO
+  #    EN ESTE CASO Y SUPONIENDO QUE ESTEMOS EN DESARROLLO, 'user', 'password' y 'database' VALDRÍAN 'CONEXION'
+  #
+  #    2.-
+  #    SI EN ENTORNO DE DESARROLLO LA BASE DE DATOS NO ESTUVIERA EN EL EQUIPO DEL DESARROLLADOR, SINO EN UN
+  #    SERVIDOR DE DESARROLLO, HABRA QUE INDICAR SU IP EN 'host'
+  #
+  #    3.-
+  #    PARA FACILITAR LA PORTABILIDAD DEL MODELO DE DATOS ENTRE DISTINTAS BASES DE DATOS, SE SEGUIRÁ LA
+  #    SIGUIENTE REGLA: SI EN LA PROPIEDAD $_conectionName DEL MODELO DE DATOS DE CADA TABLA NO SE INDICA 
+  #    NINGUN VALOR, SE ENTENDERÁ QUE LA CONEXIÓN SERÁ LA PRIMERA QUE HAYA DEFINIDA DENTRO DE ESTE NODO (conections).
+  conections:
+    regantes:
+      dbEngine: mysql
+      host: localhost
+      user: regantes_regante
+      password: R123#456e
+      database: regantes_regantes    
